@@ -1,0 +1,184 @@
+---
+import Icon from "./Icon.astro";
+import Breadcrumbs from "./Breadcrumbs.astro";
+
+interface Props {
+  num?: string;
+  kicker: string;
+  title: string;
+  lead?: string;
+  /** Ancestor crumbs; `current` defaults to the page title. */
+  trail?: { label: string; href: string }[];
+  current?: string;
+  primary?: { label: string; href: string };
+  secondary?: { label: string; href: string };
+  note?: string;
+  tone?: "paper" | "ink";
+}
+
+const {
+  num,
+  kicker,
+  title,
+  lead,
+  trail,
+  current,
+  primary,
+  secondary,
+  note,
+  tone = "paper",
+} = Astro.props;
+
+const isInk = tone === "ink";
+const hasAside = Boolean(lead || primary || secondary || note);
+---
+
+<section class:list={["phero", isInk && "on-ink blueprint"]} data-tone={tone}>
+  <div class="wrap">
+    <Breadcrumbs trail={trail} current={current ?? title} />
+
+    <div class:list={["phero__grid", !hasAside && "phero__grid--single"]}>
+      <div class="phero__main">
+        <p class="stamp">
+          {num && <span class="stamp__num">{num}</span>}
+          {kicker}
+        </p>
+        <h1 class="phero__title">{title}</h1>
+      </div>
+
+      {
+        hasAside && (
+          <div class="phero__aside">
+            {lead && <p class="phero__lead">{lead}</p>}
+
+            {(primary || secondary) && (
+              <div class="phero__actions">
+                {primary && (
+                  <a
+                    href={primary.href}
+                    class:list={["btn", isInk ? "btn--light" : "btn--primary"]}
+                  >
+                    {primary.label}
+                    <Icon name="arrowRight" size={16} />
+                  </a>
+                )}
+                {secondary && (
+                  <a
+                    href={secondary.href}
+                    class:list={["btn", isInk ? "btn--ghost-ink" : "btn--outline"]}
+                  >
+                    {secondary.label}
+                  </a>
+                )}
+              </div>
+            )}
+
+            {note && <p class="phero__note">{note}</p>}
+          </div>
+        )
+      }
+    </div>
+
+    <slot />
+  </div>
+</section>
+
+<style>
+  .phero {
+    padding-block: clamp(2rem, 1.5rem + 2.5vw, 3.5rem) clamp(2.25rem, 1.5rem + 3vw, 4rem);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* Tone-scoped on purpose: this scoped rule carries an attribute selector, so an
+     unconditional background here would outrank .on-ink and leave the ink variant
+     with light text on paper. */
+  .phero[data-tone="paper"] {
+    background: var(--paper-2);
+  }
+
+  .phero[data-tone="ink"] {
+    border-bottom-color: var(--ink);
+  }
+
+  .phero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 4rem);
+    align-items: end;
+    margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  .phero__grid--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .phero__title {
+    font-size: var(--t-h1);
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+
+  .phero__grid--single .phero__title {
+    max-width: 28ch;
+  }
+
+  .phero__aside {
+    display: grid;
+    gap: 1.35rem;
+    padding-left: clamp(0rem, -2rem + 4vw, 2.25rem);
+    border-left: 1px solid var(--rule-2);
+  }
+
+  .phero[data-tone="ink"] .phero__aside {
+    border-left-color: var(--rule-ink-2);
+  }
+
+  .phero__lead {
+    font-size: var(--t-lead);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .phero[data-tone="ink"] .phero__lead {
+    color: var(--on-ink-70);
+  }
+
+  .phero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .phero__note {
+    font-size: var(--t-xs);
+    line-height: 1.55;
+    color: var(--ink-55);
+    max-width: 34ch;
+  }
+
+  .phero[data-tone="ink"] .phero__note {
+    color: var(--on-ink-70);
+  }
+
+  @media (max-width: 1000px) {
+    .phero__grid {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .phero__title {
+      max-width: 26ch;
+    }
+
+    .phero__aside {
+      padding-left: 0;
+      border-left: 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule-2);
+    }
+
+    .phero[data-tone="ink"] .phero__aside {
+      border-top-color: var(--rule-ink-2);
+    }
+  }
+</style>

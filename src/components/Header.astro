@@ -1,0 +1,802 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import { nav, cta, contact } from "../lib/site";
+
+const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+
+const isActive = (href: string): boolean =>
+  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+
+/** A group lights up when the current page lives anywhere inside it. */
+const isGroupActive = (item: (typeof nav)[number]): boolean => {
+  if (isActive(item.href)) return true;
+  if (!item.panel) return false;
+  return item.panel.columns.some((column) => column.links.some((link) => isActive(link.href)));
+};
+
+type Panel = NonNullable<(typeof nav)[number]["panel"]>;
+
+/** Track widths for one dropdown, read off the data rather than hardcoded per
+ *  panel shape: the lead column carries one-line summaries and needs the room,
+ *  while a bare list of links reads fine narrower. The sheet is
+ *  `width: max-content`, so these widths are what decides how wide it opens.
+ *  12.5rem is the tight track, and it is measured, not guessed: the widest
+ *  summary-less label is "Property & developers" at 154.66px, which needs
+ *  30px of icon + 11.2px of gap = 195.86px to set one line. 200px clears it.
+ *  Three of those tracks put the Solutions sheet at 703px, which still fits
+ *  beside its trigger in a 1001px window — the narrowest the desktop bar ever
+ *  renders. At 13.5rem it was 751px and ran 19px past the right edge. */
+const panelTracks = (panel: Panel): string =>
+  panel.columns
+    .map((column, index) =>
+      column.links.every((link) => !link.summary) ? "12.5rem" : index === 0 ? "15rem" : "13rem",
+    )
+    .map((track) => `minmax(0, ${track})`)
+    .join(" ");
+---
+
+<header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="wrap header__inner">
+    <a href="/" class="header__brand" aria-label="Ainnect — home">
+      <Logo />
+    </a>
+
+    <nav class="header__nav" aria-label="Main">
+      <ul class="nav">
+        {
+          nav.map((item) => (
+            <li class:list={["nav__item", item.panel && "nav__item--panel"]}>
+              <a
+                href={item.href}
+                class="nav__link"
+                aria-current={isGroupActive(item) ? "page" : undefined}
+                aria-haspopup={item.panel ? "true" : undefined}
+              >
+                {item.label}
+                {item.panel && <Icon name="chevronDown" size={13} class="nav__chev" />}
+              </a>
+
+              {item.panel && (
+                <div class="panel">
+                  <div class="panel__inner" style={`--panel-tracks:${panelTracks(item.panel)}`}>
+                    {item.panel.columns.map((column) => (
+                      <div class="panel__col">
+                        <p class="stamp">{column.heading}</p>
+                        <ul class="panel__list">
+                          {column.links.map((link) => (
+                            <li>
+                              <a
+                                href={link.href}
+                                class="panel__link"
+                                aria-current={isActive(link.href) ? "page" : undefined}
+                              >
+                                {link.icon && (
+                                  <span class="panel__icon">
+                                    <Icon name={link.icon} size={17} />
+                                  </span>
+                                )}
+                                <span class="panel__body">
+                                  <span class="panel__name">{link.label}</span>
+                                  {link.summary && <span class="panel__sum">{link.summary}</span>}
+                                </span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+
+                    {item.panel.footer && (
+                      <a href={item.panel.footer.href} class="panel__promo">
+                        <span class="stamp stamp--brand">
+                          <Icon name="calendar" size={14} />
+                          Onboarding
+                        </span>
+                        <span class="panel__promo-title">{item.panel.footer.label}</span>
+                        <span class="panel__promo-text">{item.panel.footer.text}</span>
+                        <span class="panel__promo-go">
+                          Start here
+                          <Icon name="arrowRight" size={15} />
+                        </span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a href="/login" class="header__signin">Sign in</a>
+      <a href={cta.primary.href} class="btn btn--primary header__cta">
+        {cta.primary.label}
+        <Icon name="arrowRight" size={16} />
+      </a>
+      <button type="button" class="burger" aria-expanded="false" aria-controls="site-drawer">
+        <span class="sr-only">Menu</span>
+        <Icon name="menu" size={22} class="burger__open" />
+        <Icon name="close" size={22} class="burger__close" />
+      </button>
+    </div>
+  </div>
+
+  <div class="drawer" id="site-drawer" hidden>
+    <nav class="drawer__inner" aria-label="Mobile">
+      {
+        nav.map((item) =>
+          item.panel ? (
+            <details class="drawer__group" open={isGroupActive(item)}>
+              <summary class="drawer__summary">
+                {item.label}
+                <Icon name="chevronDown" size={16} class="drawer__chev" />
+              </summary>
+              <div class="drawer__panel">
+                {item.panel.columns.map((column) => (
+                  <div class="drawer__col">
+                    {/* Solutions carries twenty links across three columns. Without
+                        the headings a phone shows one undifferentiated wall. */}
+                    <p class="stamp drawer__heading">{column.heading}</p>
+                    <ul class="drawer__list">
+                      {column.links.map((link) => (
+                        <li>
+                          <a
+                            href={link.href}
+                            class="drawer__sublink"
+                            aria-current={isActive(link.href) ? "page" : undefined}
+                          >
+                            {link.icon && <Icon name={link.icon} size={16} />}
+                            {link.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+
+                {item.panel.footer && (
+                  <a class="drawer__more" href={item.panel.footer.href}>
+                    {item.panel.footer.label}
+                    <Icon name="arrowRight" size={15} />
+                  </a>
+                )}
+              </div>
+            </details>
+          ) : (
+            <a
+              href={item.href}
+              class="drawer__link"
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ),
+        )
+      }
+
+      <div class="drawer__actions">
+        <a href={cta.primary.href} class="btn btn--primary btn--block">{cta.primary.label}</a>
+        <a href="/login" class="btn btn--outline btn--block">Sign in</a>
+      </div>
+
+      <a href={`mailto:${contact.salesEmail}`} class="drawer__mail">
+        <Icon name="mail" size={17} />
+        {contact.salesEmail}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- Sits outside <header> deliberately: see the .drawer-scrim rule. -->
+<div class="drawer-scrim" hidden></div>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--rule);
+    transition: box-shadow var(--base) var(--ease);
+  }
+
+  .site-header[data-stuck] {
+    /* Opaque the moment the page moves. Translucency is pleasant while the bar
+       sits over the hero, but a blurred sticky layer has to be recomposited on
+       every scroll frame and that is exactly the layer a mobile browser drops —
+       the bar reads as gone while you are scrolling. Over a dark section the
+       same 12% of show-through also cost the logo and the burger most of their
+       contrast. Solid paper has neither problem. */
+    background: var(--paper);
+    backdrop-filter: none;
+    box-shadow:
+      0 1px 0 var(--rule),
+      0 12px 28px -22px rgba(10, 20, 15, 0.5);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: var(--header-h);
+  }
+
+  /* Stretched to the full bar rather than sized to the mark: the logo is 36px
+     tall, and "go home" should not be the smallest target in the header. */
+  .header__brand {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    border-radius: var(--r-2);
+  }
+
+  /* --- Desktop nav ------------------------------------------------------- */
+  .header__nav {
+    flex: 1 1 auto;
+  }
+
+  .nav {
+    --nav-h: 36px;
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    list-style: none;
+  }
+
+  .nav__item {
+    position: relative;
+  }
+
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: var(--nav-h);
+    padding-inline: 0.7rem;
+    border-radius: var(--r-2);
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--ink-70);
+    transition:
+      color var(--fast) var(--ease),
+      background var(--fast) var(--ease);
+  }
+
+  .nav__link:hover,
+  .nav__item--panel:hover > .nav__link {
+    color: var(--ink);
+    background: var(--paper-2);
+  }
+
+  .nav__link[aria-current="page"] {
+    color: var(--ink);
+  }
+
+  .nav__chev {
+    color: var(--ink-40);
+    transition: transform var(--base) var(--ease);
+  }
+
+  .nav__item--panel:hover .nav__chev,
+  .nav__item--panel:focus-within .nav__chev {
+    transform: rotate(180deg);
+  }
+
+  /* --- Dropdown panel ---------------------------------------------------- */
+  .panel {
+    position: absolute;
+    top: 100%;
+    left: -0.75rem;
+    /* Sized by its own content, and this is load-bearing. An absolutely
+       positioned box shrinks to fit its containing block; here that block is a
+       nav item barely wider than its own label, and the tracks inside have a
+       zero floor — so the whole sheet used to collapse into a 108px column
+       1238px tall with every track 2px wide. That was the unreadable menu. */
+    width: max-content;
+    max-width: calc(100vw - 2rem);
+    /* The trigger is the containing block, not the bar, so the sheet has to
+       clear the rest of the bar on its own: half of what the bar has left over
+       around a 36px link, plus a hair of daylight. Left at a flat 0.6rem the
+       card sat 5px high and painted over the bar's bottom rule. This padding is
+       inside the sheet's hit area, so link and sheet stay contiguous. */
+    padding-top: calc((var(--header-h) - var(--nav-h)) / 2 + 0.4rem);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-6px);
+    /* Deliberately no transition: closing is instant. Crossfading two ~740px
+       sheets as the pointer travels along the bar put both on screen at the
+       same time, which reads as one garbled panel rather than as a transition. */
+  }
+
+  .nav__item--panel:hover > .panel,
+  .nav__item--panel:focus-within > .panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    /* Opening animates. The rule above, by omitting this, is what makes closing
+       instant — the element takes the transition of the state it arrives at. */
+    transition:
+      opacity var(--base) var(--ease),
+      transform var(--base) var(--ease);
+  }
+
+  /* One sheet at a time: while the pointer is anywhere in the bar it decides, so
+     a panel left open by keyboard focus cannot sit under the one being pointed
+     at. Pointing at the sheet still counts as pointing at its own item — the
+     sheet is a descendant of it. */
+  .nav:hover .nav__item--panel:not(:hover) > .panel {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* The last item sits at the right end of the bar, so its sheet opens leftwards:
+     anchored to the left it ran 38px off the page in a 1001px window. */
+  .nav__item--panel:last-child > .panel {
+    left: auto;
+    right: -0.75rem;
+  }
+
+  .panel__inner {
+    display: grid;
+    /* From the data — see panelTracks. The fallback is the old fixed pair, so a
+       panel that somehow renders without the variable still reads as two
+       columns instead of one max-content line. */
+    grid-template-columns: var(--panel-tracks, minmax(0, 15rem) minmax(0, 13rem));
+    gap: 1.75rem;
+    padding: 1.4rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-3);
+    box-shadow: var(--shadow-3);
+  }
+
+  .panel__list {
+    display: grid;
+    gap: 0.1rem;
+    margin-top: 0.7rem;
+    list-style: none;
+  }
+
+  .panel__link {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    padding: 0.5rem;
+    margin-inline: -0.5rem;
+    border-radius: var(--r-2);
+    transition: background var(--fast) var(--ease);
+  }
+
+  .panel__link:hover {
+    background: var(--paper-2);
+  }
+
+  .panel__icon {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--r-1);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .panel__body {
+    display: block;
+    min-width: 0;
+  }
+
+  .panel__name {
+    display: block;
+    font-size: var(--t-sm);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .panel__link[aria-current="page"] .panel__name {
+    color: var(--brand);
+  }
+
+  .panel__sum {
+    display: block;
+    margin-top: 0.1rem;
+    font-size: var(--t-xs);
+    line-height: 1.4;
+    color: var(--ink-55);
+  }
+
+  /* A strip across the foot of the sheet rather than a fourth column. As a
+     column it stretched to the height of the tallest list — 476px — and a card
+     carrying three lines of text with 300px of air in the middle of it read as a
+     rendering fault rather than as a promotion. */
+  .panel__promo {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.2rem 1.25rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--r-2);
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    transition: border-color var(--fast) var(--ease);
+  }
+
+  .panel__promo:hover {
+    border-color: var(--rule-3);
+  }
+
+  .panel__promo-title {
+    font-size: var(--t-sm);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .panel__promo-text {
+    font-size: var(--t-xs);
+    line-height: 1.45;
+    color: var(--ink-55);
+  }
+
+  .panel__promo-go {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--t-xs);
+    font-weight: 700;
+    color: var(--brand);
+  }
+
+  .panel__promo:hover .panel__promo-go svg {
+    transform: translateX(3px);
+  }
+
+  .panel__promo-go svg {
+    transition: transform var(--base) var(--ease);
+  }
+
+  /* --- Actions ----------------------------------------------------------- */
+  .header__actions {
+    flex: 0 0 auto;
+    /* Holds the CTA and the burger against the right edge. The nav is the only
+       flexible item in the bar, and below 1000px it is display:none — so without
+       this the burger sat shoulder to shoulder with the logo and up to 396px of
+       bar sat empty beside it. */
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .header__signin {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--ink-70);
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--r-2);
+  }
+
+  .header__signin:hover {
+    color: var(--ink);
+  }
+
+  .header__cta {
+    --btn-h: 38px;
+    padding-inline: 0.9rem;
+  }
+
+  /* 44px: the burger is the only way to reach the nav below 1000px, so it gets a
+     full touch target rather than the 40px a mouse would tolerate. */
+  .burger {
+    display: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -0.35rem;
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-2);
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .burger__close {
+    display: none;
+  }
+
+  .burger[aria-expanded="true"] .burger__open {
+    display: none;
+  }
+
+  .burger[aria-expanded="true"] .burger__close {
+    display: block;
+  }
+
+  /* --- Drawer ------------------------------------------------------------ */
+  .drawer,
+  .drawer-scrim {
+    display: none;
+  }
+
+  .drawer__inner {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.75rem var(--pad) 2rem;
+    max-height: calc(100dvh - var(--header-h));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .drawer__link,
+  .drawer__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.9rem 0.25rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+  }
+
+  .drawer__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .drawer__summary::marker {
+    content: "";
+  }
+
+  .drawer__chev {
+    color: var(--ink-40);
+    transition: transform var(--base) var(--ease);
+  }
+
+  .drawer__group[open] .drawer__chev {
+    transform: rotate(180deg);
+  }
+
+  .drawer__panel {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.85rem 0 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .drawer__list {
+    display: grid;
+    gap: 0.1rem;
+    list-style: none;
+  }
+
+  .drawer__heading {
+    margin-bottom: 0.35rem;
+    padding-left: 0.25rem;
+    font-size: var(--t-mono-sm);
+  }
+
+  /* Second column onward gets its own rule: three stacked sections need a
+     visible seam, and the panel's own border-bottom only closes the group. */
+  .drawer__col + .drawer__col {
+    padding-top: 0.8rem;
+    border-top: 1px dashed var(--rule-2);
+  }
+
+  /* The panel footer is the only route to the fourth Solutions axis, so the
+     drawer carries it too rather than dropping it with the desktop card. */
+  .drawer__more {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.5rem 0.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    font-weight: 500;
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--brand);
+  }
+
+  .drawer__more svg {
+    transition: transform var(--fast) var(--ease);
+  }
+
+  .drawer__more:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* 0.7rem block padding puts the tap target at ~46px. These are the only links
+     to product pages on a phone, and they sit in a dense list — the one place
+     where an undersized target actually costs someone the wrong page. */
+  .drawer__sublink {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.25rem;
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--ink-70);
+  }
+
+  .drawer__sublink svg {
+    color: var(--brand);
+  }
+
+  .drawer__sublink[aria-current="page"] {
+    color: var(--brand);
+  }
+
+  .drawer__actions {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+  }
+
+  /* 19px tall failed the 24px minimum for every pointer, not just a finger, so
+     this one is not gated — a narrow desktop window opens the same drawer. */
+  .drawer__mail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono);
+    letter-spacing: 0.04em;
+    color: var(--ink-55);
+  }
+
+  /* --- Breakpoint -------------------------------------------------------- */
+  @media (max-width: 1000px) {
+    .header__nav,
+    .header__signin {
+      display: none;
+    }
+
+    /* No blur below 1000px at all, scrolled or not. It buys nothing — the bar
+       sits on paper here anyway — and it costs a composited layer on precisely
+       the devices least able to afford one. It also means the bar and the open
+       sheet already read as one flat surface, which is what the is-locked
+       override used to be for. */
+    .site-header {
+      background: var(--paper);
+      backdrop-filter: none;
+    }
+
+    .burger {
+      display: grid;
+    }
+
+    .drawer {
+      display: block;
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      box-shadow: var(--shadow-3);
+    }
+
+    /* Dims the page under the open sheet, and gives "tap outside to close" a
+       real hit area.
+
+       It lives outside <header> because the header's backdrop-filter makes it
+       the containing block for fixed descendants — nested, the scrim would clip
+       to the 66px bar instead of covering the page.
+
+       It starts below the bar rather than at `inset: 0` so the bar and its close
+       button keep full contrast while everything behind them recedes.
+
+       z-index sits between main (1) and the header (100) so the sheet stays on
+       top of the dim. */
+    .drawer-scrim {
+      display: block;
+      position: fixed;
+      top: var(--header-h);
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 90;
+      background: var(--scrim);
+    }
+
+    .drawer-scrim[hidden] {
+      display: none;
+    }
+
+    .drawer[hidden] {
+      display: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .header__cta {
+      display: none;
+    }
+  }
+
+  /* No-JS: the drawer button cannot work, so lean on the footer sitemap. */
+  :global(html:not(.js)) .burger {
+    display: none;
+  }
+
+  /* The CTA's 38px is a mouse height. On a touch device it grows to a full
+     target at any width — a tablet in landscape is still being tapped. */
+  @media (pointer: coarse) {
+    .header__cta {
+      --btn-h: 44px;
+    }
+
+    .header__signin {
+      padding-block: 0.7rem;
+    }
+  }
+</style>
+
+<style is:global>
+  html.is-locked,
+  html.is-locked body {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>(".site-header");
+  const burger = document.querySelector<HTMLButtonElement>(".burger");
+  const drawer = document.querySelector<HTMLElement>("#site-drawer");
+  const scrim = document.querySelector<HTMLElement>(".drawer-scrim");
+
+  const setDrawer = (open: boolean): void => {
+    if (!burger || !drawer) return;
+    burger.setAttribute("aria-expanded", String(open));
+    drawer.hidden = !open;
+    if (scrim) scrim.hidden = !open;
+    document.documentElement.classList.toggle("is-locked", open);
+  };
+
+  burger?.addEventListener("click", () => {
+    setDrawer(burger.getAttribute("aria-expanded") !== "true");
+  });
+
+  /* Tapping the dimmed page closes the sheet. Keyboard and assistive-tech users
+     get the same exit from Escape and the close button, so the scrim itself
+     stays out of the accessibility tree. */
+  scrim?.addEventListener("click", () => setDrawer(false));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    setDrawer(false);
+    /* Blur closes any CSS-driven dropdown held open by :focus-within. */
+    const active = document.activeElement;
+    if (active instanceof HTMLElement && active.closest(".nav__item--panel")) active.blur();
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 1000) setDrawer(false);
+  });
+
+  const onScroll = (): void => {
+    if (!header) return;
+    if (window.scrollY > 6) header.setAttribute("data-stuck", "");
+    else header.removeAttribute("data-stuck");
+  };
+
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>

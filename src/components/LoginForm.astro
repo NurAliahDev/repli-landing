@@ -1,0 +1,293 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * Sign-in form for a product whose accounts are provisioned by hand.
+ * Deliberately client-side only: no `action`, no fetch, nothing leaves the
+ * browser, so nothing a visitor types here can be logged or forwarded.
+ */
+---
+
+<form class="login" id="login-form" novalidate>
+  <div class="alert alert--error login__alert" id="login-error" role="alert" tabindex="-1" hidden>
+    <Icon name="alert" size={17} />
+    <span>
+      <strong>We could not sign you in.</strong>
+      <span
+        >Those details do not match an active Ainnect workspace. Check the email address, or ask
+        your workspace owner to re-send your invite.</span
+      >
+    </span>
+  </div>
+
+  <div class="alert alert--info login__alert" id="login-help" hidden>
+    <Icon name="key" size={17} />
+    <span>
+      <strong>No account yet?</strong>
+      Ainnect workspaces are created by our team, not through a signup form. <a href="/contact"
+        >Contact us</a
+      > and we will set yours up on a short call — usually the same day.
+    </span>
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="li-email">Work email</label>
+    <input
+      id="li-email"
+      name="email"
+      type="email"
+      inputmode="email"
+      autocomplete="username"
+      placeholder="you@company.com"
+      required
+    />
+    <p class="field__error">Enter the email address on your invite.</p>
+  </div>
+
+  <div class="field">
+    <div class="login__labelrow">
+      <label class="field__label" for="li-password">Password</label>
+      <a href="/contact" class="login__forgot">Forgot password?</a>
+    </div>
+    <div class="login__pw">
+      <input
+        id="li-password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="••••••••••"
+        required
+      />
+      <button type="button" class="login__peek" aria-pressed="false" aria-label="Show password">
+        <Icon name="eye" size={17} class="login__peek-on" />
+        <Icon name="eyeOff" size={17} class="login__peek-off" />
+      </button>
+    </div>
+    <p class="field__error">Enter your password.</p>
+  </div>
+
+  <label class="login__remember">
+    <input type="checkbox" name="remember" />
+    <span>Keep me signed in on this device</span>
+  </label>
+
+  <button type="submit" class="btn btn--primary btn--block btn--lg login__submit">
+    <span class="login__submit-label">Sign in</span>
+    <Icon name="arrowRight" size={17} />
+  </button>
+
+  <p class="form-note">
+    <Icon name="lock" size={13} />
+    Nothing you type here leaves your browser: this form makes no network request.
+  </p>
+</form>
+
+<style>
+  .login {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .login__alert[hidden] {
+    display: none;
+  }
+
+  .login__alert a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .login__labelrow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .login__forgot {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    color: var(--brand);
+  }
+
+  .login__forgot:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Touch sizing — see tokens.css. min-height rather than padding with a negative
+     margin: the password field sits 0.4rem below, and a hit area that reached
+     into it would send someone to the contact page when they meant to type. */
+  @media (pointer: coarse) {
+    .login__forgot {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+
+  .login__pw {
+    position: relative;
+  }
+
+  .login__pw input {
+    padding-right: 2.9rem;
+  }
+
+  .login__peek {
+    position: absolute;
+    top: 50%;
+    right: 0.35rem;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--r-1);
+    color: var(--ink-55);
+    background: transparent;
+  }
+
+  /* The painted button stays 34px so it sits inside the 46px field without
+     crowding it, but a thumb needs 44px. The overlay extends the hit area into
+     the 2.9rem of right padding the input already reserves, so it never covers
+     typed text. */
+  .login__peek::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+
+  .login__peek:hover {
+    color: var(--ink);
+    background: var(--paper-2);
+  }
+
+  .login__peek-off {
+    display: none;
+  }
+
+  .login__peek[aria-pressed="true"] .login__peek-on {
+    display: none;
+  }
+
+  .login__peek[aria-pressed="true"] .login__peek-off {
+    display: block;
+  }
+
+  /* The checkbox is 16px, so the label is what gets tapped — it spans the form's
+     full width but was only as tall as one line of text. min-height gives the
+     row a real target without changing where anything sits, since the content is
+     centred either way. */
+  .login__remember {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 44px;
+    font-size: var(--t-sm);
+    color: var(--ink-70);
+    cursor: pointer;
+  }
+
+  .login__remember input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--brand);
+  }
+
+  .login__submit[aria-busy="true"] {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .form-note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .form-note svg {
+    margin-top: 0.2rem;
+    color: var(--ink-40);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#login-form");
+  const errorBox = document.querySelector<HTMLElement>("#login-error");
+  const helpBox = document.querySelector<HTMLElement>("#login-help");
+  const submit = document.querySelector<HTMLButtonElement>(".login__submit");
+  const submitLabel = document.querySelector<HTMLElement>(".login__submit-label");
+  const peek = document.querySelector<HTMLButtonElement>(".login__peek");
+  const password = document.querySelector<HTMLInputElement>("#li-password");
+  const email = document.querySelector<HTMLInputElement>("#li-email");
+
+  /* Reveal the "request access" route once someone has really tried. */
+  const HELP_AFTER_ATTEMPTS = 2;
+  const CHECK_DELAY_MS = 700;
+  let attempts = 0;
+
+  const mark = (input: HTMLInputElement, invalid: boolean): void => {
+    const field = input.closest<HTMLElement>(".field");
+    if (field) {
+      if (invalid) field.setAttribute("data-invalid", "");
+      else field.removeAttribute("data-invalid");
+    }
+    input.setAttribute("aria-invalid", String(invalid));
+  };
+
+  peek?.addEventListener("click", () => {
+    if (!password) return;
+    const show = peek.getAttribute("aria-pressed") !== "true";
+    peek.setAttribute("aria-pressed", String(show));
+    peek.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    password.type = show ? "text" : "password";
+    password.focus();
+  });
+
+  for (const input of [email, password]) {
+    input?.addEventListener("input", () => {
+      if (input.value.trim() !== "") mark(input, false);
+    });
+  }
+
+  form?.addEventListener("submit", (event) => {
+    /* No action, no fetch: the credentials never leave this page. */
+    event.preventDefault();
+
+    if (!email || !password) return;
+
+    const emailEmpty = email.value.trim() === "";
+    const passwordEmpty = password.value === "";
+    mark(email, emailEmpty);
+    mark(password, passwordEmpty);
+
+    if (emailEmpty || passwordEmpty) {
+      errorBox?.setAttribute("hidden", "");
+      (emailEmpty ? email : password).focus();
+      return;
+    }
+
+    submit?.setAttribute("aria-busy", "true");
+    if (submitLabel) submitLabel.textContent = "Checking…";
+
+    window.setTimeout(() => {
+      submit?.removeAttribute("aria-busy");
+      if (submitLabel) submitLabel.textContent = "Sign in";
+
+      attempts += 1;
+      errorBox?.removeAttribute("hidden");
+      if (attempts >= HELP_AFTER_ATTEMPTS) helpBox?.removeAttribute("hidden");
+
+      password.value = "";
+      errorBox?.focus();
+    }, CHECK_DELAY_MS);
+  });
+</script>

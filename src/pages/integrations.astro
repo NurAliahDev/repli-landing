@@ -1,0 +1,387 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import SectionHead from "../components/SectionHead.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import { integrationGroups, integrationNote } from "../lib/platform";
+import { cta } from "../lib/site";
+import { breadcrumbNode } from "../lib/schema";
+
+const all = integrationGroups.flatMap((group) => group.items);
+const counts = {
+  live: all.filter((item) => item.status === "Live").length,
+  beta: all.filter((item) => item.status === "Beta").length,
+  planned: all.filter((item) => item.status === "Planned").length,
+};
+
+const legend = [
+  { status: "Live", text: "In production for paying customers today." },
+  { status: "Beta", text: "Working, in use by design partners, rough edges possible." },
+  { status: "Planned", text: "Committed and scoped, not built. No date promised." },
+] as const;
+
+/* Response shape follows our house rule: JSON is camelCase. */
+const sample = `curl https://api.ainnect.site/v1/conversations \\
+  -H "Authorization: Bearer $AINNECT_API_KEY"
+
+{
+  "success": true,
+  "data": [
+    {
+      "conversationId": "cnv_8fJ2",
+      "contactName": "Rani Kusuma",
+      "channel": "whatsapp",
+      "leadScore": 87,
+      "assignedTo": "usr_04",
+      "lastMessageAt": "2026-09-09T14:02:11+07:00"
+    }
+  ],
+  "meta": { "page": 1, "limit": 25, "totalItems": 412 }
+}`;
+---
+
+<BaseLayout
+  title="Integrations"
+  description="Every channel, commerce platform and work tool Ainnect connects to — with an honest status on each one — plus the REST API, signed webhooks and CSV import."
+  schema={[breadcrumbNode([], "Integrations", "/integrations")]}
+>
+  <PageHero
+    kicker="Integrations"
+    title="It has to fit the stack you already pay for."
+    current="Integrations"
+    lead={`${counts.live} integrations are live today, ${counts.beta} are in beta, and ${counts.planned} are planned. We label them that way on purpose — nobody should discover the difference after signing.`}
+    note={integrationNote}
+    primary={cta.primary}
+    secondary={{ label: "Ask about a specific tool", href: "/contact" }}
+  >
+    <ul class="legend">
+      {
+        legend.map((entry) => (
+          <li>
+            <span class="legend__tag" data-status={entry.status}>
+              {entry.status}
+            </span>
+            <span class="legend__text">{entry.text}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </PageHero>
+
+  <!-- ── Groups ───────────────────────────────────────────────────────── -->
+  {
+    integrationGroups.map((group, index) => (
+      <section
+        class:list={["section-sm ig", index % 2 === 1 && "bg-surface"]}
+        aria-labelledby={`ig-${index}`}
+      >
+        <div class="wrap ig__grid">
+          <header class="ig__head">
+            <span class="ig__icon">
+              <Icon name={group.icon} size={20} />
+            </span>
+            <h2 id={`ig-${index}`} class="ig__title">
+              {group.heading}
+            </h2>
+            <p class="ig__text">{group.text}</p>
+          </header>
+
+          <ul class="ig__list">
+            {group.items.map((item) => (
+              <li class="ig__item">
+                <div class="ig__row">
+                  <h3 class="ig__name">{item.name}</h3>
+                  <span class="ig__status" data-status={item.status}>
+                    {item.status}
+                  </span>
+                </div>
+                <p class="ig__detail">{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- ── API ──────────────────────────────────────────────────────────── -->
+  <section class="section on-ink blueprint" aria-labelledby="api-title">
+    <div class="wrap api">
+      <div class="api__copy">
+        <p class="stamp"><span class="stamp__num">05</span> Build your own</p>
+        <h2 id="api-title" class="api__title">Everything the interface does, the API does.</h2>
+        <p class="head__lead">
+          No feature is locked behind a partner agreement and no endpoint is reserved for enterprise
+          contracts. Keys are scoped per workspace and rate limited per plan.
+        </p>
+
+        <ul class="checks api__checks">
+          <li>
+            <Icon name="check" size={15} />
+            <span
+              ><strong>REST, camelCase, cursor paginated.</strong> Contacts, conversations,
+              messages, deals and scores.</span
+            >
+          </li>
+          <li>
+            <Icon name="check" size={15} />
+            <span
+              ><strong>Signed webhooks with replay.</strong> HMAC signature per delivery, retries
+              with backoff, a 72-hour replay window.</span
+            >
+          </li>
+          <li>
+            <Icon name="check" size={15} />
+            <span
+              ><strong>Sandbox workspace on request.</strong> Build against fake traffic before you
+              point it at your real number.</span
+            >
+          </li>
+        </ul>
+
+        <div class="api__actions">
+          <a class="btn btn--light" href="/contact">
+            Request API docs
+            <Icon name="arrowRight" size={16} />
+          </a>
+          <a class="btn btn--ghost-ink" href="/security">How we handle your data</a>
+        </div>
+      </div>
+
+      <figure class="api__figure">
+        <figcaption class="api__cap mono">
+          <Icon name="code" size={14} />
+          GET /v1/conversations
+        </figcaption>
+        <pre class="api__code"><code>{sample}</code></pre>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ── Missing something ───────────────────────────────────────────── -->
+  <section class="section-sm" aria-labelledby="miss-title">
+    <div class="wrap wrap-narrow miss">
+      <p class="stamp stamp--brand">Not listed</p>
+      <h2 id="miss-title" class="miss__title">The tool you need is not here.</h2>
+      <p class="miss__text">
+        Say so on the onboarding call. If it has an API we can usually wire it through Zapier or a
+        webhook the same week. Scale customers get custom integration work as part of the
+        engagement, not as a change request.
+      </p>
+      <p>
+        <a class="arrow-link" href="/contact">
+          Tell us what you need connected
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  /* ── Status legend ──────────────────────────────────────────────────── */
+  .legend {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule-2);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 0.85rem 1.75rem;
+  }
+
+  .legend li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.6rem;
+    align-items: start;
+  }
+
+  .legend__tag,
+  .ig__status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--r-1);
+    background: var(--paper-3);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-70);
+    white-space: nowrap;
+  }
+
+  .legend__tag[data-status="Live"],
+  .ig__status[data-status="Live"] {
+    background: var(--brand-tint);
+    color: var(--brand);
+  }
+
+  .legend__tag[data-status="Beta"],
+  .ig__status[data-status="Beta"] {
+    background: var(--amber-tint);
+    color: var(--amber-ink);
+  }
+
+  .legend__text {
+    font-size: var(--t-xs);
+    line-height: 1.5;
+    color: var(--ink-70);
+  }
+
+  /* ── Integration groups ─────────────────────────────────────────────── */
+  .ig__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .ig__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .ig__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .ig__title {
+    margin-top: 0.9rem;
+    font-size: var(--t-h4);
+  }
+
+  .ig__text {
+    margin-top: 0.6rem;
+    max-width: 30rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .ig__list {
+    list-style: none;
+    display: grid;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .ig__item {
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ig__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .ig__name {
+    font-size: var(--t-body);
+    letter-spacing: -0.025em;
+  }
+
+  .ig__detail {
+    margin-top: 0.35rem;
+    max-width: 46rem;
+    font-size: var(--t-sm);
+    line-height: 1.55;
+    color: var(--ink-70);
+  }
+
+  @media (max-width: 1000px) {
+    .ig__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ig__head {
+      position: static;
+    }
+  }
+
+  /* ── API block ──────────────────────────────────────────────────────── */
+  .api {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+    gap: clamp(2rem, 1rem + 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  .api__title {
+    margin-top: 1rem;
+    max-width: 22ch;
+  }
+
+  .api__checks {
+    margin-top: 1.75rem;
+  }
+
+  .api__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 2rem;
+  }
+
+  .api__figure {
+    border: 1px solid var(--rule-ink-2);
+    border-radius: var(--r-3);
+    background: rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+  }
+
+  .api__cap {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.7rem 0.95rem;
+    border-bottom: 1px solid var(--rule-ink);
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--signal);
+  }
+
+  .api__code {
+    margin: 0;
+    padding: 1rem 0.95rem 1.15rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono);
+    line-height: 1.7;
+    color: var(--on-ink-70);
+    tab-size: 2;
+  }
+
+  @media (max-width: 1000px) {
+    .api {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* ── Missing ────────────────────────────────────────────────────────── */
+  .miss__title {
+    margin-top: 1rem;
+    font-size: var(--t-h3);
+  }
+
+  .miss__text {
+    margin-top: 1rem;
+    margin-bottom: 1.25rem;
+    font-size: var(--t-lead);
+    line-height: 1.62;
+    color: var(--ink-70);
+  }
+</style>

@@ -1,0 +1,254 @@
+---
+import LegalLayout from "../layouts/LegalLayout.astro";
+import { site, contact } from "../lib/site";
+
+const toc = [
+  { id: "agreement", label: "The agreement" },
+  { id: "account", label: "Your workspace and seats" },
+  { id: "acceptable-use", label: "Acceptable use" },
+  { id: "whatsapp", label: "WhatsApp platform rules" },
+  { id: "fees", label: "Fees, billing and changes" },
+  { id: "data", label: "Who owns what" },
+  { id: "availability", label: "Availability and support" },
+  { id: "liability", label: "Warranties and liability" },
+  { id: "termination", label: "Ending the agreement" },
+  { id: "law", label: "Governing law and notices" },
+] as const;
+
+const summary = [
+  "Pay per seat per month in USD. Cancel whenever you like; we do not lock you into a year.",
+  "Your data stays yours, and you can take all of it with you on the way out.",
+  "No bulk unsolicited messaging. It breaks WhatsApp's rules, gets your number banned, and we will not help you do it.",
+  "We are pre-seed and say so: no formal uptime SLA below the Scale plan, and our liability is capped at what you paid us.",
+  "If we change these terms in a way that matters, you get 30 days' notice and can walk away.",
+] as const;
+---
+
+<LegalLayout
+  title="Terms of Service"
+  description="The agreement between your business and Ainnect: seats and billing in USD, acceptable use, WhatsApp platform rules, data ownership, and how either side ends it."
+  kicker="Legal"
+  heading="Terms of Service"
+  lead="A short contract, written in the language we would use on the phone. No clause here is designed to be discovered late."
+  updated="1 September 2026"
+  toc={toc}
+  summary={summary}
+>
+  <h2 id="agreement">1. The agreement</h2>
+  <p>
+    These terms are the agreement between {site.legalName} ("{site.name}", "we") — the Indonesian
+    company that operates {site.name} — and the organisation that opens a workspace ("you"). They
+    take effect when your workspace is created and apply for as long as it exists.
+  </p>
+  <p>
+    If we have signed a separate order form or master agreement with you, that document wins wherever
+    the two disagree. Our <a href="/privacy">Privacy Policy</a> is part of these terms.
+  </p>
+  <p>
+    Whoever accepts these terms must be authorised to bind your organisation. Because access to {site
+      .name} starts with a call rather than a signup form, we will have established that before you
+    have a workspace at all.
+  </p>
+
+  <h2 id="account">2. Your workspace and seats</h2>
+  <ul>
+    <li>
+      <strong>A seat is one person.</strong> Sharing one login across a team is not permitted — it
+      destroys the audit trail, which is half of what you are paying for. Add and remove seats as your
+      team changes.
+    </li>
+    <li>
+      <strong>You are responsible for your seats.</strong> Keep credentials secret, remove people who
+      leave, and use the role controls we give you. Actions taken with valid credentials are treated
+      as yours.
+    </li>
+    <li>
+      <strong>Tell us about compromise quickly.</strong> If you think a login is compromised, write to
+      <a href={`mailto:${contact.supportEmail}`}>{contact.supportEmail}</a> and we will help you lock
+      it down.
+    </li>
+    <li>
+      <strong>You must own the WhatsApp number you connect,</strong> or be authorised by whoever does.
+    </li>
+    <li><strong>Minimum age is 18,</strong> and the service is for business use, not personal use.</li>
+  </ul>
+
+  <h2 id="acceptable-use">3. Acceptable use</h2>
+  <p>You agree not to use {site.name} to:</p>
+  <ul>
+    <li>send unsolicited bulk messages, or any message a recipient has opted out of receiving;</li>
+    <li>run fraud, phishing, impersonation, or anything designed to deceive the person reading it;</li>
+    <li>market goods or services that are illegal where your customer is;</li>
+    <li>upload malware, or attempt to breach, probe or overload our infrastructure;</li>
+    <li>reverse engineer the service, resell it, or rebuild it as a competing product;</li>
+    <li>
+      present AI-generated replies as human when a customer directly asks whether they are talking to
+      a machine. Answer honestly; the product is built to let you.
+    </li>
+  </ul>
+  <p>
+    We enforce this. If use is causing active harm — to your customers, to another workspace, or to
+    the platform — we may suspend the offending capability immediately and explain afterwards. For
+    anything less urgent you get notice and a chance to fix it first.
+  </p>
+
+  <h2 id="whatsapp">4. WhatsApp platform rules</h2>
+  <p>
+    {site.name} sits on top of the WhatsApp Business Platform, and Meta's policies apply to your
+    messages whether or not you have read them. In practice that means:
+  </p>
+  <ul>
+    <li>
+      <strong>Template messages need approval,</strong> and approval is Meta's decision, not ours. We
+      will tell you why a template was rejected if we know.
+    </li>
+    <li>
+      <strong>Outside the 24-hour service window,</strong> you can only reach a customer with an
+      approved template. This is a platform rule; no tool can route around it, and any vendor claiming
+      otherwise is describing a policy violation.
+    </li>
+    <li>
+      <strong>Quality rating and messaging limits are set by Meta</strong> based on how your
+      recipients react. Bad practice lowers your rating and can get your number restricted or banned
+      permanently.
+    </li>
+    <li>
+      <strong>Conversation-based charges are Meta's,</strong> not ours. Where they apply, they are
+      billed by the platform separately from your {site.name} subscription.
+    </li>
+  </ul>
+  <p>
+    If Meta suspends your number for something you did, we will help you understand it and appeal, but
+    we cannot reverse it and we do not refund the subscription for that period.
+  </p>
+
+  <h2 id="fees">5. Fees, billing and changes</h2>
+  <ul>
+    <li>
+      <strong>Priced per seat, per month, in USD.</strong> Annual billing is charged up front at the
+      lower rate; monthly billing renews on the same day each month.
+    </li>
+    <li>
+      <strong>Adding a seat</strong> is prorated to the rest of the period. <strong
+        >Removing a seat</strong
+      > takes effect at the next renewal — we do not issue partial refunds for seats you stop using.
+    </li>
+    <li>
+      <strong>Voice minutes for the AI agent</strong> are the only usage-based item, billed monthly in
+      arrears. Everything else is a fixed subscription. Meta's conversation charges reach you through
+      Meta.
+    </li>
+    <li>
+      <strong>Taxes</strong> — Indonesian VAT and any withholding required by law are added or
+      withheld as applicable.
+    </li>
+    <li>
+      <strong>Late payment.</strong> If an invoice is 14 days overdue we will chase you like humans
+      first. After 30 days we may suspend the workspace. We do not delete data for non-payment inside
+      the retention window described in the Privacy Policy.
+    </li>
+    <li>
+      <strong>Price changes</strong> get 30 days' written notice and never take effect mid-term.
+      Design-partner and founding rates are locked for as long as the workspace stays active — that
+      promise survives any general price rise.
+    </li>
+  </ul>
+
+  <h2 id="data">6. Who owns what</h2>
+  <p>
+    <strong>Your data is yours.</strong> Contacts, conversations, media, notes, scores, reports —
+    everything your team and your customers put in. You grant us only the licence we need to run the
+    service for you, and it ends when the agreement does.
+  </p>
+  <p>
+    <strong>The software is ours.</strong> These terms give you the right to use {site.name}, not to
+    own any part of it. Feedback you give us we may use freely to improve the product, without owing
+    you anything for it — and without attaching your name to it.
+  </p>
+  <p>
+    <strong>Export is unconditional.</strong> Full CSV and JSON export is available from the interface
+    at any time, including while an invoice is disputed. We will never hold your data hostage to close
+    a commercial argument.
+  </p>
+
+  <h2 id="availability">7. Availability and support</h2>
+  <p>
+    We aim for 99.9% monthly uptime and we publish incidents honestly rather than quietly. Being
+    straight with you: <strong
+      >a contractual uptime SLA with service credits is available on the Scale plan only.</strong
+    > On Starter and Growth, that target is a commitment of effort, not a term you can enforce.
+  </p>
+  <p>
+    Support runs {contact.hours}, with a first response typically {contact.responseTime.toLowerCase()}.
+    Scale customers get a shared channel with a named engineer. Planned maintenance is announced at
+    least 48 hours ahead and scheduled outside Indonesian business hours where we can.
+  </p>
+  <p>
+    Parts of the service depend on third parties — WhatsApp, our AI provider, our cloud host. When one
+    of them has an outage, we tell you what is broken and what we are doing. We do not take
+    responsibility for their uptime, and no honest vendor would.
+  </p>
+
+  <h2 id="liability">8. Warranties and liability</h2>
+  <p>
+    We provide the service with reasonable skill and care. Beyond that, and to the extent the law
+    allows, it is provided "as is": we do not warrant that it will be uninterrupted, error-free, or
+    that AI output will always be correct.
+  </p>
+  <p>
+    <strong>AI replies are drafts your business is responsible for.</strong> The agent can be wrong. Keep
+    a human in the loop for anything that commits you — prices, legal statements, medical or financial
+    advice — and use the escalation rules for exactly that purpose.
+  </p>
+  <p>
+    Neither side is liable for indirect, incidental or consequential loss, or for lost profits, revenue
+    or goodwill. Our total liability for any claim is capped at the fees you paid us in the
+    <strong>12 months</strong> before the claim arose. Nothing here limits liability for death or
+    personal injury caused by negligence, for fraud, or for anything else that cannot lawfully be
+    limited.
+  </p>
+  <p>
+    You indemnify us against claims arising from your content or your use of the service in breach of
+    section 3 or 4 — most obviously, a claim from someone you messaged without permission.
+  </p>
+
+  <h2 id="termination">9. Ending the agreement</h2>
+  <ul>
+    <li>
+      <strong>You can cancel at any time</strong> from the workspace or by emailing us. Monthly plans
+      stop at the end of the current period. Annual plans run to the end of the term you paid for; we
+      do not refund the unused part, and we will say so plainly before you choose annual.
+    </li>
+    <li>
+      <strong>We can end it</strong> with 30 days' notice, or immediately if you materially breach
+      these terms and do not fix it within 14 days of being told.
+    </li>
+    <li>
+      <strong>If we ever shut down the product,</strong> you get at least 90 days' notice, a full
+      export, and a pro-rata refund of anything you prepaid. We would rather write that down now than
+      improvise it later.
+    </li>
+    <li>
+      <strong>On termination:</strong> access ends, export stays available for 30 days, and we delete
+      production data 60 days after cancellation as described in the
+      <a href="/privacy#retention">Privacy Policy</a>.
+    </li>
+  </ul>
+
+  <h2 id="law">10. Governing law and notices</h2>
+  <p>
+    These terms are governed by the laws of the Republic of Indonesia. Disputes go to the courts of
+    South Jakarta — after a genuine attempt to sort it out on a call, which has worked every time so
+    far.
+  </p>
+  <p>
+    We may update these terms as the product changes. Material changes come with 30 days' notice by
+    email to workspace admins and a new date at the top of this page; if a change is unacceptable to
+    you, you may cancel before it takes effect and we will refund the unused prepaid portion.
+  </p>
+  <p>
+    Notices to us go to <a href={`mailto:${contact.privacyEmail}`}>{contact.privacyEmail}</a> or by
+    post to {site.legalName}, {contact.officeLines.join(", ")}. Notices to you go to your workspace
+    admins. If a clause here turns out to be unenforceable, the rest stands.
+  </p>
+</LegalLayout>

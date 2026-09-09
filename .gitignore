@@ -1,0 +1,18 @@
+dist/
+.astro/
+node_modules/
+.env
+.env.*
+!.env.example
+
+node_modules_incomplete/
+
+# Host CLI state — per-machine, never shared. See README for both deploy paths.
+.vercel/
+.wrangler/
+
+.playwright-mcp/
+dev.log
+dev-err.log
+preview.log
+preview-err.log

@@ -1,0 +1,65 @@
+---
+/**
+ * Ainnect mark: a plate with an "A" whose crossbar runs on past the stem —
+ * a connection line — and a live-signal dot in the corner.
+ */
+interface Props {
+  /** `mark` drops the wordmark, for tight spaces and favicons. */
+  variant?: "full" | "mark";
+  /** `light` is for use on the ink background. */
+  tone?: "brand" | "light";
+  size?: number;
+  class?: string;
+}
+
+const { variant = "full", tone = "brand", size = 30, class: className } = Astro.props;
+
+const plate = tone === "light" ? "var(--on-ink)" : "var(--brand)";
+const glyph = tone === "light" ? "var(--ink)" : "#ffffff";
+const led = tone === "light" ? "var(--brand)" : "var(--signal)";
+---
+
+<span class:list={["logo", className]} data-variant={variant}>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 32 32"
+    aria-hidden="true"
+    focusable="false"
+    class="logo__mark"
+  >
+    <rect width="32" height="32" rx="8.5" fill={plate} />
+    <path
+      d="M9.4 23.6 16 8.4l6.6 15.2"
+      fill="none"
+      stroke={glyph}
+      stroke-width="2.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path d="M12.3 18.6h9" fill="none" stroke={glyph} stroke-width="2.6" stroke-linecap="round" />
+    <circle cx="25.4" cy="6.6" r="2.1" fill={led} />
+  </svg>
+  {variant === "full" && <span class="logo__word">Ainnect</span>}
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .logo__mark {
+    border-radius: 8.5px;
+    box-shadow: 0 1px 2px rgba(10, 20, 15, 0.14);
+  }
+
+  .logo__word {
+    font-size: 1.185rem;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    padding-bottom: 1px;
+  }
+</style>

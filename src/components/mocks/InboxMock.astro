@@ -1,0 +1,421 @@
+---
+import Icon from "../Icon.astro";
+import MockFrame from "./MockFrame.astro";
+
+const conversations = [
+  {
+    initials: "RS",
+    name: "Ratna Salim",
+    time: "2m",
+    snippet: "Do you still have size 42 in black?",
+    owner: null,
+    unread: 2,
+    active: true,
+  },
+  {
+    initials: "YP",
+    name: "Yusuf Pradana",
+    time: "14m",
+    snippet: "Transfer sent — here is the receipt.",
+    owner: "Andi",
+    unread: 0,
+    active: false,
+  },
+  {
+    initials: "DM",
+    name: "Dapur Melati",
+    time: "1h",
+    snippet: "Can we get the same bundle for 40 boxes?",
+    owner: "Sari",
+    unread: 0,
+    active: false,
+  },
+] as const;
+
+const messages = [
+  { dir: "in", text: "Do you still have size 42 in black?", time: "09:41" },
+  { dir: "out", text: "Yes — two pairs left. Want me to hold one for you?", time: "09:41" },
+  { dir: "in", text: "Please hold it. How much with delivery to Bekasi?", time: "09:42" },
+] as const;
+---
+
+<MockFrame
+  alt="Ainnect shared inbox: one WhatsApp number, three conversations, each with an owner and an AI-drafted reply waiting for approval."
+  label="Inbox / Team number"
+  status="3 open"
+  flush
+>
+  <div class="im">
+    <div class="im__list">
+      <div class="im__listbar">
+        <span>Unassigned first</span>
+        <Icon name="filter" size={14} />
+      </div>
+
+      {
+        conversations.map((item) => (
+          <div class="im__row" data-active={item.active ? "" : undefined}>
+            <span class="im__av">{item.initials}</span>
+            <div class="im__rowbody">
+              <div class="im__rowtop">
+                <strong>{item.name}</strong>
+                <span class="im__time">{item.time}</span>
+              </div>
+              <p class="im__snip">{item.snippet}</p>
+              <div class="im__meta">
+                {item.owner ? (
+                  <span class="im__owner">
+                    <Icon name="users" size={11} />
+                    {item.owner}
+                  </span>
+                ) : (
+                  <span class="im__owner im__owner--open">
+                    <Icon name="alert" size={11} />
+                    Unassigned
+                  </span>
+                )}
+                {item.unread > 0 && <span class="im__unread">{item.unread}</span>}
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="im__thread">
+      <div class="im__thhead">
+        <div>
+          <strong>Ratna Salim</strong>
+          <span class="im__dial">+62 812 •••• 4471</span>
+        </div>
+        <span class="im__score">
+          <Icon name="target" size={12} />
+          87 · Hot
+        </span>
+      </div>
+
+      <div class="im__msgs">
+        {
+          messages.map((message) => (
+            <div class="im__msg" data-dir={message.dir}>
+              <p>{message.text}</p>
+              <span class="im__stamp">{message.time}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="im__draft">
+        <p class="im__drafthead">
+          <Icon name="sparkle" size={13} />
+          Drafted by the Ainnect agent
+        </p>
+        <p class="im__drafttext">
+          Rp 549.000 including delivery to Bekasi, arrives Thursday. Shall I reserve it under your
+          name?
+        </p>
+        <div class="im__actions">
+          <span class="im__btn" data-primary>Send</span>
+          <span class="im__btn">Edit</span>
+          <span class="im__hint">Never sends without approval</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</MockFrame>
+
+<style>
+  .im {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    font-size: var(--t-xs);
+  }
+
+  /* --- Conversation list -------------------------------------------------- */
+  .im__list {
+    border-right: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--paper) 55%, var(--surface));
+  }
+
+  .im__listbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .im__listbar svg {
+    color: var(--ink-40);
+  }
+
+  .im__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.55rem;
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .im__row[data-active] {
+    background: var(--surface);
+    box-shadow: inset 3px 0 0 var(--brand);
+  }
+
+  .im__av {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-2);
+    background: var(--ink);
+    color: var(--on-ink);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.03em;
+  }
+
+  .im__row[data-active] .im__av {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .im__rowtop {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .im__rowtop strong {
+    font-size: var(--t-xs);
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+
+  .im__time {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    color: var(--ink-40);
+  }
+
+  .im__snip {
+    margin-top: 0.15rem;
+    color: var(--ink-55);
+    line-height: 1.45;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .im__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.45rem;
+  }
+
+  .im__owner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.12rem 0.4rem;
+    border-radius: var(--r-1);
+    background: var(--paper-3);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    color: var(--ink-70);
+  }
+
+  .im__owner--open {
+    background: var(--amber-tint);
+    color: var(--amber-ink);
+  }
+
+  .im__unread {
+    display: grid;
+    place-items: center;
+    min-width: 17px;
+    height: 17px;
+    margin-left: auto;
+    padding-inline: 0.25rem;
+    border-radius: var(--r-pill);
+    background: var(--brand);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+  }
+
+  /* --- Thread ------------------------------------------------------------- */
+  .im__thread {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .im__thhead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .im__thhead strong {
+    display: block;
+    font-size: var(--t-sm);
+    letter-spacing: -0.02em;
+  }
+
+  .im__dial {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    color: var(--ink-55);
+  }
+
+  .im__score {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.22rem 0.5rem;
+    border: 1px solid var(--brand-tint-2);
+    border-radius: var(--r-pill);
+    background: var(--brand-tint);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.05em;
+    color: var(--brand);
+    white-space: nowrap;
+  }
+
+  .im__msgs {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .im__msg {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.45rem;
+    max-width: 88%;
+    padding: 0.5rem 0.6rem;
+    border-radius: var(--r-2);
+    line-height: 1.5;
+  }
+
+  .im__msg[data-dir="in"] {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-bottom-left-radius: var(--r-1);
+    color: var(--ink-2);
+  }
+
+  .im__msg[data-dir="out"] {
+    margin-left: auto;
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    border-bottom-right-radius: var(--r-1);
+    color: var(--ink);
+  }
+
+  .im__stamp {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    color: var(--ink-40);
+  }
+
+  /* --- AI draft ----------------------------------------------------------- */
+  .im__draft {
+    padding: 0.7rem;
+    border: 1px dashed var(--rule-3);
+    border-radius: var(--r-2);
+    background: color-mix(in srgb, var(--paper) 70%, var(--surface));
+  }
+
+  .im__drafthead {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .im__drafthead svg {
+    color: var(--brand);
+  }
+
+  .im__drafttext {
+    margin-top: 0.4rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  .im__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+
+  .im__btn {
+    padding: 0.28rem 0.6rem;
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-1);
+    background: var(--surface);
+    font-weight: 700;
+    font-size: var(--t-mono);
+    color: var(--ink-2);
+  }
+
+  .im__btn[data-primary] {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+  }
+
+  .im__hint {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    color: var(--ink-40);
+  }
+
+  /* Two panes side by side need ~28rem of mock; below that each one is around
+     200px and the conversation stops being legible. Keyed to the mock's own
+     width so a narrow desktop column stacks too. */
+  @container mock (max-width: 28rem) {
+    .im {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .im__list {
+      border-right: 0;
+    }
+
+    /* Two rows are enough context once the columns stack. */
+    .im__row:nth-child(4) {
+      display: none;
+    }
+
+    .im__hint {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>

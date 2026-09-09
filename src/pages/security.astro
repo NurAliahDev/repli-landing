@@ -1,0 +1,359 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import SectionHead from "../components/SectionHead.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import { securityGroups, securityHonesty } from "../lib/platform";
+import { contact } from "../lib/site";
+import { breadcrumbNode } from "../lib/schema";
+
+/* Vendor reviews always want these four answers before anything else. */
+const summary = [
+  { label: "Hosting region", value: "Singapore", note: "Jakarta on Scale" },
+  { label: "Encryption", value: "TLS 1.3 / AES-256", note: "in transit and at rest" },
+  { label: "Model training", value: "Never shared", note: "your data, your model" },
+  { label: "Certification", value: "Not yet", note: "SOC 2 Type I scheduled" },
+] as const;
+---
+
+<BaseLayout
+  title="Security & privacy"
+  description="How Ainnect protects WhatsApp conversation data: encryption, regional hosting, per-workspace isolation, audit logs — and the certifications we lack today."
+  schema={[breadcrumbNode([], "Security", "/security")]}
+>
+  <PageHero
+    kicker="Security & privacy"
+    title="Your customer conversations. Written down like an obligation."
+    current="Security"
+    lead="This page is what we would want to read if we were the ones handing over an inbox. Claims we can defend, and the gaps stated in the same type size."
+    note={securityHonesty.contact}
+    primary={{ label: "Request a DPA", href: `mailto:${contact.privacyEmail}` }}
+    secondary={{ label: "Ask a security question", href: "/contact" }}
+  >
+    <dl class="sumrail">
+      {
+        summary.map((entry) => (
+          <div class="sumrail__cell">
+            <dt class="sumrail__label mono">{entry.label}</dt>
+            <dd class="sumrail__value">{entry.value}</dd>
+            <dd class="sumrail__note mono">{entry.note}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </PageHero>
+
+  <!-- ── The four groups ──────────────────────────────────────────────── -->
+  {
+    securityGroups.map((group, index) => (
+      <section
+        class:list={["section-sm sg", index % 2 === 1 && "bg-surface"]}
+        aria-labelledby={`sg-${index}`}
+      >
+        <div class="wrap sg__grid">
+          <header class="sg__head">
+            <p class="stamp">
+              <span class="stamp__num">{String(index + 1).padStart(2, "0")}</span>
+              Section
+            </p>
+            <h2 id={`sg-${index}`} class="sg__title">
+              <span class="sg__icon">
+                <Icon name={group.icon} size={19} />
+              </span>
+              {group.heading}
+            </h2>
+          </header>
+
+          <ul class="sg__list">
+            {group.items.map((item) => (
+              <li>
+                <h3 class="sg__itemtitle">{item.title}</h3>
+                <p class="sg__itemtext">{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- ── The honest part ──────────────────────────────────────────────── -->
+  <section class="section on-ink" aria-labelledby="honest-title">
+    <div class="wrap wrap-narrow honest">
+      <p class="stamp"><span class="stamp__num">05</span> Full disclosure</p>
+      <h2 id="honest-title" class="honest__title">{securityHonesty.heading}</h2>
+      <p class="honest__body">{securityHonesty.body}</p>
+
+      <div class="honest__foot">
+        <p class="honest__contact">
+          <Icon name="mail" size={15} />
+          {securityHonesty.contact}
+        </p>
+        <a class="btn btn--light" href={`mailto:${contact.privacyEmail}`}>
+          {contact.privacyEmail}
+          <Icon name="arrowRight" size={16} />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── For procurement ─────────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="proc-title">
+    <div class="wrap">
+      <SectionHead
+        id="proc-title"
+        num="06"
+        kicker="For procurement"
+        title="What we can send you, and how fast."
+        lead="No sales gate on any of it. Ask and it arrives — some items need an NDA, which we will say up front."
+      />
+
+      <ul class="docs">
+        <li class="card card--flat">
+          <span class="card__icon">
+            <Icon name="doc" size={19} />
+          </span>
+          <h3 class="card__title">Data processing agreement</h3>
+          <p class="card__text">
+            Our standard DPA with sub-processor list, transfer terms and deletion timelines. Signed
+            within two business days.
+          </p>
+          <p class="docs__meta mono">No NDA needed</p>
+        </li>
+        <li class="card card--flat">
+          <span class="card__icon">
+            <Icon name="shield" size={19} />
+          </span>
+          <h3 class="card__title">Penetration test summary</h3>
+          <p class="card__text">
+            The letter from our most recent independent test, with severity counts and remediation
+            status.
+          </p>
+          <p class="docs__meta mono">Under NDA</p>
+        </li>
+        <li class="card card--flat">
+          <span class="card__icon">
+            <Icon name="check" size={19} />
+          </span>
+          <h3 class="card__title">Security questionnaire</h3>
+          <p class="card__text">
+            Send yours in whatever format your team uses. A founder fills it in — no outsourced
+            compliance desk.
+          </p>
+          <p class="docs__meta mono">Typically 3 days</p>
+        </li>
+        <li class="card card--flat">
+          <span class="card__icon">
+            <Icon name="upload" size={19} />
+          </span>
+          <h3 class="card__title">Export &amp; exit plan</h3>
+          <p class="card__text">
+            Full CSV and JSON export of contacts, conversations, media and scores, plus written
+            confirmation once we have deleted our copy.
+          </p>
+          <p class="docs__meta mono">Self-serve any time</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand
+    kicker="Next step"
+    title="Bring your security review to the first call."
+    text="We would rather answer the hard questions before you sign than after. Send the questionnaire ahead of time and we will work through it live."
+    secondary={{ label: "Read the privacy policy", href: "/privacy" }}
+  />
+</BaseLayout>
+
+<style>
+  /* ── Summary rail in the hero ───────────────────────────────────────── */
+  .sumrail {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    border-block: 1px solid var(--rule-2);
+  }
+
+  .sumrail__cell {
+    padding: 1.1rem 1.25rem;
+    border-left: 1px solid var(--rule-2);
+  }
+
+  .sumrail__cell:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .sumrail__label {
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .sumrail__value {
+    margin-top: 0.35rem;
+    font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.15;
+  }
+
+  .sumrail__note {
+    margin-top: 0.2rem;
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.05em;
+    color: var(--ink-55);
+  }
+
+  @media (max-width: 780px) {
+    .sumrail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sumrail__cell {
+      padding: 1rem 1rem 1rem 0;
+    }
+
+    .sumrail__cell:nth-child(odd) {
+      border-left: 0;
+      padding-left: 0;
+    }
+
+    .sumrail__cell:nth-child(even) {
+      padding-left: 1rem;
+    }
+  }
+
+  /* ── Security groups ────────────────────────────────────────────────── */
+  .sg__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .sg__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .sg__title {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 0.85rem;
+    font-size: var(--t-h4);
+  }
+
+  .sg__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .sg__list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.75rem;
+  }
+
+  .sg__list li {
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sg__list li:nth-child(-n + 2) {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .sg__itemtitle {
+    font-size: var(--t-body);
+    letter-spacing: -0.025em;
+  }
+
+  .sg__itemtext {
+    margin-top: 0.4rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  @media (max-width: 1000px) {
+    .sg__grid,
+    .sg__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sg__head {
+      position: static;
+    }
+
+    .sg__list li:nth-child(2) {
+      border-top: 1px solid var(--rule);
+      padding-top: 1.1rem;
+    }
+  }
+
+  /* ── Honest block ───────────────────────────────────────────────────── */
+  .honest__title {
+    margin-top: 1rem;
+    font-size: var(--t-h3);
+  }
+
+  .honest__body {
+    margin-top: 1.1rem;
+    font-size: var(--t-lead);
+    line-height: 1.65;
+    color: var(--on-ink-70);
+  }
+
+  .honest__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule-ink-2);
+  }
+
+  .honest__contact {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--t-sm);
+    color: var(--on-ink);
+  }
+
+  .honest__contact svg {
+    color: var(--signal);
+  }
+
+  /* ── Procurement docs ───────────────────────────────────────────────── */
+  .docs {
+    margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  .docs__meta {
+    margin-top: 0.9rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand);
+  }
+</style>

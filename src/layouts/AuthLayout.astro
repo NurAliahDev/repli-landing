@@ -1,0 +1,319 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Logo from "../components/Logo.astro";
+import Icon from "../components/Icon.astro";
+import { contact, cta } from "../lib/site";
+import { testimonials } from "../lib/content";
+
+interface Props {
+  title: string;
+  description: string;
+  kicker: string;
+  heading: string;
+  lead?: string;
+  noindex?: boolean;
+}
+
+const { title, description, kicker, heading, lead, noindex = false } = Astro.props;
+
+const proof = testimonials[0];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  noindex={noindex}
+  chrome="bare"
+  bodyClass="auth-body"
+>
+  <a class="skip-link" href="#auth-main">Skip to the form</a>
+
+  <div class="auth">
+    <aside class="auth__side on-ink blueprint">
+      <a href="/" class="auth__brand" aria-label="Ainnect home">
+        <Logo tone="light" size={30} />
+      </a>
+
+      {
+        proof && (
+          <figure class="auth__proof">
+            <Icon name="quote" size={26} class="auth__mark" />
+            <blockquote>{proof.quote}</blockquote>
+            <figcaption>
+              <strong>{proof.company}</strong>
+              <span>{proof.role}</span>
+            </figcaption>
+          </figure>
+        )
+      }
+
+      <p class="auth__invite">
+        <Icon name="key" size={15} />
+        <span>{cta.note}</span>
+      </p>
+    </aside>
+
+    <main class="auth__main" id="auth-main">
+      <header class="auth__top">
+        <a href="/" class="auth__brand auth__brand--mobile" aria-label="Ainnect home">
+          <Logo size={26} />
+        </a>
+        <a href="/" class="auth__back">
+          <Icon name="chevronRight" size={14} class="auth__back-icon" />
+          Back to site
+        </a>
+      </header>
+
+      <div class="auth__panel">
+        <p class="stamp">{kicker}</p>
+        <h1 class="auth__title">{heading}</h1>
+        {lead && <p class="auth__lead">{lead}</p>}
+        <slot />
+      </div>
+
+      <footer class="auth__foot">
+        <p>
+          No workspace yet? <a href="/contact">Contact us</a> — we set every account up on a
+          short call.
+        </p>
+        <p class="auth__help mono">
+          <a href={`mailto:${contact.supportEmail}`}>{contact.supportEmail}</a>
+          <span aria-hidden="true">·</span>
+          <a href={`mailto:${contact.salesEmail}`}>{contact.salesEmail}</a>
+        </p>
+      </footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .auth {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  /* --- Left rail ---------------------------------------------------------- */
+  .auth__side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3rem;
+    padding: clamp(1.75rem, 1rem + 2.5vw, 3.25rem);
+  }
+
+  .auth__brand {
+    display: inline-flex;
+    width: fit-content;
+  }
+
+  .auth__proof {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 34ch;
+  }
+
+  .auth__mark {
+    color: var(--signal);
+  }
+
+  .auth__proof blockquote {
+    font-size: clamp(1.2rem, 1rem + 0.65vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.42;
+    letter-spacing: var(--track-tight);
+    color: var(--on-ink);
+  }
+
+  .auth__proof figcaption {
+    display: grid;
+    gap: 0.15rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule-ink-2);
+    line-height: 1.4;
+  }
+
+  .auth__proof figcaption strong {
+    font-size: var(--t-sm);
+    letter-spacing: -0.02em;
+    color: var(--on-ink);
+  }
+
+  .auth__proof figcaption span {
+    font-size: var(--t-xs);
+    color: var(--on-ink-70);
+  }
+
+  .auth__invite {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+    align-items: start;
+    max-width: 42ch;
+    font-size: var(--t-xs);
+    line-height: 1.6;
+    color: var(--on-ink-70);
+  }
+
+  .auth__invite svg {
+    margin-top: 0.15rem;
+    color: var(--signal);
+  }
+
+  /* --- Right panel -------------------------------------------------------- */
+  .auth__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.75rem) clamp(1.25rem, 0.5rem + 3vw, 3.5rem);
+    background: var(--paper);
+  }
+
+  .auth__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .auth__brand--mobile {
+    display: none;
+  }
+
+  .auth__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .auth__back:hover {
+    color: var(--ink);
+  }
+
+  .auth__back-icon {
+    transform: rotate(180deg);
+    transition: transform var(--fast) var(--ease);
+  }
+
+  .auth__back:hover .auth__back-icon {
+    transform: rotate(180deg) translateX(2px);
+  }
+
+  .auth__panel {
+    width: 100%;
+    max-width: 26.5rem;
+    margin: auto 0;
+  }
+
+  .auth__title {
+    margin-top: 0.65rem;
+    font-size: var(--t-h2);
+    letter-spacing: var(--track-display);
+    text-wrap: balance;
+  }
+
+  .auth__lead {
+    margin-top: 0.8rem;
+    font-size: var(--t-body);
+    line-height: 1.65;
+    color: var(--ink-70);
+    max-width: 40ch;
+  }
+
+  /* Slotted forms sit a full step below the heading block. */
+  .auth__panel :global(form) {
+    margin-top: 2rem;
+  }
+
+  .auth__foot {
+    display: grid;
+    gap: 0.55rem;
+    max-width: 26.5rem;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--t-sm);
+    color: var(--ink-70);
+  }
+
+  .auth__foot a {
+    font-weight: 700;
+    color: var(--brand);
+  }
+
+  .auth__foot a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .auth__help {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+  }
+
+  .auth__help a {
+    font-weight: 400;
+    color: var(--ink-55);
+  }
+
+  .auth__help span {
+    color: var(--rule-3);
+  }
+
+  @media (max-width: 1000px) {
+    .auth {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* The rail becomes a closing note under the form. */
+    .auth__side {
+      order: 2;
+      gap: 2rem;
+      padding-block: clamp(2rem, 1.5rem + 2vw, 3rem);
+    }
+
+    .auth__side .auth__brand {
+      display: none;
+    }
+
+    .auth__main {
+      order: 1;
+      min-height: 88vh;
+      min-height: 88svh;
+    }
+
+    .auth__brand--mobile {
+      display: inline-flex;
+    }
+
+    .auth__panel,
+    .auth__foot {
+      max-width: 30rem;
+    }
+  }
+
+  /* Touch sizing — see tokens.css. Each of these is a lone link in a row of its
+     own, so they take the 44px. The header pair stays on one line because
+     .auth__back is pushed right by margin-left:auto. Deliberately excluded: the
+     "Contact us" link sits inside a sentence, where WCAG 2.5.8 exempts it —
+     growing it would break the paragraph it reads as part of. */
+  @media (pointer: coarse) {
+    .auth__brand,
+    .auth__back,
+    .auth__help a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+</style>

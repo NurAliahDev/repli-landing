@@ -1,0 +1,92 @@
+---
+import Logo from "../Logo.astro";
+
+interface Props {
+  /** One sentence describing the screen for assistive tech. */
+  alt: string;
+  /** Mono path shown in the title bar, e.g. "Inbox / Unassigned". */
+  label: string;
+  status?: string;
+  /** Removes body padding for edge-to-edge lists and charts. */
+  flush?: boolean;
+  class?: string;
+}
+
+const { alt, label, status = "Live", flush = false, class: className } = Astro.props;
+---
+
+<figure class:list={["mock", className]} role="img" aria-label={alt}>
+  <div class="mock__bar">
+    <Logo variant="mark" size={19} />
+    <span class="mock__label">{label}</span>
+    <span class="mock__status">
+      <span class="dot dot--pulse"></span>
+      {status}
+    </span>
+  </div>
+
+  <div class:list={["mock__body", flush && "mock__body--flush"]}>
+    <slot />
+  </div>
+</figure>
+
+<style>
+  /* A query container, so the screens inside can lay themselves out against the
+     column they were given rather than the viewport. A mock in the narrow half
+     of a 1024px tablet split is ~415px wide — the same as a phone, and nothing
+     about the viewport says so. See the breakpoint contract in tokens.css. */
+  .mock {
+    container-type: inline-size;
+    container-name: mock;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-3);
+    box-shadow: var(--shadow-2);
+  }
+
+  .mock__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .mock__label {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mock__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-70);
+    white-space: nowrap;
+  }
+
+  .mock__body {
+    padding: clamp(0.9rem, 0.7rem + 0.6vw, 1.25rem);
+  }
+
+  .mock__body--flush {
+    padding: 0;
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+interface Props {
+  items: readonly { title: string; text: string; meta?: string }[];
+  class?: string;
+  /** Forwarded to the <ol>, scope attribute included, so a page can space it. */
+  [key: string]: unknown;
+}
+
+const { items, class: className, ...rest } = Astro.props;
+---
+
+<ol class:list={["steps", className]} {...rest}>
+  {
+    items.map((item, index) => (
+      <li class="steps__item" data-reveal style={`--reveal-delay:${index * 70}ms`}>
+        <div class="steps__body">
+          <div class="steps__head">
+            <h3 class="steps__title">{item.title}</h3>
+            {item.meta && <span class="steps__meta mono">{item.meta}</span>}
+          </div>
+          <p class="steps__text">{item.text}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .steps__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  .steps__title {
+    font-size: var(--t-h4);
+    letter-spacing: -0.028em;
+  }
+
+  .steps__meta {
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    white-space: nowrap;
+  }
+
+  .steps__text {
+    margin-top: 0.5rem;
+    max-width: 52ch;
+    font-size: var(--t-sm);
+    line-height: 1.65;
+    color: var(--ink-70);
+  }
+
+  :global(.on-ink) .steps__meta,
+  :global(.on-ink) .steps__text {
+    color: var(--on-ink-70);
+  }
+</style>

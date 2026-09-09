@@ -1,0 +1,196 @@
+---
+/* Four bands, divided by single rules rather than boxed into cards. The seat
+   count is the graphic here, which is why these entries carry no icon. */
+import Icon from "../Icon.astro";
+import { sizes } from "../../lib/audiences";
+
+/* The three numeric bands count seats; the agency band describes a setup. */
+const unitFor = (band: string): string => (/\d/.test(band) ? "Seats" : "Setup");
+---
+
+<div class="bands">
+  {
+    sizes.map((size) => (
+      <article class="band" id={size.slug}>
+        <span class="band__unit mono">{unitFor(size.band)}</span>
+        <span class="band__figure mono">{size.band}</span>
+
+        <h3 class="band__name">{size.name}</h3>
+        <p class="band__who">{size.who}</p>
+
+        <ul class="band__fit">
+          {size.fit.map((item) => (
+            <li>
+              <span class="band__dash" aria-hidden="true"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <a class="band__plan" href={size.plan.href}>
+          {size.plan.label}
+          <Icon name="arrowRight" size={14} />
+        </a>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .bands {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .band {
+    display: grid;
+    grid-template-rows: auto auto auto auto 1fr auto;
+    padding-inline: clamp(0.9rem, 0.4rem + 1.4vw, 1.75rem);
+    border-left: 1px solid var(--rule);
+  }
+
+  /* Flush with the wrap at both ends so the rules read as column dividers,
+     not as a floating frame. */
+  .band:first-child {
+    padding-inline-start: 0;
+    border-left: 0;
+  }
+
+  .band:last-child {
+    padding-inline-end: 0;
+  }
+
+  /* --- The figure --------------------------------------------------------- */
+
+  .band__unit {
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-40);
+  }
+
+  .band__figure {
+    margin-top: 0.15rem;
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.875rem);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    color: var(--brand);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Body --------------------------------------------------------------- */
+
+  .band__name {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--rule);
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  .band__who {
+    margin-top: 0.5rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-55);
+  }
+
+  .band__fit {
+    display: grid;
+    gap: 0.55rem;
+    margin: 1rem 0 1.5rem;
+    list-style: none;
+  }
+
+  .band__fit li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.55rem;
+    font-size: var(--t-xs);
+    line-height: 1.55;
+    color: var(--ink-70);
+  }
+
+  .band__dash {
+    width: 10px;
+    height: 1px;
+    margin-top: 0.62rem;
+    background: var(--brand);
+  }
+
+  .band__plan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-self: end;
+    justify-self: start;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--ink);
+    border-radius: var(--r-1);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    transition:
+      background var(--fast) var(--ease),
+      color var(--fast) var(--ease);
+  }
+
+  .band__plan:hover {
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+
+  /* --- Narrow ------------------------------------------------------------- */
+
+  @media (max-width: 980px) {
+    .bands {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .band:nth-child(2n + 1) {
+      padding-inline-start: 0;
+      border-left: 0;
+    }
+
+    .band:nth-child(2n) {
+      padding-inline-end: 0;
+    }
+
+    .band:nth-child(n + 3) {
+      margin-top: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+      padding-top: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+      border-top: 1px solid var(--rule);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .bands {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .band {
+      padding-inline: 0;
+      border-left: 0;
+    }
+
+    .band:not(:first-child) {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .band__figure {
+      font-size: 2rem;
+    }
+  }
+
+  @media (pointer: coarse) {
+    .band__plan {
+      min-height: 44px;
+      padding-inline: 1rem;
+    }
+  }
+</style>

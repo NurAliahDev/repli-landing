@@ -1,0 +1,234 @@
+---
+import Icon from "../Icon.astro";
+import MockFrame from "./MockFrame.astro";
+
+const score = 87;
+
+const signals = [
+  { label: "Asked for a price twice", delta: "+24", icon: "cart" },
+  { label: "Replied within 3 minutes", delta: "+18", icon: "clock" },
+  { label: "Mentioned a delivery date", delta: "+15", icon: "calendar" },
+  { label: "Came from the Instagram ad", delta: "+12", icon: "target" },
+  { label: "Quiet for 4 days", delta: "−9", icon: "refresh" },
+] as const;
+
+const bands = [
+  { label: "Cold", at: 0 },
+  { label: "Warm", at: 40 },
+  { label: "Hot", at: 70 },
+] as const;
+---
+
+<MockFrame
+  alt="Lead scoring panel: Ratna Salim scores 87 out of 100 and is marked hot, with the five buying signals that produced the score."
+  label="Leads / Ratna Salim"
+  status="Auto-scored"
+>
+  <div class="sm">
+    <div class="sm__head">
+      <span class="sm__av">RS</span>
+      <div class="sm__who">
+        <strong>Ratna Salim</strong>
+        <span>Retail · first message 6 minutes ago</span>
+      </div>
+      <span class="sm__badge">Hot</span>
+    </div>
+
+    <div class="sm__score">
+      <p class="sm__value">
+        {score}<span class="sm__of">/100</span>
+      </p>
+      <div class="sm__bar" style={`--fill:${score}%`}>
+        <span class="sm__fill"></span>
+        {bands.slice(1).map((band) => <span class="sm__tick" style={`--at:${band.at}%`}></span>)}
+      </div>
+      <div class="sm__bands">
+        {bands.map((band) => <span>{band.label}</span>)}
+      </div>
+    </div>
+
+    <ul class="sm__signals">
+      {
+        signals.map((signal) => (
+          <li>
+            <Icon name={signal.icon} size={13} />
+            <span class="sm__label">{signal.label}</span>
+            <span class="sm__delta" data-down={signal.delta.startsWith("−") ? "" : undefined}>
+              {signal.delta}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="sm__foot">
+      <Icon name="refresh" size={12} />
+      Recalculated 12s ago · routed to Andi (Sales)
+    </p>
+  </div>
+</MockFrame>
+
+<style>
+  .sm {
+    display: grid;
+    gap: 1rem;
+    font-size: var(--t-xs);
+  }
+
+  /* --- Contact ------------------------------------------------------------ */
+  .sm__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sm__av {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-2);
+    background: var(--ink);
+    color: var(--on-ink);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono);
+    letter-spacing: 0.03em;
+  }
+
+  .sm__who {
+    display: grid;
+    gap: 0.1rem;
+    line-height: 1.35;
+  }
+
+  .sm__who strong {
+    font-size: var(--t-sm);
+    letter-spacing: -0.02em;
+  }
+
+  .sm__who span {
+    color: var(--ink-55);
+  }
+
+  .sm__badge {
+    margin-left: auto;
+    padding: 0.25rem 0.55rem;
+    border-radius: var(--r-1);
+    background: var(--brand);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* --- Score bar ---------------------------------------------------------- */
+  .sm__value {
+    font-size: clamp(2.4rem, 2rem + 2vw, 3.1rem);
+    font-weight: 800;
+    letter-spacing: -0.055em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--brand);
+  }
+
+  .sm__of {
+    font-size: 0.32em;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-40);
+    margin-left: 0.15rem;
+  }
+
+  .sm__bar {
+    position: relative;
+    height: 8px;
+    margin-top: 0.7rem;
+    border-radius: var(--r-pill);
+    background: var(--paper-3);
+    overflow: hidden;
+  }
+
+  .sm__fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--fill);
+    border-radius: var(--r-pill);
+    background: linear-gradient(90deg, var(--brand-press), var(--brand));
+  }
+
+  .sm__tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--at);
+    width: 1px;
+    background: var(--surface);
+  }
+
+  .sm__bands {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-40);
+  }
+
+  /* --- Signals ------------------------------------------------------------ */
+  .sm__signals {
+    display: grid;
+    gap: 0;
+    list-style: none;
+  }
+
+  .sm__signals li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sm__signals svg {
+    color: var(--ink-40);
+  }
+
+  .sm__label {
+    color: var(--ink-2);
+    letter-spacing: -0.01em;
+  }
+
+  .sm__delta {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    color: var(--brand);
+  }
+
+  .sm__delta[data-down] {
+    color: var(--clay);
+  }
+
+  .sm__foot {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.05em;
+    color: var(--ink-55);
+  }
+
+  .sm__foot svg {
+    color: var(--ink-40);
+  }
+</style>

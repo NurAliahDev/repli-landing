@@ -1,0 +1,259 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import { footerGroups, site, contact } from "../lib/site";
+import { businessPartners } from "../lib/content";
+
+const year = new Date().getFullYear();
+
+/* Partner marks sit on a paper plate, not straight on the ink. The Meta file we
+   have is the light-background variant: its wordmark is #192830, which lands at
+   1.24:1 against this footer's #0a140f — invisible. Recolouring someone else's
+   trademark to fix that is a guess about their brand rules, so the mark ships
+   untouched on a surface it was drawn for. Height is fixed and the width comes
+   from the measured ink ratio, so a second partner cannot skew the row. */
+const PARTNER_H = 18;
+const partners = businessPartners.map((partner) => ({
+  ...partner,
+  width: Math.round(PARTNER_H * partner.ratio),
+}));
+---
+
+<footer class="site-footer on-ink blueprint">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a href="/" aria-label="Ainnect — home">
+          <Logo tone="light" />
+        </a>
+        <p class="footer__pitch">{site.tagline}.</p>
+
+        <ul class="footer__contact">
+          <li>
+            <a href={`mailto:${contact.salesEmail}`}>
+              <Icon name="mail" size={16} />
+              {contact.salesEmail}
+            </a>
+          </li>
+          <li>
+            <span>
+              <Icon name="pin" size={16} />
+              {contact.officeShort}
+            </span>
+          </li>
+          <li>
+            <span>
+              <Icon name="clock" size={16} />
+              {contact.hours}
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer">
+        {
+          footerGroups.map((group) => (
+            <div class="footer__group">
+              <h2 class="stamp">{group.heading}</h2>
+              <ul>
+                {group.links.map((link) => (
+                  <li>
+                    <a href={link.href}>{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
+
+    <!-- A div, not a <section>: naming a section turns it into a `region`
+         landmark, and one logo does not deserve its own landmark next to the
+         footer's <nav>. The heading still carries it for heading navigation. -->
+    {
+      partners.length > 0 && (
+        <div class="footer__partners">
+          <h2 class="stamp">Business Partners</h2>
+          <ul class="footer__partner-list">
+            {partners.map((partner) => (
+              <li class="footer__partner">
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  width={partner.width}
+                  height={PARTNER_H}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    <div class="footer__bottom">
+      <p class="footer__legal">© {year} {site.name}. All rights reserved.</p>
+      <p class="footer__entity">Operated by {site.legalName}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(3rem, 2rem + 3vw, 4.5rem) 1.75rem;
+  }
+
+  .footer__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+  }
+
+  .footer__pitch {
+    margin-top: 1.1rem;
+    max-width: 22rem;
+    font-size: var(--t-sm);
+    line-height: 1.55;
+    color: var(--on-ink-70);
+  }
+
+  .footer__contact {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 1.5rem;
+    list-style: none;
+  }
+
+  .footer__contact a,
+  .footer__contact span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: var(--t-sm);
+    color: var(--on-ink-70);
+  }
+
+  .footer__contact svg {
+    color: var(--signal);
+  }
+
+  .footer__contact a:hover {
+    color: var(--on-ink);
+  }
+
+  .footer__nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem 1rem;
+  }
+
+  .footer__group ul {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    list-style: none;
+  }
+
+  .footer__group a {
+    font-size: var(--t-sm);
+    color: var(--on-ink-70);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .footer__group a:hover {
+    color: var(--on-ink);
+  }
+
+  /* Carries the big gap that used to belong to .footer__bottom, which now only
+     needs the hairline above the legal line. */
+  .footer__partners {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.75rem;
+    margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule-ink);
+  }
+
+  .footer__partner-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    list-style: none;
+  }
+
+  /* The plate the marks were drawn for. Padding is roughly half the mark height
+     on the short axis and a little more on the long one, which clears the usual
+     brand-kit requirement for space around a logo without measuring each one. */
+  .footer__partner {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--r-2);
+    background: var(--paper);
+  }
+
+  .footer__partner img {
+    display: block;
+    height: 18px;
+    width: auto;
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule-ink);
+  }
+
+  .footer__legal,
+  .footer__entity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--t-xs);
+    color: var(--on-ink-70);
+  }
+
+  /* Two steps rather than one: the brand/sitemap split goes first, which buys
+     the four link columns enough room to survive down to the tablet tier. */
+  @media (max-width: 1000px) {
+    .footer__top {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 780px) {
+    .footer__nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem 1rem;
+    }
+  }
+
+  /* Touch sizing — see the note in tokens.css. The sitemap takes the spacing
+     route rather than 44px rows: nineteen links at 44px each would stretch the
+     footer well past a phone screen. 29px tall on a 37px pitch clears the 24px
+     minimum with room to spare, and the logo — a discrete control, not a list
+     row — gets the full 44px. */
+  @media (pointer: coarse) {
+    .footer__brand > a:first-child {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .footer__group a,
+    .footer__contact a,
+    .footer__contact span {
+      padding-block: 0.35rem;
+    }
+  }
+</style>

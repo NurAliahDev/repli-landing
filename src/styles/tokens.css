@@ -1,0 +1,153 @@
+/* ==========================================================================
+   Ainnect design tokens — "Field Manual"
+   Warm paper stock, deep forest ink, emerald action, amber signal.
+   Every value here is deliberate: contrast ratios for text colours were
+   checked against --paper (#FAF7F2) and --ink (#0A140F).
+   ========================================================================== */
+
+:root {
+  /* --- Paper (light surfaces) ------------------------------------------- */
+  --paper: #faf7f2;
+  --paper-2: #f2ede3;
+  --paper-3: #e9e2d5;
+  --surface: #ffffff;
+
+  /* --- Ink (text + dark surfaces) --------------------------------------- */
+  --ink: #0a140f;
+  --ink-2: #14231b;
+  --ink-3: #1e3227;
+  --ink-70: #4a5b52; /* 6.75:1 on paper — body copy */
+  --ink-55: #5f6e65; /* 5.03:1 on paper — meta, labels */
+  --ink-40: #8a9690; /* 2.64:1 — decorative only, never text */
+
+  /* --- Rules (hairlines) ------------------------------------------------ */
+  --rule: #ded6c8;
+  --rule-2: #cec4b2;
+  --rule-3: #bdb19b;
+
+  /* --- Brand: deep emerald --------------------------------------------- */
+  --brand: #07753f; /* 5.71:1 on paper, 6.1:1 with white text */
+  --brand-hover: #056133;
+  --brand-press: #044c28;
+  --brand-tint: #e7f1e9;
+  --brand-tint-2: #d3e6d8;
+  --signal: #35d07f; /* 9.34:1 on ink — live states, dark sections */
+
+  /* --- Amber: the second voice (AI, highlights) ------------------------ */
+  --amber: #e8853a; /* fills only */
+  --amber-ink: #a8501a; /* 5.13:1 on paper — amber as text */
+  --amber-tint: #fbeee0;
+  --clay: #b4462f; /* negative deltas, charts */
+
+  /* --- On dark ---------------------------------------------------------- */
+  --on-ink: #f4f1ea;
+  --on-ink-70: #a8b5ac; /* 8.8:1 on ink */
+  --on-ink-40: rgba(244, 241, 234, 0.42);
+  --rule-ink: rgba(244, 241, 234, 0.14);
+  --rule-ink-2: rgba(244, 241, 234, 0.24);
+
+  /* Dim behind an open overlay (mobile nav). Deep enough to push the page back,
+     light enough that you can still see what you were reading. */
+  --scrim: rgba(10, 20, 15, 0.34);
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", monospace;
+
+  /* Fluid display scale — tight tracking is part of the identity */
+  --t-display: clamp(2.65rem, 1.1rem + 5.6vw, 5rem);
+  --t-h1: clamp(2.25rem, 1.2rem + 3.6vw, 3.5rem);
+  --t-h2: clamp(1.75rem, 1.1rem + 2.3vw, 2.65rem);
+  --t-h3: clamp(1.2rem, 1.05rem + 0.6vw, 1.45rem);
+  --t-h4: 1.0625rem;
+  --t-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --t-body: 1rem;
+  --t-sm: 0.9125rem;
+  --t-xs: 0.8125rem;
+  --t-mono: 0.75rem;
+  --t-mono-sm: 0.6875rem;
+
+  --track-display: -0.045em;
+  --track-tight: -0.03em;
+  --track-mono: 0.1em;
+
+  /* --- Space ------------------------------------------------------------ */
+  --gap-1: 0.25rem;
+  --gap-2: 0.5rem;
+  --gap-3: 0.75rem;
+  --gap-4: 1rem;
+  --gap-5: 1.5rem;
+  --gap-6: 2rem;
+  --gap-7: 3rem;
+  --gap-8: 4rem;
+  --section-y: clamp(4.5rem, 3rem + 5vw, 7.5rem);
+  --section-y-sm: clamp(3rem, 2rem + 3vw, 4.5rem);
+
+  /* --- Shape ------------------------------------------------------------ */
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-3: 12px;
+  --r-4: 16px;
+  --r-pill: 999px;
+
+  /* --- Depth: warm, restrained ---------------------------------------- */
+  --shadow-1: 0 1px 2px rgba(10, 20, 15, 0.05);
+  --shadow-2: 0 1px 2px rgba(10, 20, 15, 0.04), 0 10px 24px -10px rgba(10, 20, 15, 0.16);
+  --shadow-3: 0 2px 4px rgba(10, 20, 15, 0.05), 0 28px 60px -22px rgba(10, 20, 15, 0.3);
+  --shadow-ink: 0 30px 70px -25px rgba(4, 12, 8, 0.65);
+  --focus: 0 0 0 3px rgba(7, 117, 63, 0.28);
+
+  /* --- Motion ----------------------------------------------------------- */
+  --fast: 130ms;
+  --base: 220ms;
+  --slow: 420ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.6, 0, 0.2, 1);
+
+  /* --- Layout ----------------------------------------------------------- */
+  --wrap: 1180px;
+  --wrap-narrow: 760px;
+  --pad: clamp(1.25rem, 0.5rem + 3vw, 2.5rem);
+  --header-h: 66px;
+
+  /* --- Breakpoints ------------------------------------------------------ */
+  /* Custom properties are not allowed inside @media, so this is a contract
+     rather than a set of variables. Four steps, written as literals:
+
+       1000px  lap    Two-column page splits collapse to one, and the primary
+                      nav becomes the drawer. Deliberately the same number: the
+                      nav measures ~932px at its narrowest, so just under 1000
+                      is where it stops fitting — and a page should never be
+                      desktop-wide with a hamburger, or stacked with a full nav.
+       780px   tab    Four-up metric rails step down to two-up; two-up content
+                      grids, testimonials and forms go single-column.
+       560px   phone  Anything still two-up goes single-column, and secondary
+                      affordances (header CTA, row chevrons) drop out.
+       28rem   mock   A container query on .mock, not the viewport. A screenshot
+                      sitting in a 415px column of a 1024px tablet needs the
+                      same layout as one on a 415px phone; only its own width
+                      can tell it that. Below this it uses its compact form.
+
+     Rails whose items are interchangeable skip all of it and use
+     repeat(auto-fit, minmax(Xrem, 1fr)), so they fold on their own width. Each
+     minmax floor is the measured width of the longest label it must hold. */
+
+  /* --- Touch targets ----------------------------------------------------- */
+  /* Target sizing is gated on @media (pointer: coarse), never on width. A 1024px
+     tablet is a touch device and a 700px desktop window is not, so width is the
+     wrong question: it tells you about layout, not about what is doing the
+     pointing. Mouse users keep the tight ops spacing the design is built on.
+
+     Two rules under a coarse pointer, not one:
+
+       Discrete controls — buttons, the burger, the billing switch, a lone link
+       in a row of its own — get 44px on the short axis.
+
+       Dense link lists — the footer sitemap, contact rows — take WCAG 2.5.8's
+       spacing route instead: 24px+ tall with 24px+ pitch. Forcing 44px rows on
+       a 28-link sitemap would add ~900px of scroll on a phone to satisfy a
+       number, and make the thing harder to use, not easier. */
+
+  /* Paper grain — one inline SVG, reused as a background layer */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}

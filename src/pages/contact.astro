@@ -1,0 +1,375 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import RequestForm from "../components/RequestForm.astro";
+import Icon from "../components/Icon.astro";
+import { contact, site } from "../lib/site";
+import { breadcrumbNode, organizationNode } from "../lib/schema";
+import type { IconName } from "../lib/icons";
+
+type Door = {
+  icon: IconName;
+  label: string;
+  detail: string;
+  href: string;
+  value: string;
+};
+
+/* Three doors, so nobody has to guess which inbox their question belongs in. */
+const doors: readonly Door[] = [
+  {
+    icon: "mail",
+    label: "Sales & pricing",
+    detail: "Quotes, seat counts, migration questions and procurement paperwork.",
+    href: `mailto:${contact.salesEmail}`,
+    value: contact.salesEmail,
+  },
+  {
+    icon: "headset",
+    label: "Existing customer support",
+    detail: "Already running on Ainnect? This queue is watched by the implementation team.",
+    href: `mailto:${contact.supportEmail}`,
+    value: contact.supportEmail,
+  },
+  {
+    icon: "shield",
+    label: "Security, privacy & DPA",
+    detail: "Data processing agreements, deletion requests, and vendor security reviews.",
+    href: `mailto:${contact.privacyEmail}`,
+    value: contact.privacyEmail,
+  },
+];
+---
+
+<BaseLayout
+  title="Contact us"
+  description="Talk to the Ainnect team by email: sales and pricing, support, security and press — plus the form that starts a quote."
+  schema={[organizationNode, breadcrumbNode([], "Contact", "/contact")]}
+>
+  <PageHero
+    kicker="Contact"
+    title="Talk to someone who has already seen your problem."
+    current="Contact"
+    lead="No chatbot on this page, and no round-robin to a qualifier. Whichever door you pick, a person on the team reads it."
+    note={`${contact.hours} · ${contact.responseTime}`}
+  />
+
+  <!-- ── The three doors ──────────────────────────────────────────────── -->
+  <section class="section-sm" aria-labelledby="doors-title">
+    <div class="wrap">
+      <h2 id="doors-title" class="sr-only">Ways to reach us</h2>
+      <ul class="doors">
+        {
+          doors.map((door) => (
+            <li data-reveal>
+              <a class="doors__link" href={door.href}>
+                <span class="doors__icon">
+                  <Icon name={door.icon} size={18} />
+                </span>
+                <span class="doors__label">{door.label}</span>
+                <span class="doors__value mono">{door.value}</span>
+                <span class="doors__detail">{door.detail}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Form + office ────────────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="cform-title">
+    <div class="wrap ct">
+      <div class="ct__panel">
+        <p class="stamp"><span class="stamp__num">01</span> Send a message</p>
+        <h2 id="cform-title" class="ct__title">Tell us about your inbox.</h2>
+        <p class="ct__sub">
+          This is where a quote starts too — pick a topic and it lands with the right person.
+        </p>
+        <RequestForm subject="Contact" showTopic={true} />
+      </div>
+
+      <aside class="ct__side">
+        <div class="ct__block">
+          <p class="stamp stamp--brand">Office</p>
+          <address class="ct__address">
+            {contact.officeLines.map((line) => <span>{line}</span>)}
+          </address>
+          <p class="ct__note">
+            <Icon name="pin" size={13} />
+            Visits by appointment. We are a small team and usually on calls.
+          </p>
+        </div>
+
+        <div class="ct__block">
+          <p class="stamp stamp--brand">Hours</p>
+          <dl class="ct__facts">
+            <div>
+              <dt>Working hours</dt>
+              <dd>{contact.hours}</dd>
+            </div>
+            <div>
+              <dt>Typical reply</dt>
+              <dd>{contact.responseTime}</dd>
+            </div>
+            <div>
+              <dt>Press</dt>
+              <dd><a href={`mailto:${contact.pressEmail}`}>{contact.pressEmail}</a></dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="ct__block">
+          <p class="stamp stamp--brand">Legal entity</p>
+          <p class="ct__entity">{site.legalName}</p>
+          <p class="ct__note">
+            <Icon name="doc" size={13} />
+            The name on the contract, the invoice and the DPA. {site.name} is the product it operates.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── Signposts ────────────────────────────────────────────────────── -->
+  <section class="section-sm" aria-label="Before you write">
+    <div class="wrap ct__signposts">
+      <p>
+        Looking for prices?
+        <a class="arrow-link" href="/faq#billing">
+          How quoting works
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+      <p>
+        Question already answered?
+        <a class="arrow-link" href="/faq">
+          Read the FAQ
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+      <p>
+        Doing a vendor review?
+        <a class="arrow-link" href="/security">
+          Security posture
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── Doors ──────────────────────────────────────────────────────────── */
+  .doors {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1px;
+    background: var(--rule-2);
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-3);
+    overflow: hidden;
+  }
+
+  .doors__link {
+    display: grid;
+    gap: 0.35rem;
+    height: 100%;
+    padding: 1.35rem;
+    background: var(--surface);
+    transition: background var(--fast) var(--ease);
+  }
+
+  .doors__link:hover {
+    background: var(--paper);
+  }
+
+  .doors__icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 0.35rem;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    color: var(--brand);
+    transition:
+      background var(--fast) var(--ease),
+      color var(--fast) var(--ease);
+  }
+
+  .doors__link:hover .doors__icon {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .doors__label {
+    font-size: var(--t-body);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .doors__value {
+    font-size: var(--t-mono);
+    color: var(--brand);
+    word-break: break-word;
+  }
+
+  .doors__detail {
+    margin-top: 0.2rem;
+    font-size: var(--t-xs);
+    line-height: 1.55;
+    color: var(--ink-70);
+  }
+
+  /* ── Form + side ────────────────────────────────────────────────────── */
+  .ct {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: clamp(2rem, 1rem + 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .ct__panel {
+    padding: clamp(1.35rem, 1rem + 1.5vw, 2.25rem);
+    background: var(--surface);
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-4);
+    box-shadow: var(--shadow-2);
+  }
+
+  .ct__title {
+    margin-top: 0.85rem;
+    font-size: var(--t-h3);
+  }
+
+  .ct__sub {
+    margin-top: 0.6rem;
+    margin-bottom: 1.75rem;
+    max-width: 40rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .ct__side {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .ct__block {
+    padding: 1.35rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-3);
+  }
+
+  .ct__address {
+    display: grid;
+    gap: 0.15rem;
+    margin-top: 1rem;
+    font-style: normal;
+    font-size: var(--t-sm);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .ct__note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--t-xs);
+    line-height: 1.5;
+    color: var(--ink-55);
+  }
+
+  .ct__note svg {
+    margin-top: 0.15rem;
+    color: var(--ink-40);
+  }
+
+  .ct__facts {
+    margin-top: 1rem;
+    display: grid;
+  }
+
+  .ct__facts div {
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ct__facts div:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .ct__facts dt {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .ct__facts dd {
+    margin-top: 0.2rem;
+    font-size: var(--t-sm);
+    color: var(--ink-2);
+  }
+
+  .ct__facts a {
+    color: var(--brand);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .ct__entity {
+    margin-top: 1rem;
+    font-size: var(--t-sm);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 1000px) {
+    .ct {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ct__side {
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    }
+  }
+
+  /* ── Signposts ──────────────────────────────────────────────────────── */
+  .ct__signposts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ct__signposts p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--t-sm);
+    color: var(--ink-70);
+  }
+
+  /* Touch sizing — see tokens.css. The press address is the only link among the
+     facts, so growing it inflates nothing else. */
+  @media (pointer: coarse) {
+    .ct__facts a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+</style>

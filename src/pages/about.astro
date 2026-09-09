@@ -1,0 +1,450 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import SectionHead from "../components/SectionHead.astro";
+import LedgerRail from "../components/LedgerRail.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import { companyStory, principles, companyFacts } from "../lib/platform";
+import { site, contact } from "../lib/site";
+import { breadcrumbNode, organizationNode } from "../lib/schema";
+---
+
+<BaseLayout
+  title="About"
+  description="Ainnect is a pre-seed team in Jakarta building a WhatsApp-native CRM. Why we started, what we believe about building sales tools, and what we are not yet."
+  schema={[organizationNode, breadcrumbNode([], "About", "/about")]}
+>
+  <PageHero
+    kicker="Company"
+    title="We built the CRM the spreadsheet was standing in for."
+    current="About"
+    lead={`${site.name} is a small ${site.stage.toLowerCase()} team in Jakarta, operating as ${site.legalName}. We take on a handful of accounts at a time and stay close to each one, because a shared inbox is not something you hand over and hope.`}
+    primary={{ label: "Talk to us", href: "/contact" }}
+    secondary={{ label: "See the product", href: "/product" }}
+  >
+    <LedgerRail items={companyFacts} class="about__ledger" />
+  </PageHero>
+
+  <!-- ── Story ────────────────────────────────────────────────────────── -->
+  <section class="section" aria-labelledby="story-title">
+    <div class="wrap story">
+      <div class="story__head">
+        <p class="stamp"><span class="stamp__num">01</span> How it started</p>
+        <h2 id="story-title" class="story__title">A printing business, sixty quotes, four phones.</h2>
+      </div>
+
+      <div class="story__body">
+        {companyStory.map((para) => <p class="story__para">{para}</p>)}
+
+        <blockquote class="story__pull">
+          <p>
+            Every CRM assumed the deal starts with an email. Theirs started, and finished, inside
+            WhatsApp.
+          </p>
+        </blockquote>
+
+        <p class="story__para">
+          That is still the whole thesis. Not "WhatsApp integration" bolted onto a CRM built for
+          another decade — the conversation as the record, with the scoring, automation and AI agent
+          reading from it directly.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Principles ───────────────────────────────────────────────────── -->
+  <section class="section bg-surface" aria-labelledby="principles-title">
+    <div class="wrap">
+      <SectionHead
+        id="principles-title"
+        num="02"
+        kicker="How we work"
+        title="Four decisions we keep making the same way."
+        lead="These are not values on a wall. Each one costs us something measurable, which is how you can tell we mean them."
+      />
+
+      <ol class="prins">
+        {
+          principles.map((principle, index) => (
+            <li class="prins__item" data-reveal>
+              <span class="prins__num mono">{String(index + 1).padStart(2, "0")}</span>
+              <span class="prins__icon">
+                <Icon name={principle.icon} size={19} />
+              </span>
+              <div>
+                <h3 class="prins__title">{principle.title}</h3>
+                <p class="prins__text">{principle.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── What we are not ──────────────────────────────────────────────── -->
+  <section class="section on-ink blueprint" aria-labelledby="notyet-title">
+    <div class="wrap notyet">
+      <div>
+        <p class="stamp"><span class="stamp__num">03</span> Plainly</p>
+        <h2 id="notyet-title" class="notyet__title">What we are not, as of today.</h2>
+        <p class="head__lead">
+          You will find out eventually. Better it comes from us, on our own site, before you spend a
+          quarter finding out the hard way.
+        </p>
+      </div>
+
+      <ul class="notyet__list">
+        <li>
+          <span class="notyet__x" aria-hidden="true">
+            <Icon name="close" size={14} />
+          </span>
+          <div>
+            <h3>Not a funded scale-up</h3>
+            <p>
+              Pre-seed, founded {site.founded}, no venture round announced. If a big-vendor
+              procurement checklist is non-negotiable for you, we are probably the wrong choice this
+              year.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="notyet__x" aria-hidden="true">
+            <Icon name="close" size={14} />
+          </span>
+          <div>
+            <h3>Not a self-serve product</h3>
+            <p>
+              There is no signup form and no free trial that starts a countdown. Every workspace is
+              set up on a call with someone who will still be answering your messages next month.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="notyet__x" aria-hidden="true">
+            <Icon name="close" size={14} />
+          </span>
+          <div>
+            <h3>Not a marketing blast tool</h3>
+            <p>
+              We will not help you send unsolicited bulk WhatsApp messages. It gets numbers banned,
+              and it is the opposite of what this product is for.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Talk to us ───────────────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="reach-title">
+    <div class="wrap reach">
+      <div>
+        <SectionHead
+          id="reach-title"
+          num="04"
+          kicker="Get in touch"
+          title="Small team, short chain of command."
+          lead="Whichever address you use, one of the founders reads it. There is no support tier to escalate through."
+        />
+      </div>
+
+      <ul class="reach__list">
+        <li>
+          <span class="reach__label mono">Sales</span>
+          <a href={`mailto:${contact.salesEmail}`}>{contact.salesEmail}</a>
+        </li>
+        <li>
+          <span class="reach__label mono">Support</span>
+          <a href={`mailto:${contact.supportEmail}`}>{contact.supportEmail}</a>
+        </li>
+        <li>
+          <span class="reach__label mono">Press</span>
+          <a href={`mailto:${contact.pressEmail}`}>{contact.pressEmail}</a>
+        </li>
+        <li>
+          <span class="reach__label mono">Privacy</span>
+          <a href={`mailto:${contact.privacyEmail}`}>{contact.privacyEmail}</a>
+        </li>
+        <li>
+          <span class="reach__label mono">Office</span>
+          <span class="reach__value">{contact.officeShort}</span>
+        </li>
+        <li>
+          <span class="reach__label mono">Hours</span>
+          <span class="reach__value">{contact.hours}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .about__ledger {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  /* ── Story ──────────────────────────────────────────────────────────── */
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 4rem);
+    align-items: start;
+  }
+
+  .story__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+  }
+
+  .story__title {
+    margin-top: 1rem;
+    font-size: var(--t-h3);
+    max-width: 20ch;
+  }
+
+  .story__para {
+    font-size: 1.0375rem;
+    line-height: 1.72;
+    color: var(--ink-70);
+  }
+
+  .story__para + .story__para {
+    margin-top: 1.1rem;
+  }
+
+  .story__para:first-child {
+    font-size: var(--t-lead);
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  .story__pull {
+    margin: 2rem 0;
+    padding: 1.35rem 0 1.35rem 1.5rem;
+    border-left: 3px solid var(--brand);
+  }
+
+  .story__pull p {
+    font-size: clamp(1.15rem, 1rem + 0.8vw, 1.45rem);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: var(--track-tight);
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  @media (max-width: 1000px) {
+    .story {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .story__head {
+      position: static;
+    }
+  }
+
+  /* ── Principles ─────────────────────────────────────────────────────── */
+  .prins {
+    margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 2.5rem;
+  }
+
+  .prins__item {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 0.9rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .prins__item:nth-child(-n + 2) {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .prins__num {
+    padding-top: 0.55rem;
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.08em;
+    color: var(--ink-55);
+  }
+
+  .prins__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .prins__title {
+    font-size: 1.0625rem;
+    letter-spacing: -0.025em;
+    padding-top: 0.45rem;
+  }
+
+  .prins__text {
+    margin-top: 0.4rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  @media (max-width: 1000px) {
+    .prins {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .prins__item:nth-child(2) {
+      border-top: 1px solid var(--rule);
+      padding-top: 1.5rem;
+    }
+  }
+
+  /* ── What we are not ────────────────────────────────────────────────── */
+  .notyet {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .notyet__title {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: var(--t-h3);
+  }
+
+  .notyet__list {
+    list-style: none;
+    display: grid;
+  }
+
+  .notyet__list li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.85rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--rule-ink);
+  }
+
+  .notyet__list li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .notyet__x {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-top: 0.15rem;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--rule-ink-2);
+    color: var(--on-ink-70);
+  }
+
+  .notyet__list h3 {
+    font-size: var(--t-body);
+    letter-spacing: -0.025em;
+  }
+
+  .notyet__list p {
+    margin-top: 0.4rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--on-ink-70);
+  }
+
+  .notyet__list a {
+    color: var(--signal);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 1000px) {
+    .notyet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* ── Reach ──────────────────────────────────────────────────────────── */
+  .reach {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .reach__list {
+    list-style: none;
+    display: grid;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .reach__list li {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .reach__label {
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .reach__list a,
+  .reach__value {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--t-sm);
+    color: var(--ink-2);
+  }
+
+  .reach__list a:hover {
+    color: var(--brand);
+  }
+
+  .reach__list svg {
+    color: var(--ink-40);
+  }
+
+  @media (max-width: 1000px) {
+    .reach {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .reach__list li {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.15rem;
+    }
+  }
+
+  /* Touch sizing — see tokens.css. Four addresses, so the ~60px this adds is
+     worth it: these are the addresses people came to this page to tap. The row
+     keeps its baseline alignment because the anchor centres its own content
+     either way. */
+  @media (pointer: coarse) {
+    .reach__list a {
+      min-height: 44px;
+    }
+  }
+</style>

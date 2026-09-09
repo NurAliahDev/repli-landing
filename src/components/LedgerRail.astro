@@ -1,0 +1,33 @@
+---
+import type { Metric } from "../lib/features";
+
+interface Props {
+  items: readonly Metric[];
+  class?: string;
+  reveal?: boolean;
+  /** Anything else is forwarded to the <dl>, including the scope attribute
+      Astro passes down. Without it a page's `.hero__ledger { margin-top }`
+      never matches the element it names, and five heroes sat with their rail
+      flush against the headline. */
+  [key: string]: unknown;
+}
+
+const { items, class: className, reveal = true, ...rest } = Astro.props;
+---
+
+<dl
+  class:list={["ledger", className]}
+  style={`--cols:${items.length}`}
+  data-reveal={reveal ? "" : undefined}
+  {...rest}
+>
+  {
+    items.map((item) => (
+      <div class="ledger__cell">
+        <dt class="ledger__label">{item.label}</dt>
+        <dd class="ledger__value">{item.value}</dd>
+        {item.note && <dd class="ledger__note">{item.note}</dd>}
+      </div>
+    ))
+  }
+</dl>

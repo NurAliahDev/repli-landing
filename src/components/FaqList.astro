@@ -1,0 +1,120 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  items: readonly { q: string; a: string }[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<div class:list={["faq", className]}>
+  {
+    items.map((item) => (
+      <details class="faq__item">
+        <summary class="faq__q">
+          <span>{item.q}</span>
+          <span class="faq__sign" aria-hidden="true">
+            <Icon name="plus" size={16} class="faq__plus" />
+            <Icon name="minus" size={16} class="faq__minus" />
+          </span>
+        </summary>
+        <div class="faq__a">
+          <p>{item.a}</p>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--rule);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 1.15rem 0;
+    cursor: pointer;
+    font-size: var(--t-h4);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.4;
+    list-style: none;
+    transition: color var(--fast) var(--ease);
+  }
+
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__q:hover {
+    color: var(--brand);
+  }
+
+  .faq__sign {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-top: 0.1rem;
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-1);
+    background: var(--surface);
+    color: var(--brand);
+    transition: border-color var(--fast) var(--ease);
+  }
+
+  .faq__q:hover .faq__sign {
+    border-color: var(--brand-tint-2);
+  }
+
+  .faq__minus {
+    display: none;
+  }
+
+  .faq__item[open] .faq__plus {
+    display: none;
+  }
+
+  .faq__item[open] .faq__minus {
+    display: block;
+  }
+
+  .faq__a {
+    padding-bottom: 1.35rem;
+    max-width: 58ch;
+  }
+
+  .faq__a p {
+    font-size: var(--t-sm);
+    line-height: 1.7;
+    color: var(--ink-70);
+  }
+
+  .faq__item[open] .faq__a {
+    animation: faq-in var(--base) var(--ease) both;
+  }
+
+  @keyframes faq-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq__item[open] .faq__a {
+      animation: none;
+    }
+  }
+</style>

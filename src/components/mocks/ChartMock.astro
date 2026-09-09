@@ -1,0 +1,350 @@
+---
+import Icon from "../Icon.astro";
+import MockFrame from "./MockFrame.astro";
+
+const kpis = [
+  { label: "First reply", value: "42s", delta: "−96%", down: true },
+  { label: "Deals won / week", value: "38", delta: "+11", down: false },
+  { label: "Chats answered", value: "94%", delta: "+29pt", down: false },
+] as const;
+
+/* Conversations handled per day, two weeks. The last bar is today. */
+const days = [
+  { day: "M", value: 46 },
+  { day: "T", value: 58 },
+  { day: "W", value: 51 },
+  { day: "T", value: 67 },
+  { day: "F", value: 74 },
+  { day: "S", value: 39 },
+  { day: "S", value: 22 },
+  { day: "M", value: 62 },
+  { day: "T", value: 71 },
+  { day: "W", value: 69 },
+  { day: "T", value: 83 },
+  { day: "F", value: 96 },
+] as const;
+
+const peak = Math.max(...days.map((entry) => entry.value));
+const TARGET = 70;
+
+/* Median reply time per hour, 09:00–20:00 — darker means slower. */
+const hours = [
+  { at: "09", load: 2 },
+  { at: "10", load: 3 },
+  { at: "11", load: 4 },
+  { at: "12", load: 3 },
+  { at: "13", load: 2 },
+  { at: "14", load: 3 },
+  { at: "15", load: 4 },
+  { at: "16", load: 5 },
+  { at: "17", load: 4 },
+  { at: "18", load: 3 },
+  { at: "19", load: 2 },
+  { at: "20", load: 1 },
+] as const;
+---
+
+<MockFrame
+  alt="Analytics panel: median first reply of 42 seconds, a two-week bar chart of conversations handled, and a per-hour strip showing when replies slow down."
+  label="Analytics / Last 14 days"
+  status="Updated 09:12"
+>
+  <div class="cm">
+    <dl class="cm__kpis">
+      {
+        kpis.map((kpi) => (
+          <div class="cm__kpi">
+            <dt>{kpi.label}</dt>
+            <dd>
+              <span class="cm__value">{kpi.value}</span>
+              <span class="cm__delta" data-down={kpi.down ? "" : undefined}>
+                <Icon name={kpi.down ? "arrowRight" : "arrowUpRight"} size={11} />
+                {kpi.delta}
+              </span>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="cm__chart">
+      <div class="cm__chartbar">
+        <span class="cm__chartlabel">Conversations handled</span>
+        <span class="cm__target">Target {TARGET}/day</span>
+      </div>
+
+      <div class="cm__plot" style={`--target:${(TARGET / peak) * 100}%`}>
+        <span class="cm__targetline" aria-hidden="true"></span>
+        {
+          days.map((entry, index) => (
+            <span
+              class="cm__bar"
+              style={`--h:${Math.round((entry.value / peak) * 100)}%`}
+              data-today={index === days.length - 1 ? "" : undefined}
+              data-week={index < 7 ? "prev" : "now"}
+            ></span>
+          ))
+        }
+      </div>
+
+      <div class="cm__axis" aria-hidden="true">
+        {days.map((entry) => <span>{entry.day}</span>)}
+      </div>
+    </div>
+
+    <div class="cm__hours">
+      <div class="cm__chartbar">
+        <span class="cm__chartlabel">Reply time by hour</span>
+        <span class="cm__legend">
+          Fast
+          <i data-load="1"></i>
+          <i data-load="3"></i>
+          <i data-load="5"></i>
+          Slow
+        </span>
+      </div>
+      <div class="cm__strip">
+        {
+          hours.map((hour) => (
+            <span class="cm__cell" data-load={hour.load}>
+              <em>{hour.at}</em>
+            </span>
+          ))
+        }
+      </div>
+      <p class="cm__note">
+        <Icon name="alert" size={12} />
+        16:00 is your slowest hour. The agent now covers it.
+      </p>
+    </div>
+  </div>
+</MockFrame>
+
+<style>
+  .cm {
+    display: grid;
+    gap: 1.1rem;
+    font-size: var(--t-xs);
+  }
+
+  /* --- KPI row ------------------------------------------------------------ */
+  .cm__kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-2);
+    overflow: hidden;
+  }
+
+  .cm__kpi {
+    padding: 0.65rem 0.7rem;
+    background: var(--surface);
+  }
+
+  .cm__kpi dt {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .cm__kpi dd {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+  }
+
+  .cm__value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cm__delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    color: var(--brand);
+  }
+
+  /* A drop in reply time is good news, so both directions stay green. */
+  .cm__delta[data-down] svg {
+    transform: rotate(90deg);
+  }
+
+  /* --- Bar chart ---------------------------------------------------------- */
+  .cm__chartbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cm__chartlabel {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .cm__target,
+  .cm__legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    color: var(--ink-40);
+  }
+
+  .cm__legend i {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background: var(--brand);
+  }
+
+  .cm__legend i[data-load="1"] {
+    opacity: 0.22;
+  }
+
+  .cm__legend i[data-load="3"] {
+    opacity: 0.55;
+  }
+
+  .cm__plot {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 92px;
+    padding-bottom: 1px;
+    border-bottom: 1px solid var(--rule-2);
+  }
+
+  .cm__targetline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--target);
+    border-top: 1px dashed var(--rule-3);
+  }
+
+  .cm__bar {
+    position: relative;
+    flex: 1 1 auto;
+    height: var(--h);
+    border-radius: 2px 2px 0 0;
+    background: var(--brand-tint-2);
+  }
+
+  .cm__bar[data-week="now"] {
+    background: var(--brand);
+  }
+
+  .cm__bar[data-today] {
+    background: var(--ink);
+  }
+
+  .cm__axis {
+    display: flex;
+    gap: 3px;
+    margin-top: 0.3rem;
+  }
+
+  .cm__axis span {
+    flex: 1 1 auto;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    color: var(--ink-40);
+  }
+
+  /* --- Hour strip --------------------------------------------------------- */
+  .cm__strip {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 2px;
+  }
+
+  .cm__cell {
+    display: grid;
+    place-items: center;
+    height: 30px;
+    border-radius: 2px;
+    background: var(--brand);
+  }
+
+  .cm__cell em {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: var(--t-mono-sm);
+    color: #fff;
+  }
+
+  .cm__cell[data-load="1"] {
+    opacity: 0.18;
+  }
+
+  .cm__cell[data-load="2"] {
+    opacity: 0.34;
+  }
+
+  .cm__cell[data-load="3"] {
+    opacity: 0.55;
+  }
+
+  .cm__cell[data-load="4"] {
+    opacity: 0.78;
+  }
+
+  .cm__cell[data-load="1"] em,
+  .cm__cell[data-load="2"] em {
+    color: var(--ink);
+  }
+
+  .cm__note {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.55rem;
+    color: var(--ink-55);
+  }
+
+  .cm__note svg {
+    color: var(--amber-ink);
+  }
+
+  /* Keyed to the mock's own width, not the viewport: three KPIs and 12 labelled
+     hour cells need roughly 28rem to stay readable, whether that width is short
+     because the screen is small or because the column is. The span-2 rule below
+     assumes exactly two columns, so this cannot be an auto-fit grid. */
+  @container mock (max-width: 28rem) {
+    .cm__kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cm__kpi:last-child {
+      grid-column: span 2;
+    }
+
+    /* 12 cells across ~380px is 30px each — the hour numbers stop fitting, and
+       the load shading already carries the meaning. */
+    .cm__cell em {
+      display: none;
+    }
+  }
+</style>

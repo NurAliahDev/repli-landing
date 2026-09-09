@@ -1,0 +1,170 @@
+---
+/* An index, in the book sense: numbered entries, the ask on the left and what
+   we build on the right, separated by a single rule. No cards. */
+import Icon from "../Icon.astro";
+import { useCases } from "../../lib/audiences";
+import { moduleLabels } from "../../lib/solutions";
+---
+
+<ol class="ucase">
+  {
+    useCases.map((useCase) => (
+      <li class="ucase__item" id={useCase.slug}>
+        <span class="ucase__num mono" aria-hidden="true">{useCase.num}</span>
+
+        <div class="ucase__ask">
+          <h3 class="ucase__title">
+            <Icon name={useCase.icon} size={17} class="ucase__ico" />
+            <span>{useCase.title}</span>
+          </h3>
+          <p class="ucase__problem">{useCase.problem}</p>
+        </div>
+
+        <div class="ucase__ans">
+          <p class="ucase__answer">{useCase.answer}</p>
+          <ul class="ucase__mods">
+            {useCase.modules.map((module) => (
+              <li>
+                <a class="ucase__mod mono" href={`/product/${module}`}>
+                  {moduleLabels[module]}
+                  <Icon name="arrowUpRight" size={12} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .ucase {
+    border-top: 1px solid var(--rule);
+    list-style: none;
+  }
+
+  .ucase__item {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+    padding: clamp(1.4rem, 1.1rem + 1.2vw, 2rem) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ucase__num {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--ink-40);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- The ask ------------------------------------------------------------ */
+
+  .ucase__title {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: start;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.3;
+  }
+
+  .ucase__ico {
+    margin-top: 0.22rem;
+    color: var(--brand);
+  }
+
+  .ucase__problem {
+    margin-top: 0.6rem;
+    padding-left: 1.6875rem; /* icon width + gap, so the text stays aligned */
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-55);
+  }
+
+  /* --- What we set up ----------------------------------------------------- */
+
+  .ucase__ans {
+    padding-left: clamp(1rem, 0.5rem + 1.4vw, 1.75rem);
+    border-left: 1px solid var(--rule);
+  }
+
+  .ucase__answer {
+    font-size: var(--t-sm);
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+
+  .ucase__mods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.9rem;
+    list-style: none;
+  }
+
+  .ucase__mod {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-pill);
+    background: var(--paper-2);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-70);
+    transition:
+      border-color var(--fast) var(--ease),
+      color var(--fast) var(--ease),
+      background var(--fast) var(--ease);
+  }
+
+  .ucase__mod:hover {
+    border-color: var(--brand);
+    background: var(--brand-tint);
+    color: var(--brand);
+  }
+
+  /* --- Narrow ------------------------------------------------------------- */
+
+  @media (max-width: 900px) {
+    .ucase__item {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 0.9rem 1rem;
+    }
+
+    .ucase__num {
+      font-size: 1.15rem;
+      padding-top: 0.15rem;
+    }
+
+    /* The rule moves from vertical to horizontal, and the answer indents to
+       sit under the title rather than under the number. */
+    .ucase__ans {
+      grid-column: 2;
+      padding-left: 0;
+      padding-top: 0.9rem;
+      border-left: 0;
+      border-top: 1px dashed var(--rule-2);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .ucase__problem {
+      padding-left: 0;
+    }
+
+    /* WCAG 2.5.8 Spacing: chips are 26px tall, so a 0.5rem gap keeps every
+       target on a >=24px pitch without inflating them into buttons. */
+    .ucase__mods {
+      gap: 0.5rem;
+    }
+  }
+</style>

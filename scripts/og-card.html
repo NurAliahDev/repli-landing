@@ -1,0 +1,307 @@
+<!doctype html>
+<!--
+  Source for public/og.png (1200×630) — the social preview card.
+
+  It is a standalone file rather than an Astro page because it must never ship
+  as a route. Values below mirror src/styles/tokens.css; if the palette or type
+  changes there, change it here and re-render.
+
+  To re-render: open this file at a 1200×630 viewport and screenshot the
+  viewport (not the full page) to public/og.png.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ainnect — OG card source</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    />
+    <style>
+      :root {
+        --paper: #faf7f2;
+        --paper-2: #f2ede3;
+        --ink: #0a140f;
+        --ink-55: #5f6e65;
+        --rule: #ded6c8;
+        --brand: #07753f;
+        --brand-tint: #e7f1e9;
+        --brand-tint-2: #d3e6d8;
+        --signal: #35d07f;
+        --amber-ink: #a8501a;
+        --amber-tint: #fbeee0;
+        --on-ink: #f4f1ea;
+        --on-ink-70: #a8b5ac;
+        --rule-ink: rgba(244, 241, 234, 0.14);
+        --font-sans: "Plus Jakarta Sans", sans-serif;
+        --font-mono: "IBM Plex Mono", monospace;
+        --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        letter-spacing: -0.011em;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .card {
+        position: relative;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        width: 1200px;
+        height: 630px;
+        padding: 54px 64px 0;
+      }
+
+      /* Blueprint grid, then grain — the two textures the site uses to keep
+         flat fills from reading as a default template. */
+      .card::before,
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .card::before {
+        background-image:
+          linear-gradient(var(--rule) 1px, transparent 1px),
+          linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+        background-size: 60px 60px;
+        opacity: 0.35;
+        mask-image: radial-gradient(120% 100% at 82% 6%, #000 0%, transparent 62%);
+      }
+
+      .card::after {
+        background-image: var(--grain);
+        background-size: 180px 180px;
+        opacity: 0.05;
+        mix-blend-mode: multiply;
+      }
+
+      .card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* --- Masthead --------------------------------------------------------- */
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .logo svg {
+        display: block;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(10, 20, 15, 0.14);
+      }
+
+      .logo b {
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -0.045em;
+        line-height: 1;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 15px 8px 13px;
+        border: 1px solid var(--brand-tint-2);
+        border-radius: 999px;
+        background: var(--brand-tint);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--brand);
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--brand);
+        box-shadow: 0 0 0 4px rgba(7, 117, 63, 0.16);
+      }
+
+      /* --- Headline --------------------------------------------------------- */
+      .body {
+        display: grid;
+        align-content: center;
+        gap: 26px;
+        padding-block: 8px;
+      }
+
+      .stamp {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--amber-ink);
+      }
+
+      .stamp span {
+        padding: 3px 8px;
+        border: 1px solid #f0d9bf;
+        border-radius: 4px;
+        background: var(--amber-tint);
+      }
+
+      h1 {
+        max-width: 17ch;
+        font-size: 82px;
+        font-weight: 800;
+        line-height: 0.99;
+        letter-spacing: -0.045em;
+        text-wrap: balance;
+      }
+
+      h1 em {
+        font-style: normal;
+        color: var(--brand);
+      }
+
+      .lead {
+        max-width: 58ch;
+        font-size: 21px;
+        line-height: 1.45;
+        color: var(--ink-55);
+      }
+
+      /* --- Ledger ----------------------------------------------------------- */
+      .ledger {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr) auto;
+        align-items: center;
+        gap: 0;
+        margin-inline: -64px;
+        padding: 26px 64px 28px;
+        background: var(--ink);
+        color: var(--on-ink);
+      }
+
+      .cell {
+        padding-inline: 26px;
+        border-left: 1px solid var(--rule-ink);
+      }
+
+      .cell:first-child {
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .cell b {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 30px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+
+      .cell i {
+        display: block;
+        margin-top: 5px;
+        font-family: var(--font-mono);
+        font-style: normal;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--on-ink-70);
+      }
+
+      .domain {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-left: 30px;
+        border-left: 1px solid var(--rule-ink);
+        font-family: var(--font-mono);
+        font-size: 17px;
+        letter-spacing: 0.06em;
+        color: var(--on-ink);
+      }
+
+      .domain span {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--signal);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <header class="top">
+        <div class="logo">
+          <svg width="46" height="46" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="8.5" fill="#07753f" />
+            <path
+              d="M9.4 23.6 16 8.4l6.6 15.2"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12.3 18.6h9"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            />
+            <circle cx="25.4" cy="6.6" r="2.1" fill="#35d07f" />
+          </svg>
+          <b>Ainnect</b>
+        </div>
+
+        <p class="pill"><span class="dot"></span>Built in Jakarta</p>
+      </header>
+
+      <main class="body">
+        <p class="stamp"><span>01</span>WhatsApp CRM</p>
+        <h1>WhatsApp CRM with an AI agent that <em>answers</em></h1>
+        <p class="lead">
+          One shared inbox for your team, AI lead scoring, and an agent that replies to chats and
+          picks up voice calls — on the number your customers already message.
+        </p>
+      </main>
+
+      <footer class="ledger">
+        <div class="cell"><b>42s</b><i>First reply</i></div>
+        <div class="cell"><b>0&ndash;100</b><i>Lead score</i></div>
+        <div class="cell"><b>24/7</b><i>Chat and voice</i></div>
+        <div class="cell"><b>1 day</b><i>Setup to live</i></div>
+        <p class="domain"><span></span>ainnect.site</p>
+      </footer>
+    </div>
+  </body>
+</html>

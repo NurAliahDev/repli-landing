@@ -1,0 +1,254 @@
+---
+import Icon from "../Icon.astro";
+import MockFrame from "./MockFrame.astro";
+
+/* Deterministic waveform: no randomness, so the markup is stable per build. */
+const BAR_COUNT = 46;
+const PLAYHEAD = 40;
+
+const bars = Array.from({ length: BAR_COUNT }, (_, index) => {
+  const wave = Math.sin(index * 0.55) * 0.34 + Math.sin(index * 0.19) * 0.42;
+  const height = Math.round((0.52 + wave * 0.48) * 100);
+  return Math.min(100, Math.max(14, height));
+});
+
+const transcript = [
+  { who: "Caller", text: "Hi, is anyone there? I need a quote for 40 boxes.", at: "00:03" },
+  {
+    who: "Ainnect agent",
+    text: "I can help with that. 40 boxes of the Melati bundle is Rp 4.2m delivered — shall I book a call with Sari to confirm?",
+    at: "00:11",
+    ai: true,
+  },
+  { who: "Caller", text: "Yes, tomorrow afternoon works.", at: "00:34" },
+] as const;
+
+const facts = [
+  { label: "Language", value: "Bahasa Indonesia" },
+  { label: "Reply latency", value: "1.2s" },
+  { label: "Handoff", value: "00:58 → Sari" },
+] as const;
+---
+
+<MockFrame
+  alt="Voice agent panel: a 64-second answered call with its waveform, a three-line transcript, and a booked follow-up handed to a human."
+  label="Agent / Inbound call"
+  status="Answered"
+>
+  <div class="vm">
+    <div class="vm__head">
+      <span class="vm__icon">
+        <Icon name="phone" size={16} />
+      </span>
+      <div class="vm__who">
+        <strong>+62 812 •••• 4471</strong>
+        <span>Missed by the shop · answered by the agent in 2 rings</span>
+      </div>
+      <span class="vm__timer">01:04</span>
+    </div>
+
+    <div class="vm__wave" aria-hidden="true">
+      {
+        bars.map((height, index) => (
+          <i style={`--h:${height}%`} data-past={index < PLAYHEAD ? "" : undefined}></i>
+        ))
+      }
+    </div>
+
+    <ol class="vm__transcript">
+      {
+        transcript.map((line) => (
+          <li data-ai={line.ai ? "" : undefined}>
+            <span class="vm__speaker">
+              {line.ai && <Icon name="sparkle" size={11} />}
+              {line.who}
+              <span class="vm__at">{line.at}</span>
+            </span>
+            <p>{line.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="vm__outcome">
+      <Icon name="checkCircle" size={15} />
+      <span><strong>Booked:</strong> Friday 14:00 with Sari · logged on the contact</span>
+    </div>
+
+    <dl class="vm__facts">
+      {
+        facts.map((fact) => (
+          <div>
+            <dt>{fact.label}</dt>
+            <dd>{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</MockFrame>
+
+<style>
+  .vm {
+    display: grid;
+    gap: 0.9rem;
+    font-size: var(--t-xs);
+  }
+
+  /* --- Call header -------------------------------------------------------- */
+  .vm__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .vm__icon {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    color: var(--brand);
+  }
+
+  .vm__who {
+    display: grid;
+    gap: 0.1rem;
+    line-height: 1.35;
+    min-width: 0;
+  }
+
+  .vm__who strong {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .vm__who span {
+    color: var(--ink-55);
+  }
+
+  .vm__timer {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono);
+    letter-spacing: 0.06em;
+    color: var(--ink-70);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Waveform ----------------------------------------------------------- */
+  .vm__wave {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 46px;
+    padding: 0 0.1rem;
+  }
+
+  .vm__wave i {
+    flex: 1 1 auto;
+    height: var(--h);
+    min-height: 3px;
+    border-radius: 1px;
+    background: var(--paper-3);
+  }
+
+  .vm__wave i[data-past] {
+    background: var(--brand);
+  }
+
+  .vm__wave i[data-past]:nth-child(3n) {
+    background: var(--brand-hover);
+  }
+
+  /* --- Transcript --------------------------------------------------------- */
+  .vm__transcript {
+    display: grid;
+    gap: 0.55rem;
+    list-style: none;
+  }
+
+  .vm__transcript li {
+    padding-left: 0.7rem;
+    border-left: 2px solid var(--rule-2);
+  }
+
+  .vm__transcript li[data-ai] {
+    border-left-color: var(--brand);
+  }
+
+  .vm__speaker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .vm__transcript li[data-ai] .vm__speaker {
+    color: var(--brand);
+  }
+
+  .vm__at {
+    color: var(--ink-40);
+    letter-spacing: 0.04em;
+  }
+
+  .vm__transcript p {
+    margin-top: 0.2rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  /* --- Outcome + facts ---------------------------------------------------- */
+  .vm__outcome {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--brand-tint-2);
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .vm__outcome svg {
+    color: var(--brand);
+  }
+
+  /* 7rem is the widest value here ("Bahasa Indonesia", 107px) plus breathing
+     room, so auto-fit drops to two columns exactly when three would start
+     wrapping. No breakpoint needed — the rail measures itself. */
+  .vm__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    gap: 0.75rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .vm__facts dt {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .vm__facts dd {
+    margin-top: 0.15rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+</style>

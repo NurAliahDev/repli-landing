@@ -1,0 +1,20 @@
+---
+import InboxMock from "./InboxMock.astro";
+import ScoreMock from "./ScoreMock.astro";
+import VoiceMock from "./VoiceMock.astro";
+import FlowMock from "./FlowMock.astro";
+import ChartMock from "./ChartMock.astro";
+
+interface Props {
+  /** Matches `Feature.mock` in src/lib/features.ts. */
+  name: "inbox" | "score" | "voice" | "flow" | "chart";
+}
+
+const { name } = Astro.props;
+---
+
+{name === "inbox" && <InboxMock />}
+{name === "score" && <ScoreMock />}
+{name === "voice" && <VoiceMock />}
+{name === "flow" && <FlowMock />}
+{name === "chart" && <ChartMock />}

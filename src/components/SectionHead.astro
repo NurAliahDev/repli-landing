@@ -1,0 +1,26 @@
+---
+interface Props {
+  num?: string;
+  kicker: string;
+  title: string;
+  lead?: string;
+  center?: boolean;
+  class?: string;
+  /** Lands on the <h2> so a wrapping section can point `aria-labelledby` at it. */
+  id?: string;
+  /** Anything else is forwarded to the wrapper, including the scope attribute
+      Astro passes down — that is what lets a page make its own head sticky. */
+  [key: string]: unknown;
+}
+
+const { num, kicker, title, lead, center = false, class: className, id, ...rest } = Astro.props;
+---
+
+<div class:list={["head", center && "head--center", className]} data-reveal {...rest}>
+  <p class="stamp">
+    {num && <span class="stamp__num">{num}</span>}
+    {kicker}
+  </p>
+  <h2 class="head__title" id={id}>{title}</h2>
+  {lead && <p class="head__lead">{lead}</p>}
+</div>

@@ -1,0 +1,362 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/PageHero.astro";
+import SectionHead from "../../components/SectionHead.astro";
+import LedgerRail from "../../components/LedgerRail.astro";
+import StepList from "../../components/StepList.astro";
+import Icon from "../../components/Icon.astro";
+import FeatureMock from "../../components/mocks/FeatureMock.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import { features } from "../../lib/features";
+import { cta } from "../../lib/site";
+import { breadcrumbNode } from "../../lib/schema";
+
+export const getStaticPaths = (() =>
+  features.map((feature, index) => ({
+    params: { slug: feature.slug },
+    props: {
+      feature,
+      /* Wraps around, so the tour never dead-ends. */
+      next: features[(index + 1) % features.length],
+    },
+  }))) satisfies GetStaticPaths;
+
+const { feature, next } = Astro.props;
+const trail = [{ label: "Product", href: "/product" }];
+---
+
+<BaseLayout
+  title={feature.name}
+  description={feature.summary}
+  schema={[breadcrumbNode(trail, feature.name, `/product/${feature.slug}`)]}
+>
+  <PageHero
+    num={feature.num}
+    kicker={feature.kicker}
+    title={feature.title}
+    lead={feature.lead}
+    trail={trail}
+    current={feature.name}
+    primary={cta.primary}
+    secondary={cta.secondary}
+  >
+    <LedgerRail items={feature.metrics} class="detail__ledger" />
+  </PageHero>
+
+  <!-- ── Mock + capability list ───────────────────────────────────────── -->
+  <section class="section" aria-labelledby="does-title">
+    <div class="wrap detail__grid">
+      <div class="detail__stage">
+        <FeatureMock name={feature.mock} />
+      </div>
+
+      <div class="detail__copy">
+        <SectionHead
+          id="does-title"
+          num="01"
+          kicker="What it does"
+          title="The four things you will use every day."
+        />
+
+        <ul class="caps">
+          {
+            feature.points.map((point) => (
+              <li data-reveal>
+                <span class="caps__icon">
+                  <Icon name={point.icon} size={17} />
+                </span>
+                <div>
+                  <h3 class="caps__title">{point.title}</h3>
+                  <p class="caps__text">{point.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The longer argument ──────────────────────────────────────────── -->
+  <section class="section bg-surface" aria-labelledby="deeper-title">
+    <div class="wrap deeper">
+      <div class="deeper__body">
+        <p class="stamp"><span class="stamp__num">02</span> Why it works this way</p>
+        <h2 id="deeper-title" class="deeper__title">{feature.deeper.heading}</h2>
+        {feature.deeper.body.map((para) => <p class="deeper__para">{para}</p>)}
+      </div>
+
+      <aside class="deeper__panel" aria-label="Included in this module">
+        <p class="stamp stamp--brand">In the box</p>
+        <ul class="checks deeper__checks">
+          {
+            feature.deeper.checks.map((check) => (
+              <li>
+                <Icon name="check" size={15} />
+                <span>{check}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── Setup ────────────────────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="how-title">
+    <div class="wrap how">
+      <SectionHead
+        id="how-title"
+        num="03"
+        kicker="Getting it running"
+        title="Set up on the onboarding call, not over a quarter."
+        lead="Your implementation partner does these steps with you, on your real number, while you watch."
+        class="how__head"
+      />
+      <StepList items={feature.how} class="how__steps" />
+    </div>
+  </section>
+
+  <!-- ── Next module ──────────────────────────────────────────────────── -->
+  <section class="section-sm" aria-label="Continue the tour">
+    <div class="wrap">
+      <a class="nextcard" href={`/product/${next.slug}`}>
+        <span class="nextcard__label mono">Next · {next.num}</span>
+        <span class="nextcard__title">{next.name}</span>
+        <span class="nextcard__text">{next.summary}</span>
+        <span class="nextcard__go" aria-hidden="true">
+          <Icon name="arrowRight" size={18} />
+        </span>
+      </a>
+      <p class="nextcard__all">
+        <a class="arrow-link" href="/product">
+          Back to the full tour
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .detail__ledger {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  /* ── Mock + capabilities ────────────────────────────────────────────── */
+  .detail__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: start;
+  }
+
+  .detail__stage {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .caps {
+    margin-top: 2rem;
+    list-style: none;
+    display: grid;
+  }
+
+  .caps li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .caps li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .caps__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .caps__title {
+    font-size: 1.0625rem;
+    letter-spacing: -0.025em;
+    padding-top: 0.3rem;
+  }
+
+  .caps__text {
+    margin-top: 0.4rem;
+    font-size: var(--t-sm);
+    line-height: 1.62;
+    color: var(--ink-70);
+  }
+
+  @media (max-width: 1000px) {
+    .detail__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .detail__stage {
+      position: static;
+    }
+  }
+
+  /* ── Longer argument ────────────────────────────────────────────────── */
+  .deeper {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 1rem + 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .deeper__title {
+    margin-top: 1rem;
+    font-size: var(--t-h3);
+    max-width: 26ch;
+  }
+
+  .deeper__para {
+    margin-top: 1.1rem;
+    max-width: 42rem;
+    font-size: 1.0125rem;
+    line-height: 1.72;
+    color: var(--ink-70);
+  }
+
+  /* First paragraph carries the weight, so it gets the larger setting. */
+  .deeper__para:first-of-type {
+    font-size: var(--t-lead);
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  .deeper__panel {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    padding: clamp(1.35rem, 1rem + 1vw, 1.9rem);
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-3);
+  }
+
+  .deeper__checks {
+    margin-top: 1.25rem;
+  }
+
+  @media (max-width: 1000px) {
+    .deeper {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .deeper__panel {
+      position: static;
+    }
+  }
+
+  /* ── Setup steps ────────────────────────────────────────────────────── */
+  .how {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .how__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+  }
+
+  @media (max-width: 1000px) {
+    .how {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .how__head {
+      position: static;
+    }
+  }
+
+  /* ── Next card ──────────────────────────────────────────────────────── */
+  .nextcard {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.25rem 1.5rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    background: var(--ink);
+    color: var(--on-ink);
+    border-radius: var(--r-3);
+    transition: background var(--fast) var(--ease);
+  }
+
+  .nextcard:hover {
+    background: var(--ink-2);
+  }
+
+  .nextcard__label {
+    grid-column: 1;
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--signal);
+  }
+
+  .nextcard__title {
+    grid-column: 1;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+    font-weight: 800;
+    letter-spacing: var(--track-tight);
+  }
+
+  .nextcard__text {
+    grid-column: 1;
+    margin-top: 0.2rem;
+    max-width: 46ch;
+    font-size: var(--t-sm);
+    line-height: 1.55;
+    color: var(--on-ink-70);
+  }
+
+  .nextcard__go {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--rule-ink-2);
+    transition:
+      transform var(--base) var(--ease),
+      background var(--fast) var(--ease),
+      color var(--fast) var(--ease);
+  }
+
+  .nextcard:hover .nextcard__go {
+    transform: translateX(4px);
+    background: var(--signal);
+    border-color: var(--signal);
+    color: var(--ink);
+  }
+
+  .nextcard__all {
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 560px) {
+    .nextcard__go {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,234 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import { contact } from "../lib/site";
+
+interface Props {
+  title: string;
+  description: string;
+  kicker: string;
+  heading: string;
+  lead?: string;
+  /** Human-readable date, e.g. "1 September 2026". */
+  updated: string;
+  /** Section anchors; each `id` must match an `<h2 id>` in the slot. */
+  toc: readonly { id: string; label: string }[];
+  /** Plain-language précis shown above the legal text. */
+  summary?: readonly string[];
+  /** Who to write to about this document. */
+  contactEmail?: string;
+}
+
+const {
+  title,
+  description,
+  kicker,
+  heading,
+  lead,
+  updated,
+  toc,
+  summary,
+  contactEmail = contact.privacyEmail,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <PageHero kicker={kicker} title={heading} lead={lead} note={`Last updated ${updated}`} />
+
+  <div class="section">
+    <div class="wrap legal">
+      <nav class="legal__toc" aria-label="On this page">
+        <p class="stamp">On this page</p>
+        <ol>
+          {
+            toc.map((item, index) => (
+              <li>
+                <a href={`#${item.id}`}>
+                  <span class="legal__tocnum mono">{String(index + 1).padStart(2, "0")}</span>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="legal__stamp mono">
+          <Icon name="doc" size={13} />
+          Updated {updated}
+        </p>
+      </nav>
+
+      <div class="legal__body">
+        {
+          summary && summary.length > 0 && (
+            <aside class="legal__tldr" aria-label="Plain-language summary">
+              <p class="stamp stamp--brand">
+                <span class="stamp__num">TL;DR</span>
+                In plain English
+              </p>
+              <ul class="checks">
+                {summary.map((line) => (
+                  <li>
+                    <Icon name="check" size={15} />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+              <p class="legal__tldrnote">
+                This summary is here to be useful, not to replace the text below. Where the two
+                differ, the full text governs.
+              </p>
+            </aside>
+          )
+        }
+
+        <div class="prose">
+          <slot />
+        </div>
+
+        <aside class="legal__ask">
+          <Icon name="mail" size={17} />
+          <p>
+            Questions about this document? Write to <a href={`mailto:${contactEmail}`}
+              >{contactEmail}</a
+            > and a person — not a ticket queue — will answer.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .legal {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 4.5rem);
+    align-items: start;
+  }
+
+  /* --- Table of contents -------------------------------------------------- */
+  .legal__toc {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    display: grid;
+    gap: 1rem;
+  }
+
+  .legal__toc ol {
+    display: grid;
+    gap: 0.1rem;
+    list-style: none;
+  }
+
+  .legal__toc a {
+    display: grid;
+    grid-template-columns: 2.1rem 1fr;
+    gap: 0.35rem;
+    padding: 0.45rem 0.5rem 0.45rem 0;
+    border-top: 1px solid var(--rule);
+    font-size: var(--t-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.012em;
+    color: var(--ink-70);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .legal__toc li:last-child a {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .legal__toc a:hover {
+    color: var(--brand);
+  }
+
+  .legal__tocnum {
+    font-size: var(--t-mono-sm);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--ink-55);
+  }
+
+  .legal__toc a:hover .legal__tocnum {
+    color: var(--brand);
+  }
+
+  .legal__stamp {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .legal__stamp svg {
+    color: var(--ink-40);
+  }
+
+  /* --- Body -------------------------------------------------------------- */
+  .legal__body {
+    display: grid;
+    gap: 2.5rem;
+    min-width: 0;
+    max-width: 68ch;
+  }
+
+  .legal__tldr {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    border-radius: var(--r-3);
+  }
+
+  .legal__tldrnote {
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--brand-tint-2);
+    font-size: var(--t-xs);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .legal__ask {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: start;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--t-sm);
+    line-height: 1.65;
+    color: var(--ink-70);
+  }
+
+  .legal__ask svg {
+    margin-top: 0.2rem;
+    color: var(--brand);
+  }
+
+  .legal__ask a {
+    font-weight: 700;
+    color: var(--brand);
+  }
+
+  .legal__ask a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 1000px) {
+    .legal {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .legal__toc {
+      position: static;
+      padding-bottom: 0.5rem;
+    }
+  }
+</style>

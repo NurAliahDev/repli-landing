@@ -1,0 +1,260 @@
+---
+/* Customer logo row, scrolling right to left.
+   Two identical groups sit in one `max-content` track; the track animates from
+   `translateX(0)` to `translateX(-50%)`, which is exactly one group's width, so
+   the loop has no seam. The second group is `aria-hidden` — it is the same nine
+   logos, and a screen reader should hear them once.
+
+   Sizing is optical, not literal. A long wordmark set to the same pixel height
+   as a compact one occupies three times the area and reads as three times more
+   important, so each mark gets a height that equalises its area:
+   `h = BASE / sqrt(ratio / REF)`, clamped so nothing gets comic. `ratio` is the
+   width÷height of the mark's *ink*, measured with `getBBox()` — see
+   `CustomerBrand` in lib/content.ts.
+
+   ⚠️  The brands named here are real companies and none has signed off on being
+   listed as a customer. See BRAND-CONSENT.md before this site goes live. */
+import { customerBrands, type CustomerBrand } from "../lib/content";
+
+interface Props {
+  label?: string;
+  items?: readonly CustomerBrand[];
+}
+
+const { label = "Teams running on Ainnect today", items = customerBrands } = Astro.props;
+
+/* Optical sizing. BASE is the height of a mark at REF proportion; the clamp
+   keeps a near-square mark from towering over the row. */
+const BASE_H = 26;
+const REF_RATIO = 3.5;
+const MIN_H = 20;
+const MAX_H = 32;
+
+/* Weight matching. Desaturating nine brand palettes gives nine different greys,
+   so a flat opacity leaves the row ragged — measured at 0.62 alpha the marks ran
+   from 58 (Ruangguru) to 122 (Bukalapak), a 2.1× spread. Since a mark's darkness
+   scales linearly with alpha, dividing its measured `weight` out lands them all
+   on TARGET_WEIGHT: measured 2.1× → 1.01×.
+
+   A uniform `contrast()` was the obvious alternative and is wrong here.
+   `contrast()` pulls white toward mid-grey, and indomaret.svg is fully opaque
+   with a third of its box white: at contrast(0.75) — the gentlest setting worth
+   having — 28.6% of that box turns into grey slab, and DANA loses 4.2% of its
+   knockouts the same way. Alpha never touches white. */
+const REF_ALPHA = 0.62;
+const TARGET_WEIGHT = 92;
+const MIN_ALPHA = 0.45;
+const MAX_ALPHA = 1;
+
+/* Gap between marks, in px, mirroring `--marq-gap`. Only used to work out how
+   long one lap should take — the CSS value is what actually spaces them. */
+const GAP_PX = 56;
+/* Reading speed rather than a fixed duration: add a brand and the row keeps the
+   same pace instead of speeding up to finish in time. */
+const SPEED_PX_S = 32;
+
+const clamp = (value: number) => Math.max(MIN_H, Math.min(MAX_H, Math.round(value)));
+
+const marks = items.map((brand) => {
+  const ratio = brand.ratio ?? REF_RATIO;
+  const height = clamp(BASE_H / Math.sqrt(ratio / REF_RATIO));
+  const alpha = brand.weight
+    ? Math.max(MIN_ALPHA, Math.min(MAX_ALPHA, (REF_ALPHA * TARGET_WEIGHT) / brand.weight))
+    : REF_ALPHA;
+  return {
+    ...brand,
+    height,
+    alpha: Number(alpha.toFixed(3)),
+    width: Math.round(height * ratio),
+    /* Type fallback for a brand whose kit is not cleared yet. Its width is an
+       estimate — it only nudges the lap time, never the layout. */
+    typeWidth: brand.name.length * 11 + 4,
+  };
+});
+
+const groupWidth = marks.reduce((total, m) => total + (m.logo ? m.width : m.typeWidth) + GAP_PX, 0);
+const duration = Math.max(20, Math.round(groupWidth / SPEED_PX_S));
+---
+
+<div class="marq" data-reveal style={`--marq-dur:${duration}s`}>
+  <p class="stamp">{label}</p>
+
+  <div class="marq__viewport">
+    <div class="marq__track">
+      {
+        [false, true].map((isClone) => (
+          <ul class="marq__group" aria-label={isClone ? undefined : label} aria-hidden={isClone ? "true" : undefined}>
+            {marks.map((mark) => (
+              <li>
+                {mark.logo ? (
+                  /* Both groups keep real alt text. `aria-hidden` on the clone's
+                     <ul> takes the whole subtree out of the a11y tree, so the
+                     names are still announced exactly once — and every <img>
+                     carries a proper alt rather than an empty one. */
+                  <img
+                    class="marq__logo"
+                    src={mark.logo}
+                    alt={mark.name}
+                    width={mark.width}
+                    height={mark.height}
+                    style={`--logo-h:${mark.height}px;--logo-a:${mark.alpha}`}
+                    decoding="async"
+                  />
+                ) : (
+                  <span class="marq__name">{mark.name}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .marq {
+    --marq-gap: 3.5rem;
+    --marq-fade: 4.5rem;
+    /* Scales every mark together on narrow screens without touching the ratios. */
+    --logo-k: 1;
+    display: grid;
+    /* `minmax(0, 1fr)`, not the implicit `auto`: an auto track sizes to the
+       max-content of the track inside it, which is the whole 2,700px strip, so
+       the viewport would grow past the screen and take its edge fade with it. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  /* `clip` rather than `hidden`: it crops without creating a scroll container,
+     so nothing here can break `position: sticky` further up the page. */
+  .marq__viewport {
+    overflow: clip;
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 var(--marq-fade),
+      #000 calc(100% - var(--marq-fade)),
+      transparent 100%
+    );
+  }
+
+  /* Nothing stops this row: no button, and hover does not pause it either — the
+     brief is that it always moves. That trades away WCAG 2.2.2 (Pause, Stop,
+     Hide), which wants a control for motion running longer than five seconds.
+     The `prefers-reduced-motion` block below is what remains of it: anyone who
+     has asked their OS for less motion gets a static logo wall instead. If the
+     control ever comes back, it needs markup, a `.is-paused` class on `.marq`
+     and `animation-play-state: paused` here. */
+  .marq__track {
+    display: flex;
+    width: max-content;
+    animation: marq-slide var(--marq-dur, 40s) linear infinite;
+    will-change: transform;
+  }
+
+  /* -50% of the track is one group exactly, since both groups are identical. */
+  @keyframes marq-slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marq__group {
+    display: flex;
+    align-items: center;
+    gap: var(--marq-gap);
+    padding: 0 var(--marq-gap) 0 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .marq__group li {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Grey at rest so nine brand palettes do not fight the page, full colour on
+     hover. Not a single-ink mask: three of these marks use white knockouts
+     inside a coloured shape, and flattening them fills the holes in.
+
+     `--logo-a` is per-brand, worked out in the frontmatter from each mark's
+     measured weight — see the note there for why one shared opacity, or a
+     `contrast()` curve, does not work.
+
+     Do not reach for `mix-blend-mode: multiply` to hide the white in
+     indomaret.svg, which is fully opaque with a third of its box white. It
+     cannot work: blending only reaches the nearest isolated group, and both
+     `.marq__track` (`will-change`) and `.marq__viewport` (`mask-image`) form one
+     with a transparent background, so the formula collapses to `Cr = Cs` and the
+     declaration does nothing. The white is left as the brand drew it, which also
+     avoids editing a trademark on a guess: measured off a screenshot of the real
+     render it lands at most 5/255 above the paper across a fifth of its box, so
+     it stays under the threshold where it would read as a plate. */
+  .marq__logo {
+    height: calc(var(--logo-h) * var(--logo-k));
+    width: auto;
+    filter: grayscale(1);
+    opacity: var(--logo-a, 0.62);
+    transition:
+      filter var(--base) var(--ease),
+      opacity var(--base) var(--ease);
+  }
+
+  .marq__group li:hover .marq__logo {
+    filter: none;
+    opacity: 1;
+  }
+
+  /* Fallback for a brand with no cleared logo file. */
+  .marq__name {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    color: var(--ink-3);
+    opacity: 0.72;
+    white-space: nowrap;
+  }
+
+  :global(.on-ink) .marq__name {
+    color: var(--on-ink);
+    opacity: 0.6;
+  }
+
+  @media (max-width: 560px) {
+    .marq {
+      --marq-gap: 2.25rem;
+      --marq-fade: 1.75rem;
+      --logo-k: 0.82;
+    }
+  }
+
+  /* Motion off: hide the duplicate group and let the real one wrap like an
+     ordinary logo wall. */
+  @media (prefers-reduced-motion: reduce) {
+    .marq__viewport {
+      mask-image: none;
+    }
+
+    .marq__track {
+      display: block;
+      width: 100%;
+      animation: none;
+      will-change: auto;
+    }
+
+    .marq__group[aria-hidden="true"] {
+      display: none;
+    }
+
+    .marq__group {
+      flex-wrap: wrap;
+      column-gap: 2.25rem;
+      row-gap: 1.25rem;
+      padding-right: 0;
+    }
+  }
+</style>

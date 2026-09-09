@@ -1,0 +1,261 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/PageHero.astro";
+import SectionHead from "../../components/SectionHead.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import Icon from "../../components/Icon.astro";
+import IndustryGrid from "../../components/solutions/IndustryGrid.astro";
+import TeamRows from "../../components/solutions/TeamRows.astro";
+import UseCaseIndex from "../../components/solutions/UseCaseIndex.astro";
+import SizeBands from "../../components/solutions/SizeBands.astro";
+import { industries } from "../../lib/solutions";
+import { teams, useCases, sizes } from "../../lib/audiences";
+import { cta } from "../../lib/site";
+import { breadcrumbNode } from "../../lib/schema";
+
+/* Four ways people describe themselves when they call. Counts come from the
+   data so the hero can never disagree with the sections below it. */
+const axes = [
+  { href: "#by-industry", label: "By industry", count: industries.length, unit: "configurations" },
+  { href: "#by-team", label: "By team", count: teams.length, unit: "roles" },
+  { href: "#by-use-case", label: "By use case", count: useCases.length, unit: "jobs to be done" },
+  { href: "#by-size", label: "By company size", count: sizes.length, unit: "seat bands" },
+] as const;
+---
+
+<BaseLayout
+  title="Solutions by industry, team and use case"
+  description="Browse Ainnect by industry, team, use case or company size: twelve industry configurations and eight common jobs, all built on the same five modules."
+  schema={[breadcrumbNode([], "Solutions", "/solutions")]}
+>
+  <PageHero
+    kicker="Solutions"
+    title="Four ways in. One platform underneath."
+    current="Solutions"
+    lead="Start from your trade, your team, the job that is broken today, or the number of people who need a seat. Everything below is the same five modules configured differently — not five different products."
+    primary={cta.primary}
+    secondary={cta.secondary}
+  >
+    <nav class="axis" aria-label="Ways to browse solutions">
+      <ol class="axis__list">
+        {
+          axes.map((entry) => (
+            <li>
+              <a href={entry.href}>
+                <span class="axis__n mono">{entry.count}</span>
+                <span class="axis__body">
+                  <span class="axis__t">{entry.label}</span>
+                  <span class="axis__u mono">{entry.unit}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  </PageHero>
+
+  <!-- ── By industry ──────────────────────────────────────────────────── -->
+  <section id="by-industry" class="section" aria-labelledby="by-industry-title">
+    <div class="wrap">
+      <SectionHead
+        num="01"
+        kicker="By industry"
+        title="Twelve trades. Twelve different inboxes."
+        lead="A clinic and a car dealer both live on WhatsApp, and almost nothing else about their day is alike. Each configuration below is one we have already run with design partners."
+        id="by-industry-title"
+      />
+      <div class="block" data-reveal>
+        <IndustryGrid />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── By team ──────────────────────────────────────────────────────── -->
+  <section id="by-team" class="section bg-surface" aria-labelledby="by-team-title">
+    <div class="wrap">
+      <SectionHead
+        num="02"
+        kicker="By team"
+        title="Whoever opens the inbox first, this is what changes for them."
+        lead="Sales, support, marketing, operations — or the founder quietly doing all four before lunch."
+        id="by-team-title"
+      />
+      <div class="block" data-reveal>
+        <TeamRows />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── By use case ──────────────────────────────────────────────────── -->
+  <section id="by-use-case" class="section" aria-labelledby="by-use-case-title">
+    <div class="wrap">
+      <SectionHead
+        num="03"
+        kicker="By use case"
+        title="Or start from whatever is broken today."
+        lead="Eight jobs people hire us for, written the way they say them on the first call. Each one points at the modules that do the actual work."
+        id="by-use-case-title"
+      />
+      <div class="block" data-reveal>
+        <UseCaseIndex />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── By company size ──────────────────────────────────────────────── -->
+  <section id="by-size" class="section bg-paper-2" aria-labelledby="by-size-title">
+    <div class="wrap">
+      <SectionHead
+        num="04"
+        kicker="By company size"
+        title="Five people or five branches. The difference is governance, not features."
+        lead="Every plan gets the same inbox, the same scoring and the same agent. What changes higher up is control: multiple numbers, SSO, provisioning and where the data sits."
+        id="by-size-title"
+      />
+      <div class="block" data-reveal>
+        <SizeBands />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Not listed ───────────────────────────────────────────────────── -->
+  <section class="section-sm bg-surface" aria-labelledby="other-title">
+    <div class="wrap wrap-narrow other" data-reveal>
+      <p class="stamp stamp--brand">Not on the list</p>
+      <h2 id="other-title" class="other__title">
+        Your trade is missing. That is not a problem.
+      </h2>
+      <p class="other__text">
+        None of the twelve is a separate product — it is the same five modules, configured
+        differently. If you sell, quote, or book appointments over WhatsApp, the setup call is the
+        same call. Tell us what a good lead looks like in your business and we will build the
+        scoring around it.
+      </p>
+      <div class="other__actions">
+        <a class="btn btn--primary" href={cta.primary.href}>
+          {cta.primary.label}
+          <Icon name="arrowRight" size={16} />
+        </a>
+        <a class="btn btn--outline" href="/product">See the five modules</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  /* ── Hero axis nav ──────────────────────────────────────────────────── */
+  .axis {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .axis__list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    list-style: none;
+  }
+
+  .axis__list a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    height: 100%;
+    padding: 1rem clamp(0.75rem, 0.4rem + 1vw, 1.25rem) 0;
+    border-left: 1px solid var(--rule-2);
+  }
+
+  .axis__list li:first-child a {
+    padding-inline-start: 0;
+    border-left: 0;
+  }
+
+  .axis__n {
+    font-size: 1.375rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--brand);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .axis__body {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .axis__t {
+    font-size: var(--t-sm);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink-2);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .axis__u {
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-40);
+  }
+
+  .axis__list a:hover .axis__t {
+    color: var(--brand);
+  }
+
+  /* Two up on tablets, still two up on phones: the labels are short and the
+     four-way choice is the point of the block, so it stays a grid. */
+  @media (max-width: 780px) {
+    .axis__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .axis__list li:nth-child(2n + 1) a {
+      padding-inline-start: 0;
+      border-left: 0;
+    }
+
+    .axis__list li:nth-child(n + 3) a {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--rule-2);
+    }
+  }
+
+  @media (max-width: 400px) {
+    .axis__list a {
+      gap: 0.5rem;
+    }
+
+    .axis__n {
+      font-size: 1.125rem;
+    }
+  }
+
+  /* ── Section bodies ─────────────────────────────────────────────────── */
+  .block {
+    margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+  }
+
+  /* ── Not listed ─────────────────────────────────────────────────────── */
+  .other__title {
+    margin-top: 1rem;
+    font-size: var(--t-h3);
+  }
+
+  .other__text {
+    margin-top: 1.1rem;
+    font-size: var(--t-lead);
+    line-height: 1.62;
+    color: var(--ink-70);
+  }
+
+  .other__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1.75rem;
+  }
+</style>

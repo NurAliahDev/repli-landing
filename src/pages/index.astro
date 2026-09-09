@@ -1,0 +1,988 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import SectionHead from "../components/SectionHead.astro";
+import LedgerRail from "../components/LedgerRail.astro";
+import WordmarkRow from "../components/WordmarkRow.astro";
+import Testimonials from "../components/Testimonials.astro";
+import FaqList from "../components/FaqList.astro";
+import CtaBand from "../components/CtaBand.astro";
+import InboxMock from "../components/mocks/InboxMock.astro";
+import VoiceMock from "../components/mocks/VoiceMock.astro";
+import { cta } from "../lib/site";
+import { features } from "../lib/features";
+import { industries } from "../lib/solutions";
+import { heroMetrics, problems, outcomes, trustPoints, faqGroups } from "../lib/content";
+import { organizationNode, websiteNode, softwareNode, faqNode } from "../lib/schema";
+
+const agent = features[2];
+const homeFaq = faqGroups[0].items.slice(0, 4);
+---
+
+<BaseLayout
+  title="WhatsApp CRM with an AI agent that answers"
+  description="Ainnect turns WhatsApp into a real sales system: one shared inbox, AI lead scoring, no-code follow-up automation, and an agent that answers chats and calls."
+  schema={[organizationNode, websiteNode, softwareNode, faqNode(homeFaq)]}
+>
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <p class="pill pill--live" data-reveal>
+          <span class="dot dot--pulse"></span>
+          Private pilot · onboarding the first cohort now
+        </p>
+
+        <h1 id="hero-title" data-reveal style="--reveal-delay:60ms">
+          The WhatsApp CRM with an AI agent that <em>actually answers</em>.
+        </h1>
+
+        <p class="hero__lead" data-reveal style="--reveal-delay:120ms">
+          One shared inbox for your whole team, a 0–100 score on every lead, and an agent that
+          replies in seconds and picks up WhatsApp calls at 11pm — so the buyer who messaged three
+          suppliers hears back from you first.
+        </p>
+
+        <div class="hero__actions" data-reveal style="--reveal-delay:180ms">
+          <a class="btn btn--primary btn--lg" href={cta.primary.href}>
+            {cta.primary.label}
+            <Icon name="arrowRight" size={17} />
+          </a>
+          <a class="btn btn--outline btn--lg" href={cta.secondary.href}>{cta.secondary.label}</a>
+        </div>
+
+        <p class="hero__note" data-reveal style="--reveal-delay:220ms">
+          <Icon name="key" size={14} />
+          {cta.note}
+        </p>
+
+        <ul class="hero__strip mono" data-reveal style="--reveal-delay:260ms">
+          <li>Shared inbox</li>
+          <li>AI scoring</li>
+          <li>Chat &amp; voice agent</li>
+        </ul>
+      </div>
+
+      <div class="hero__stage" data-reveal style="--reveal-delay:200ms">
+        <InboxMock />
+        <p class="hero__chip mono" aria-hidden="true">
+          <strong>42s</strong>
+          median first reply
+        </p>
+      </div>
+    </div>
+
+    <div class="wrap hero__proof">
+      <WordmarkRow />
+      <LedgerRail items={heroMetrics} class="hero__ledger" />
+    </div>
+  </section>
+
+  <!-- ── The problem ──────────────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="problem-title">
+    <div class="wrap">
+      <SectionHead
+        id="problem-title"
+        num="01"
+        kicker="Why deals leak"
+        title="WhatsApp is where the money is. It is also where the money goes missing."
+        lead="Nothing here is a software problem yet. It is four operational failures that a chat app was never designed to prevent."
+      />
+
+      <ol class="probs">
+        {
+          problems.map((problem, index) => (
+            <li class="probs__item" data-reveal style={`--reveal-delay:${index * 70}ms`}>
+              <span class="probs__num mono">{String(index + 1).padStart(2, "0")}</span>
+              <div class="probs__body">
+                <h3 class="probs__title">
+                  <Icon name={problem.icon} size={17} />
+                  {problem.title}
+                </h3>
+                <p class="probs__text">{problem.text}</p>
+              </div>
+              <p class="probs__stat mono">{problem.stat}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── What changes ─────────────────────────────────────────────────── -->
+  <section class="section" aria-labelledby="outcome-title">
+    <div class="wrap outcomes">
+      <SectionHead
+        id="outcome-title"
+        num="02"
+        kicker="What changes"
+        title="Same number. Same team. A channel that behaves like a sales system."
+        lead="Ainnect does not ask your customers to move anywhere. It changes what happens on your side of the conversation."
+        class="outcomes__head"
+      />
+
+      <ul class="outcomes__list">
+        {
+          outcomes.map((outcome, index) => (
+            <li class="outcomes__item" data-reveal style={`--reveal-delay:${index * 60}ms`}>
+              <span class="outcomes__icon">
+                <Icon name={outcome.icon} size={18} />
+              </span>
+              <div>
+                <h3 class="outcomes__title">{outcome.title}</h3>
+                <p class="outcomes__text">{outcome.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Product index ────────────────────────────────────────────────── -->
+  <section class="section bg-surface tour" aria-labelledby="tour-title">
+    <div class="wrap">
+      <SectionHead
+        id="tour-title"
+        num="03"
+        kicker="The platform"
+        title="Five parts, one record of the conversation."
+        lead="Each one is useful alone. Together they mean nobody on your team has to remember anything."
+      />
+
+      <ol class="tour__list">
+        {
+          features.map((feature) => (
+            <li class="tour__item" data-reveal>
+              <a class="tour__link" href={`/product/${feature.slug}`}>
+                <span class="tour__num mono">{feature.num}</span>
+                <span class="tour__icon">
+                  <Icon name={feature.icon} size={19} />
+                </span>
+                <span class="tour__text">
+                  <span class="tour__name">{feature.name}</span>
+                  <span class="tour__summary">{feature.summary}</span>
+                </span>
+                <span class="tour__go" aria-hidden="true">
+                  <Icon name="arrowRight" size={17} />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+
+      <p class="tour__foot">
+        <a class="arrow-link" href="/product">
+          See how the five fit together
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ── AI agent spotlight ───────────────────────────────────────────── -->
+  <section class="section on-ink blueprint" aria-labelledby="agent-title">
+    <div class="wrap agent">
+      <div class="agent__copy">
+        <p class="stamp"><span class="stamp__num">04</span> {agent.kicker}</p>
+        <h2 id="agent-title" class="agent__title">{agent.title}</h2>
+        <p class="head__lead">{agent.lead}</p>
+
+        <ul class="checks agent__checks">
+          {
+            agent.deeper.checks.slice(0, 4).map((check) => (
+              <li>
+                <Icon name="check" size={15} />
+                <span>{check}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="agent__actions">
+          <a class="btn btn--light" href={`/product/${agent.slug}`}>
+            How the agent works
+            <Icon name="arrowRight" size={16} />
+          </a>
+          <a class="btn btn--ghost-ink" href="/contact">Hear a sample call</a>
+        </div>
+
+        <p class="agent__guard">
+          <Icon name="shield" size={14} />
+          Starts in shadow mode: it drafts, your team sends. Kill switch per pipeline, no deploy.
+        </p>
+      </div>
+
+      <div class="agent__stage">
+        <VoiceMock />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Solutions ────────────────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="industry-title">
+    <div class="wrap">
+      <SectionHead
+        id="industry-title"
+        num="05"
+        kicker="By industry"
+        title="The same questions, asked differently in every trade."
+        lead="Twelve configurations we have already run with design partners. Pick the one that sounds like your inbox."
+      />
+
+      <ul class="inds">
+        {
+          industries.slice(0, 6).map((industry) => (
+            <li data-reveal>
+              <a class="inds__link" href={`/solutions/${industry.slug}`}>
+                <span class="inds__icon">
+                  <Icon name={industry.icon} size={18} />
+                </span>
+                <span class="inds__name">{industry.name}</span>
+                <span class="inds__metric mono">
+                  {industry.metrics[0].value}
+                  <em>{industry.metrics[0].label}</em>
+                </span>
+                <Icon name="chevronRight" size={16} class="inds__go" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="inds__more">
+        <a class="arrow-link" href="/solutions">
+          All {industries.length} industries, plus by team, use case and company size
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Proof ────────────────────────────────────────────────────────── -->
+  <section class="section" aria-labelledby="proof-title">
+    <div class="wrap">
+      <SectionHead
+        id="proof-title"
+        num="06"
+        kicker="Customers"
+        title="Teams whose whole day already runs through WhatsApp."
+        lead="Marketplaces, payments, travel, retail networks. The volume is wildly different from one to the next; the failure mode is identical — a chat nobody answered."
+      />
+      <Testimonials limit={3} />
+      <p class="proof__more">
+        <a class="arrow-link" href="/customers">
+          Read the customer stories
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Ground rules ─────────────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="start-title">
+    <div class="wrap start">
+      <div>
+        <SectionHead
+          id="start-title"
+          num="07"
+          kicker="Ground rules"
+          title="Three promises that belong in the contract, not the pitch."
+          lead="A shared inbox ends up holding every customer conversation your business has ever had. Before you move that onto anyone's platform, these are the terms worth insisting on — ours are written down."
+        />
+        <a class="arrow-link start__link" href="/security">
+          Read the security detail
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </div>
+
+      <div class="start__trust">
+        <ul class="start__points">
+          {
+            trustPoints.map((point) => (
+              <li>
+                <span class="start__icon">
+                  <Icon name={point.icon} size={17} />
+                </span>
+                <h3 class="start__ptitle">{point.title}</h3>
+                <p class="start__ptext">{point.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
+  <section class="section" aria-labelledby="faq-title">
+    <div class="wrap faq">
+      <SectionHead
+        id="faq-title"
+        num="08"
+        kicker="Straight answers"
+        title="The four questions everyone asks on the first call."
+        class="faq__head"
+      />
+      <div class="faq__body">
+        <FaqList items={homeFaq} />
+        <p class="faq__more">
+          <a class="arrow-link" href="/faq">
+            All questions, grouped
+            <Icon name="arrowRight" size={15} />
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  /* ── Hero ───────────────────────────────────────────────────────────── */
+  .hero {
+    padding-top: clamp(2.5rem, 1.5rem + 4vw, 4.75rem);
+    padding-bottom: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: clamp(2rem, 1rem + 4vw, 3.75rem);
+    align-items: center;
+  }
+
+  #hero-title {
+    margin-top: 1.35rem;
+  }
+
+  /* Marker underline: two hairlines, drawn like a pen stroke under the phrase */
+  #hero-title em {
+    font-style: normal;
+    color: var(--brand);
+    background-image: linear-gradient(var(--brand-tint-2), var(--brand-tint-2));
+    background-size: 100% 0.28em;
+    background-position: 0 88%;
+    background-repeat: no-repeat;
+    box-decoration-break: clone;
+  }
+
+  .hero__lead {
+    margin-top: 1.35rem;
+    max-width: 34rem;
+    font-size: var(--t-lead);
+    line-height: 1.55;
+    color: var(--ink-70);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1.75rem;
+  }
+
+  .hero__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
+    max-width: 30rem;
+    font-size: var(--t-xs);
+    line-height: 1.5;
+    color: var(--ink-55);
+  }
+
+  .hero__note svg {
+    flex: 0 0 auto;
+    margin-top: 0.1rem;
+    color: var(--brand);
+  }
+
+  .hero__strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+    margin-top: 1.9rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+    list-style: none;
+    font-size: var(--t-mono);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .hero__strip li {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .hero__strip li + li::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--rule-3);
+  }
+
+  /* The mock is pushed slightly out of the grid and the chip overlaps it. */
+  .hero__stage {
+    position: relative;
+    margin-right: calc(var(--pad) * -0.5);
+  }
+
+  .hero__chip {
+    position: absolute;
+    left: -1.25rem;
+    bottom: 1.75rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--ink);
+    color: var(--on-ink);
+    border-radius: var(--r-2);
+    box-shadow: var(--shadow-3);
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+  }
+
+  .hero__chip strong {
+    font-family: var(--font-sans);
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--signal);
+  }
+
+  .hero__proof {
+    margin-top: clamp(2.5rem, 2rem + 3vw, 4rem);
+  }
+
+  .hero__ledger {
+    margin-top: 1.75rem;
+  }
+
+  @media (max-width: 1000px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+
+    .hero__stage {
+      margin-right: 0;
+    }
+
+    /* Stacked, the card has no empty corner left to float over. Pinned to the
+       bottom-right the 49px chip sat 33px inside the card, straight across
+       "Never sends without approval" — at every width from 360 to 990. Above
+       1000px it hangs off the card's left below the last conversation row,
+       where the list column genuinely ends, so the overlap stays up there. */
+    .hero__chip {
+      position: static;
+      width: max-content;
+      max-width: 100%;
+      margin-top: 0.75rem;
+      margin-left: auto;
+    }
+  }
+
+  /* ── Problems ───────────────────────────────────────────────────────── */
+  .probs {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .probs__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 1rem;
+    padding: 1.6rem 1.75rem 1.6rem 0;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .probs__item:nth-child(even) {
+    padding-left: 1.75rem;
+    padding-right: 0;
+    border-left: 1px solid var(--rule-2);
+  }
+
+  .probs__num {
+    font-size: var(--t-mono);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--brand);
+    padding-top: 0.2rem;
+  }
+
+  .probs__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.075rem;
+    letter-spacing: -0.025em;
+  }
+
+  .probs__title svg {
+    flex: 0 0 auto;
+    color: var(--ink-55);
+  }
+
+  .probs__text {
+    margin-top: 0.5rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .probs__stat {
+    grid-column: 2;
+    margin-top: 0.9rem;
+    padding-left: 0.7rem;
+    border-left: 2px solid var(--amber);
+    font-size: var(--t-mono);
+    line-height: 1.45;
+    color: var(--amber-ink);
+  }
+
+  @media (max-width: 780px) {
+    .probs {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .probs__item,
+    .probs__item:nth-child(even) {
+      padding: 1.4rem 0;
+      border-left: 0;
+    }
+  }
+
+  /* ── Outcomes ───────────────────────────────────────────────────────── */
+  .outcomes {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: start;
+  }
+
+  .outcomes__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+  }
+
+  .outcomes__list {
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+
+  .outcomes__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1.4rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .outcomes__item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .outcomes__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .outcomes__title {
+    font-size: 1.075rem;
+    letter-spacing: -0.025em;
+    padding-top: 0.35rem;
+  }
+
+  .outcomes__text {
+    margin-top: 0.45rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  @media (max-width: 1000px) {
+    .outcomes {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .outcomes__head {
+      position: static;
+    }
+  }
+
+  /* ── Product index ──────────────────────────────────────────────────── */
+  .tour__list {
+    margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+    list-style: none;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .tour__item {
+    border-bottom: 1px solid var(--rule-2);
+  }
+
+  .tour__link {
+    display: grid;
+    grid-template-columns: 2.5rem auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.15rem;
+    padding: 1.35rem 0.5rem 1.35rem 0;
+    transition: background var(--fast) var(--ease);
+  }
+
+  .tour__link:hover {
+    background: var(--paper);
+  }
+
+  .tour__num {
+    font-size: var(--t-mono);
+    letter-spacing: 0.08em;
+    color: var(--ink-55);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .tour__link:hover .tour__num {
+    color: var(--brand);
+  }
+
+  .tour__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--r-2);
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    color: var(--ink-3);
+    transition:
+      background var(--fast) var(--ease),
+      border-color var(--fast) var(--ease),
+      color var(--fast) var(--ease);
+  }
+
+  .tour__link:hover .tour__icon {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+  }
+
+  .tour__text {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .tour__name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .tour__summary {
+    font-size: var(--t-sm);
+    color: var(--ink-70);
+  }
+
+  .tour__go {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--rule-2);
+    color: var(--ink-55);
+    transition:
+      transform var(--base) var(--ease),
+      border-color var(--fast) var(--ease),
+      color var(--fast) var(--ease);
+  }
+
+  .tour__link:hover .tour__go {
+    transform: translateX(3px);
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+
+  .tour__foot {
+    margin-top: 1.75rem;
+  }
+
+  @media (max-width: 780px) {
+    .tour__link {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.5rem 0.9rem;
+      padding-block: 1.15rem;
+    }
+
+    .tour__num {
+      grid-column: 1 / -1;
+    }
+
+    .tour__go {
+      display: none;
+    }
+  }
+
+  /* ── AI agent spotlight ─────────────────────────────────────────────── */
+  .agent {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: center;
+  }
+
+  .agent__title {
+    margin-top: 1rem;
+    max-width: 22ch;
+  }
+
+  .agent__checks {
+    margin-top: 1.75rem;
+  }
+
+  .agent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 2rem;
+  }
+
+  .agent__guard {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin-top: 1.25rem;
+    max-width: 34rem;
+    font-size: var(--t-xs);
+    line-height: 1.55;
+    color: var(--on-ink-70);
+  }
+
+  .agent__guard svg {
+    flex: 0 0 auto;
+    margin-top: 0.1rem;
+    color: var(--signal);
+  }
+
+  @media (max-width: 1000px) {
+    .agent {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* ── Industries ─────────────────────────────────────────────────────── */
+  .inds {
+    margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1px;
+    background: var(--rule-2);
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-3);
+    overflow: hidden;
+  }
+
+  .inds__link {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.85rem;
+    height: 100%;
+    padding: 1.15rem 1.15rem;
+    background: var(--surface);
+    transition: background var(--fast) var(--ease);
+  }
+
+  .inds__link:hover {
+    background: var(--paper);
+  }
+
+  .inds__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-2);
+    background: var(--paper-2);
+    color: var(--ink-3);
+  }
+
+  .inds__link:hover .inds__icon {
+    background: var(--brand-tint);
+    color: var(--brand);
+  }
+
+  .inds__name {
+    font-size: var(--t-sm);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .inds__metric {
+    display: grid;
+    justify-items: end;
+    font-size: var(--t-mono);
+    font-weight: 500;
+    color: var(--brand);
+    text-align: right;
+  }
+
+  .inds__metric em {
+    font-style: normal;
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    color: var(--ink-55);
+    max-width: 11ch;
+    line-height: 1.3;
+  }
+
+  .inds__go {
+    color: var(--rule-3);
+    transition:
+      transform var(--base) var(--ease),
+      color var(--fast) var(--ease);
+  }
+
+  .inds__link:hover .inds__go {
+    transform: translateX(2px);
+    color: var(--brand);
+  }
+
+  .inds__more {
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 560px) {
+    .inds__link {
+      grid-template-columns: auto minmax(0, 1fr);
+      row-gap: 0.5rem;
+    }
+
+    .inds__metric {
+      grid-column: 2;
+      justify-items: start;
+      text-align: left;
+    }
+
+    .inds__go {
+      display: none;
+    }
+  }
+
+  .proof__more {
+    margin-top: 2rem;
+  }
+
+  /* ── Ground rules ───────────────────────────────────────────────────── */
+  .start {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(2rem, 1rem + 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .start__link {
+    margin-top: 1.75rem;
+  }
+
+  .start__trust {
+    padding: clamp(1.35rem, 1rem + 1vw, 1.9rem);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-3);
+    box-shadow: var(--shadow-1);
+  }
+
+  .start__points {
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+
+  .start__points li {
+    padding: 1.15rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .start__points li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .start__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--r-2);
+    background: var(--paper-2);
+    color: var(--brand);
+  }
+
+  .start__ptitle {
+    margin-top: 0.7rem;
+    font-size: 1rem;
+    letter-spacing: -0.025em;
+  }
+
+  .start__ptext {
+    margin-top: 0.35rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  @media (max-width: 1000px) {
+    .start {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* ── FAQ ────────────────────────────────────────────────────────────── */
+  .faq {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .faq__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+  }
+
+  .faq__more {
+    margin-top: 1.75rem;
+  }
+
+  @media (max-width: 1000px) {
+    .faq {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .faq__head {
+      position: static;
+    }
+  }
+</style>

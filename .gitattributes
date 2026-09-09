@@ -1,0 +1,14 @@
+# The working copies here are LF and the build runs on Linux (Vercel, Cloudflare),
+# so store LF in the repo and let Windows checkouts do what they like locally.
+# Without this, `core.autocrlf=true` on Windows rewrites every file on checkout and
+# the next `git status` is a wall of phantom changes.
+* text=auto eol=lf
+
+# Assets git must never touch. SVGs are text and stay text — they are edited by hand
+# (viewBox fixes live in BRAND-CONSENT.md) and should diff line by line.
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.ico binary
+*.woff binary
+*.woff2 binary

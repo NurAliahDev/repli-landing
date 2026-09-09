@@ -1,93 +1,181 @@
-# landing
+# Ainnect — marketing site
 
+Static marketing site for Ainnect, a WhatsApp CRM with an AI agent. Astro 5, no
+UI framework, no client-side router. 30 routes, zero external JavaScript bundles —
+the only scripts are small inline islands (header drawer, reveal-on-scroll, the
+login form).
 
+Design direction, palette and type decisions are recorded in
+[`LANDING-PAGE-BRIEF.md`](LANDING-PAGE-BRIEF.md).
 
-## Getting started
+> [!WARNING]
+> **Do not point `ainnect.site` at this build yet.** The site names real
+> Indonesian companies as customers and shows named people with their
+> photographs. None of it is cleared. Read
+> [`BRAND-CONSENT.md`](BRAND-CONSENT.md) first — it lists exactly what has to be
+> signed and what to delete if it is not. Deploying to a preview URL is fine;
+> that document is about the public launch.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Requirements
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- Node.js 22 (pinned in `.nvmrc` and `package.json` → `engines`)
+- npm 10
 
-## Add your files
+## Local development
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
+```bash
+npm ci            # npm install also works; ci respects the lockfile
+npm run dev       # http://localhost:4321, hot reload
+npm run build     # writes dist/
+npm run preview   # serves dist/ exactly as a host would
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/ainnect/landing.git
-git branch -M main
-git push -uf origin main
+
+`npm run preview` is the one to trust before deploying — `dev` transforms on the
+fly, `preview` serves the real build output from disk.
+
+## What the build produces
+
+`npm run build` writes a plain static tree to `dist/`:
+
+- 30 pages → 35 HTML files
+- 5 of those are redirect stubs (`/features`, `/pricing`, `/register`,
+  `/sign-up`, `/signup`) generated from `redirects` in `astro.config.mjs`. They
+  are `<meta http-equiv="refresh">` pages carrying `noindex` and a canonical
+  link, so they work on any static host with no host-specific config.
+- `dist/404.html` — a real page, not a stub. Configure your host to serve it.
+- `dist/sitemap.xml`, `dist/robots.txt`
+
+There is **no server runtime**: no adapter, no functions, no environment
+variables, no database. `/login` rejects every credential in the browser and
+makes no network request; the contact form hands off to `mailto:`. Nothing here
+needs a secret, so there is nothing to configure in a host's env panel.
+
+## Before a real domain
+
+`astro.config.mjs` sets `site: 'https://ainnect.site'`. That value builds the
+canonical tags and the sitemap. **If you deploy to a different hostname, change
+it**, or every page will advertise a canonical URL that is not where it lives.
+Preview deployments are fine to leave alone — they are `noindex` by convention on
+both hosts below — but a production domain change means editing that line.
+
+---
+
+## Deploy: option A — Vercel
+
+Vercel deploys a static Astro site with zero configuration and no adapter.
+
+1. **Vercel dashboard → Add New → Project → Import Git Repository.** Connect the
+   GitLab account that owns `ainnect/landing`. You need Maintainer or Owner on
+   the GitLab project so Vercel can install its webhook.
+2. Pick the repo. Vercel detects Astro and fills in:
+   - Framework Preset: **Astro**
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Install Command: `npm ci`
+3. Leave Environment Variables empty. This site has none.
+4. **Deploy.** First build is roughly a minute.
+5. **Project → Settings → Domains** to add `ainnect.site`. Vercel prints the DNS
+   records to create at your registrar (an `A` record for the apex, `CNAME` for
+   `www`).
+
+Node version comes from `engines.node` in `package.json`, so the build runs on
+Node 22 without touching project settings.
+
+Do **not** add `vercel.json` rewrites — Vercel's own Astro docs say rewriting URL
+paths that way produces inconsistent behaviour with Astro. Redirects belong in
+`astro.config.mjs`, which is where ours are.
+
+### Vercel from the CLI instead
+
+```bash
+npm i -g vercel
+vercel login
+vercel          # preview deployment, answers get saved to .vercel/
+vercel --prod   # production
 ```
 
-## Integrate with your tools
+`.vercel/` is generated per-machine and should stay out of git — add it to
+`.gitignore` if you use this path.
 
-* [Set up project integrations](https://gitlab.com/ainnect/landing/-/settings/integrations)
+---
 
-## Collaborate with your team
+## Deploy: option B — Cloudflare Pages
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+Pages is the older of Cloudflare's two static paths and still the shortest one
+from a Git repo.
 
-## Test and Deploy
+1. **Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git.**
+   Authorise GitLab and pick `ainnect/landing`.
+2. Build settings:
+   - Framework preset: **Astro**
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+3. Add one environment variable, because Cloudflare's default build image can
+   lag behind: `NODE_VERSION` = `22`. (`.nvmrc` in the repo says the same thing;
+   the variable is the one that is unambiguous.)
+4. **Save and Deploy.**
+5. **Custom domains** tab → add `ainnect.site`. If the domain's DNS is already on
+   Cloudflare, the records are created for you.
 
-Use the built-in continuous integration in GitLab.
+Pages serves `404.html` for unmatched paths automatically, and resolves
+`/about/index.html` for `/about` without extra config.
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+---
 
-***
+## Deploy: option C — Cloudflare Workers (static assets)
 
-# Editing this README
+Workers now serves static assets directly, and this is the path Cloudflare
+develops most actively. Because the site is fully prebuilt, **no Worker script is
+needed** — there is no `main`, just an assets directory.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Add `wrangler.jsonc` at the repo root:
 
-## Suggestions for a good README
+```jsonc
+{
+  "name": "ainnect-landing",
+  "compatibility_date": "2026-09-10",
+  "assets": {
+    "directory": "./dist/",
+    // Serve our real 404 page instead of a Cloudflare error page.
+    "not_found_handling": "404-page",
+    // Default. Resolves /about → /about/index.html the way the build expects.
+    "html_handling": "auto-trailing-slash"
+  }
+}
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Then, from your machine:
 
-## Name
-Choose a self-explaining name for your project.
+```bash
+npm i -D wrangler
+npx wrangler login
+npm run build
+npx wrangler deploy
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+To build on push instead, use **Workers & Pages → Create → Workers → Connect to
+Git**, point it at the GitLab repo, and set:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Custom domain is set per-Worker under **Settings → Domains & Routes**.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+---
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Which one
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+| | Vercel | Cloudflare Pages | Cloudflare Workers |
+| --- | --- | --- | --- |
+| Config files needed | none | none | `wrangler.jsonc` |
+| Setup effort | lowest | low | moderate |
+| Astro support | first-class, documented | framework preset | generic static assets |
+| Where Cloudflare is investing | — | maintained | actively developed |
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Take **Vercel** if you want it live in five minutes with nothing added to the
+repo. Take **Cloudflare Workers** if the rest of the stack is already on
+Cloudflare and you expect to add redirects, headers or an API on the same domain
+later. **Pages** is the middle option and needs no repo changes either.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+All three build the same `dist/`, so switching later costs one afternoon of DNS,
+not a rewrite.

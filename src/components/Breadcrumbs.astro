@@ -1,0 +1,97 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** Ancestors only — the current page is added as plain text. */
+  trail?: { label: string; href: string }[];
+  current: string;
+}
+
+const { trail = [], current } = Astro.props;
+const items = [{ label: "Home", href: "/" }, ...trail];
+---
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      items.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+          <Icon name="chevronRight" size={13} />
+        </li>
+      ))
+    }
+    <li><span aria-current="page">{current}</span></li>
+  </ol>
+</nav>
+
+<style>
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .crumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  /* The mono type is 12px, which left an 18px-tall link. The block padding takes
+     it past the 24px minimum for a pointer, and the negative inline margin keeps
+     the row optically flush with the heading below it. */
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.15rem;
+    margin-inline: -0.15rem;
+    color: var(--ink-55);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .crumbs a:hover {
+    color: var(--brand);
+  }
+
+  .crumbs svg {
+    color: var(--rule-3);
+  }
+
+  .crumbs [aria-current] {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* On a dark hero the paper-tone inks invert — [aria-current] would otherwise be
+     var(--ink) on var(--ink). */
+  :global(.on-ink) .crumbs a {
+    color: var(--on-ink-70);
+  }
+
+  :global(.on-ink) .crumbs a:hover {
+    color: var(--signal);
+  }
+
+  :global(.on-ink) .crumbs svg {
+    color: var(--rule-ink-2);
+  }
+
+  :global(.on-ink) .crumbs [aria-current] {
+    color: var(--on-ink);
+  }
+
+  /* See the touch-target note in tokens.css. Adds ~26px above the heading on a
+     phone, which is worth it for the only way back up the tree. */
+  @media (pointer: coarse) {
+    .crumbs a {
+      min-height: 44px;
+    }
+  }
+</style>

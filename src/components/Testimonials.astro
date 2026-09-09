@@ -1,0 +1,288 @@
+---
+import Icon from "./Icon.astro";
+import { testimonials, testimonialDisclosure } from "../lib/content";
+import type { Testimonial } from "../lib/content";
+
+interface Props {
+  items?: readonly Testimonial[];
+  limit?: number;
+  /** Gives the first quote a double-width, larger-type treatment. */
+  featureFirst?: boolean;
+  disclosure?: boolean;
+}
+
+const {
+  items = testimonials,
+  limit,
+  featureFirst = true,
+  disclosure = true,
+} = Astro.props;
+
+const list = limit ? items.slice(0, limit) : items;
+
+/* Portraits ship at 100×100 (one at 800×800), so 44 is the largest avatar that
+   never upscales on a 2× screen: 44 × 2 = 88 device px. Mirrors `--avatar`. */
+const AVATAR_PX = 44;
+
+/* Three quotes tile as one full-width feature over a pair. Any other count keeps
+   the even three-column grid, where the double-width feature is only used when it
+   still leaves a full last row instead of a two-column hole. */
+const isSplit = featureFirst && list.length === 3;
+const hasFeature = featureFirst && (isSplit || (list.length + 1) % 3 === 0);
+---
+
+<div class="quotes">
+  <div class:list={["quotes__grid", isSplit && "quotes__grid--split"]}>
+    {
+      list.map((item, index) => (
+        <figure
+          class="quote card card--lift"
+          data-featured={hasFeature && index === 0 ? "" : undefined}
+          data-reveal
+          style={`--reveal-delay:${Math.min(index, 4) * 70}ms`}
+        >
+          <div class="quote__top">
+            <Icon name="quote" size={22} class="quote__mark" />
+            <span class="stamp">{item.industry}</span>
+          </div>
+
+          <blockquote class="quote__text">{item.quote}</blockquote>
+
+          <figcaption class="quote__foot">
+            {item.photo ? (
+              /* Decorative on purpose: the person's name, role and company are
+                 in the text right beside it, so alt text here would only make a
+                 screen reader say the name twice. Written as a literal `alt=""`
+                 rather than `alt={""}`, which Astro compiles to a bare `alt`. */
+              <img
+                class="quote__photo"
+                src={item.photo}
+                alt=""
+                width={AVATAR_PX}
+                height={AVATAR_PX}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <span class="quote__avatar mono" aria-hidden="true">
+                {item.initials}
+              </span>
+            )}
+            <span class="quote__who">
+              <strong>{item.name ?? item.company}</strong>
+              <span>{item.name ? `${item.role}, ${item.company}` : item.role}</span>
+            </span>
+          </figcaption>
+
+          {item.metric && (
+            <div class="quote__metric">
+              <span class="quote__metric-label">{item.metric.label}</span>
+              <span class="quote__metric-value mono">{item.metric.value}</span>
+            </div>
+          )}
+        </figure>
+      ))
+    }
+  </div>
+
+  {
+    disclosure && (
+      <p class="quotes__note">
+        <Icon name="alert" size={14} />
+        {testimonialDisclosure}
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .quotes__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .quotes__grid--split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quote {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .quote__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .quote__mark {
+    color: var(--brand-tint-2);
+  }
+
+  .quote__text {
+    font-size: var(--t-sm);
+    line-height: 1.68;
+    color: var(--ink-2);
+    letter-spacing: -0.008em;
+  }
+
+  .quote[data-featured] {
+    grid-column: span 2;
+  }
+
+  .quotes__grid--split .quote[data-featured] {
+    grid-column: span 2;
+  }
+
+  .quotes__grid--split .quote[data-featured] .quote__text {
+    font-size: 1.3125rem;
+    line-height: 1.5;
+    max-width: 52ch;
+  }
+
+  .quote[data-featured] .quote__text {
+    font-size: 1.1875rem;
+    line-height: 1.55;
+    letter-spacing: -0.024em;
+    max-width: 44ch;
+  }
+
+  .quote[data-featured] .quote__mark {
+    color: var(--brand);
+  }
+
+  .quote__foot {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: auto;
+  }
+
+  /* One size for both the portrait and the initials fallback, so a card without
+     a cleared photo still lines up with the ones that have it. Kept in step with
+     AVATAR_PX in the frontmatter. */
+  .quotes {
+    --avatar: 44px;
+  }
+
+  .quote__avatar,
+  .quote__photo {
+    width: var(--avatar);
+    height: var(--avatar);
+    flex: 0 0 auto;
+    border-radius: var(--r-2);
+  }
+
+  .quote__avatar {
+    display: grid;
+    place-items: center;
+    background: var(--ink);
+    color: var(--on-ink);
+    font-size: var(--t-mono);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .quote__photo {
+    /* Portraits are square already; `cover` is insurance against a replacement
+       file that is not. The hairline keeps a pale photo background from bleeding
+       into the card, and the tint is what shows while it loads.
+
+       A `border`, not an inset `box-shadow`: on a replaced element the replaced
+       content paints over inset shadows, so the hairline would be invisible.
+       Global `box-sizing: border-box` keeps the box at 44px either way. */
+    object-fit: cover;
+    background: var(--paper-3);
+    border: 1px solid var(--rule-2);
+  }
+
+  .quote__who {
+    display: grid;
+    line-height: 1.35;
+  }
+
+  .quote__who strong {
+    font-size: var(--t-sm);
+    letter-spacing: -0.02em;
+  }
+
+  .quote__who span {
+    font-size: var(--t-xs);
+    color: var(--ink-55);
+  }
+
+  .quote__metric {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .quote__metric-label {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .quote__metric-value {
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--brand);
+  }
+
+  .quotes__note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: start;
+    margin-top: 1.5rem;
+    max-width: 62ch;
+    font-size: var(--t-xs);
+    line-height: 1.6;
+    color: var(--ink-55);
+  }
+
+  .quotes__note svg {
+    margin-top: 0.15rem;
+    color: var(--ink-40);
+  }
+
+  @media (max-width: 1000px) {
+    .quotes__grid,
+    .quotes__grid--split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .quotes__grid--split .quote[data-featured] {
+      grid-column: span 2;
+      grid-row: auto;
+    }
+  }
+
+  @media (max-width: 780px) {
+    .quotes__grid,
+    .quotes__grid--split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .quote[data-featured],
+    .quotes__grid--split .quote[data-featured] {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .quote[data-featured] .quote__text,
+    .quotes__grid--split .quote[data-featured] .quote__text {
+      font-size: 1.0625rem;
+    }
+  }
+</style>

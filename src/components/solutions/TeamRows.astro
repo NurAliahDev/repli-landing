@@ -1,0 +1,213 @@
+---
+/* Five roles, read as a register: hairline-separated full-width rows rather
+   than cards, so the eye runs down the left column looking for its own job. */
+import Icon from "../Icon.astro";
+import { teams } from "../../lib/audiences";
+---
+
+<div class="trows">
+  {
+    teams.map((team) => (
+      <article class="trow" id={team.slug}>
+        <div class="trow__who">
+          <span class="trow__badge">
+            <Icon name={team.icon} size={20} />
+          </span>
+          <div>
+            <span class="trow__num mono">{team.num}</span>
+            <h3 class="trow__name">{team.name}</h3>
+            <p class="trow__sub">{team.who}</p>
+          </div>
+        </div>
+
+        <div class="trow__body">
+          <p class="trow__head">{team.headline}</p>
+          <ul class="trow__wins">
+            {team.wins.map((win) => (
+              <li>
+                <Icon name="check" size={15} class="trow__tick" />
+                <span>{win}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="trow__metric">
+          <span class="trow__value mono">{team.metric.value}</span>
+          <span class="trow__label">{team.metric.label}</span>
+          {team.metric.note && <span class="trow__note mono">{team.metric.note}</span>}
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .trows {
+    border-top: 1px solid var(--rule);
+  }
+
+  .trow {
+    display: grid;
+    /* All three tracks are fractional on purpose. With `minmax(9rem, auto)` on
+       the metric, each row sized that column to its own number — so "1,400"
+       pulled row four's middle column 20px left of row one's, and a register
+       ruled with hairlines showed the misalignment on every line. */
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr) minmax(0, 0.85fr);
+    gap: clamp(1.25rem, 0.5rem + 2.4vw, 2.75rem);
+    align-items: start;
+    padding: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* --- Who ---------------------------------------------------------------- */
+
+  .trow__who {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .trow__badge {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--r-2);
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+
+  .trow__num {
+    display: block;
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    color: var(--ink-40);
+  }
+
+  .trow__name {
+    margin-top: 0.15rem;
+    font-size: var(--t-h4);
+    font-weight: 800;
+    letter-spacing: var(--track-tight);
+    line-height: 1.2;
+  }
+
+  .trow__sub {
+    margin-top: 0.5rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-55);
+  }
+
+  /* --- What changes ------------------------------------------------------- */
+
+  .trow__head {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.4;
+  }
+
+  .trow__wins {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+    list-style: none;
+  }
+
+  .trow__wins li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.55rem;
+    font-size: var(--t-sm);
+    line-height: 1.55;
+    color: var(--ink-70);
+  }
+
+  .trow__tick {
+    margin-top: 0.28rem;
+    color: var(--brand);
+  }
+
+  /* --- Metric ------------------------------------------------------------- */
+
+  .trow__metric {
+    padding-left: clamp(1rem, 0.6rem + 1vw, 1.5rem);
+    border-left: 2px solid var(--brand);
+  }
+
+  .trow__value {
+    display: block;
+    font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--brand);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .trow__label {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: var(--t-xs);
+    line-height: 1.45;
+    color: var(--ink-70);
+  }
+
+  .trow__note {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-40);
+  }
+
+  /* --- Narrow ------------------------------------------------------------- */
+
+  /* Below the lap breakpoint the three columns become two: identity on top,
+     then the detail and the number side by side while there is still room.
+     Fractional again, for the same alignment reason as the wide layout. */
+  @media (max-width: 1000px) {
+    .trow {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.4fr);
+      gap: 1.25rem clamp(1.25rem, 0.5rem + 2vw, 2rem);
+    }
+
+    .trow__who {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .trow {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .trow__metric {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.2rem 0.7rem;
+      padding: 0.7rem 0 0 0;
+      border-left: 0;
+      border-top: 2px solid var(--brand);
+    }
+
+    .trow__value {
+      font-size: 1.6rem;
+    }
+
+    .trow__label,
+    .trow__note {
+      margin-top: 0;
+    }
+
+    /* The note repeats scope the label already implies once they sit on one
+       line, so it steps back rather than competing. */
+    .trow__note {
+      width: 100%;
+    }
+  }
+</style>

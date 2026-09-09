@@ -1,0 +1,230 @@
+---
+import LegalLayout from "../layouts/LegalLayout.astro";
+import { site, contact } from "../lib/site";
+
+const toc = [
+  { id: "scope", label: "What this covers" },
+  { id: "collect", label: "What we collect" },
+  { id: "conversations", label: "WhatsApp conversation data" },
+  { id: "use", label: "How we use it" },
+  { id: "ai", label: "AI processing" },
+  { id: "processors", label: "Who else touches it" },
+  { id: "retention", label: "Where it lives, and for how long" },
+  { id: "rights", label: "Your rights" },
+  { id: "changes", label: "Changes and contact" },
+] as const;
+
+const summary = [
+  "We process your customers' WhatsApp messages so that you can run your own sales pipeline. You own that data; we hold it on your behalf.",
+  "We never sell it, rent it, or use it to train a shared AI model.",
+  "It is stored in Singapore, encrypted in transit and at rest, and isolated per workspace.",
+  "You can export everything at any time, and ask us to delete it — we confirm deletion in writing.",
+  "Four named sub-processors, listed below. No advertising networks, ever.",
+] as const;
+---
+
+<LegalLayout
+  title="Privacy Policy"
+  description="How Ainnect collects, uses, stores and deletes business and WhatsApp conversation data — sub-processors, retention periods, and how AI reads your messages."
+  kicker="Legal"
+  heading="Privacy Policy"
+  lead="Written to be read. If any part of this is unclear, that is a defect in the document and we would like to hear about it."
+  updated="1 September 2026"
+  toc={toc}
+  summary={summary}
+>
+  <h2 id="scope">1. What this covers</h2>
+  <p>
+    This policy explains how {site.legalName} ("{site.name}", "we") — the Indonesian company that
+    operates {site.name} — handles personal data when you visit this website, when you talk to us
+    about buying the product, and when your team uses the {site.name} workspace.
+  </p>
+  <p>
+    Two different relationships are covered here, and the distinction matters:
+  </p>
+  <ul>
+    <li>
+      <strong>For your own account data</strong> — the names, emails and phone numbers of your
+      staff, your billing details, your support messages — we are the <strong>controller</strong>.
+      We decide what to collect and why.
+    </li>
+    <li>
+      <strong>For your customers' data</strong> — everyone who messages your WhatsApp number — we
+      are a <strong>processor</strong> acting on your instructions. You are the controller. You
+      decide what is collected, why, and for how long; we execute that and nothing more.
+    </li>
+  </ul>
+  <p>
+    If your organisation needs that written into a contract, ask for our data processing agreement
+    at <a href={`mailto:${contact.privacyEmail}`}>{contact.privacyEmail}</a>. We sign it before
+    onboarding, not after.
+  </p>
+
+  <h2 id="collect">2. What we collect</h2>
+  <h3>From this website</h3>
+  <p>
+    Page requests are logged by our host with an IP address and user agent for security and abuse
+    prevention, and those logs are discarded after 30 days. We do not run advertising pixels,
+    cross-site trackers, or third-party analytics that build a profile of you. There is no cookie
+    banner on this site because there is nothing to consent to.
+  </p>
+  <h3>When you contact us</h3>
+  <p>
+    The access-request and contact forms on this site do not submit to a server. They compose a
+    message in WhatsApp or your email client, which you then choose to send. Whatever you send us
+    that way — name, company, phone number, whatever you wrote in the notes field — sits in our
+    inbox and our CRM until you ask us to remove it.
+  </p>
+  <h3>When your team uses the product</h3>
+  <ul>
+    <li><strong>Account data:</strong> workspace name, seat names, work emails, roles, password hashes.</li>
+    <li><strong>Billing data:</strong> company details, tax identifiers, invoice history. Card details go straight to our payment processor and never touch our servers.</li>
+    <li>
+      <strong>Usage data:</strong> which features a seat uses, when they log in, what they change.
+      This is what the audit log shows you, and it is how we debug your problems.
+    </li>
+    <li><strong>Support data:</strong> the messages you send us and the screenshots you attach.</li>
+  </ul>
+
+  <h2 id="conversations">3. WhatsApp conversation data</h2>
+  <p>
+    This is the sensitive part, so it gets its own section. When you connect a WhatsApp Business
+    number, {site.name} receives and stores:
+  </p>
+  <ul>
+    <li>the phone number, WhatsApp profile name, and any contact fields your team fills in;</li>
+    <li>the full text of messages exchanged with your number, in both directions;</li>
+    <li>media your customers send — images, documents, voice notes — and media you send back;</li>
+    <li>delivery and read status, timestamps, and which seat handled which conversation;</li>
+    <li>derived values: lead score, assigned owner, pipeline stage, tags, internal notes.</li>
+  </ul>
+  <p>
+    We store this because it <em>is</em> the product. A CRM that forgets the conversation is a
+    spreadsheet. What we do not do is read it for our own purposes: no employee opens a customer
+    conversation unless you ask us to look at something specific, or unless a system alert requires
+    it to keep the service running. Those accesses are logged and available to you.
+  </p>
+  <p>
+    Your customers are messaging <em>you</em>, not us. Telling them how you use their data is your
+    responsibility as controller — including honouring opt-outs, which the product supports and
+    which the AI agent respects automatically.
+  </p>
+
+  <h2 id="use">4. How we use it</h2>
+  <p>We use data for these purposes and no others:</p>
+  <ul>
+    <li><strong>To run the service</strong> you are paying for — routing messages, scoring leads, firing automations, drawing reports.</li>
+    <li><strong>To support you</strong> when you report a problem.</li>
+    <li><strong>To bill you</strong> and to meet our own tax and accounting obligations.</li>
+    <li><strong>To keep the service secure</strong> — rate limiting, abuse detection, fraud prevention.</li>
+    <li>
+      <strong>To improve the product in aggregate</strong> — counts and timings such as "median
+      first-response time fell this month". Aggregate means aggregate: no message content, no
+      identifiers, nothing that resolves back to a person.
+    </li>
+  </ul>
+  <p>
+    We do not sell personal data. We do not share it with advertisers or data brokers. We do not
+    build a cross-customer contact graph. If we ever want to do something with your data that is not
+    on this list, we will ask you first, in writing, and a "no" costs you nothing.
+  </p>
+
+  <h2 id="ai">5. AI processing</h2>
+  <p>
+    The AI agent, lead scoring and summarisation features send conversation content to a large
+    language model provider to generate a reply or a score. This matters enough to spell out:
+  </p>
+  <ul>
+    <li>
+      <strong>Your data is never used to train a shared model.</strong> We use enterprise API tiers
+      with training disabled and zero data retention on the provider side, so prompts are not kept
+      after the response is returned.
+    </li>
+    <li>
+      <strong>The agent only sees what it needs.</strong> Prompts are scoped to the conversation
+      being handled plus the knowledge base you uploaded — not your whole database, and never
+      another workspace.
+    </li>
+    <li>
+      <strong>You choose what it may say.</strong> Anything you mark as escalate-to-human is handed
+      over, not answered.
+    </li>
+    <li>
+      <strong>You can turn it off.</strong> Disable AI features per workspace and the calls stop
+      immediately. The rest of the CRM keeps working.
+    </li>
+    <li>
+      <strong>Every AI action is logged</strong> with the prompt, the output, and the seat or trigger
+      that caused it, so an AI reply is as auditable as a human one.
+    </li>
+  </ul>
+
+  <h2 id="processors">6. Who else touches it</h2>
+  <p>
+    We keep this list short on purpose, and we will tell you at least 30 days before adding to it.
+  </p>
+  <ul>
+    <li><strong>Cloud infrastructure</strong> — hosting, managed database and object storage in the Singapore region.</li>
+    <li><strong>WhatsApp Business Platform</strong> — the channel itself. Messages transit Meta's infrastructure under their terms; that is inherent to using WhatsApp at all.</li>
+    <li><strong>AI model provider</strong> — enterprise tier, training disabled, zero retention, as described above.</li>
+    <li><strong>Payment processor</strong> — card handling and invoicing. They hold your billing data; we hold a reference.</li>
+  </ul>
+  <p>
+    Each one is bound by a written agreement no weaker than this policy. The current list with legal
+    entity names and regions is in the DPA — ask and it arrives the same day.
+  </p>
+
+  <h2 id="retention">7. Where it lives, and for how long</h2>
+  <p>
+    Primary storage is in <strong>Singapore</strong>. Scale customers can request Jakarta hosting
+    where a data-residency requirement applies. Data is encrypted in transit with TLS 1.3 and at rest
+    with AES-256, and every workspace is logically isolated with row-level access control.
+  </p>
+  <ul>
+    <li><strong>While you are a customer:</strong> conversations and contacts are kept until you delete them. You set your own retention rules per workspace; we do not impose one.</li>
+    <li><strong>Encrypted backups:</strong> retained 30 days on a rolling window, then overwritten.</li>
+    <li><strong>Audit and access logs:</strong> 12 months, because that is what a security review needs.</li>
+    <li><strong>After you cancel:</strong> your workspace stays available for 30 days so you can export. We delete production data 60 days after cancellation and confirm in writing when it is gone.</li>
+    <li><strong>Invoices:</strong> kept as long as Indonesian tax law requires, regardless of deletion requests. That obligation overrides our preference.</li>
+  </ul>
+
+  <h2 id="rights">8. Your rights</h2>
+  <p>
+    Depending on where you or your customers are, you may have the right to access, correct, export,
+    restrict or delete personal data, and to object to certain processing. Under Indonesia's Personal
+    Data Protection Law (UU 27/2022) and, where it applies, the GDPR, those rights are enforceable —
+    and we would honour them either way.
+  </p>
+  <p>
+    In practice: everything in the product is exportable to CSV or JSON from the interface, without
+    asking us. Contacts, conversations, media and scores. If you would rather we did it, or you need
+    something the export does not cover, write to
+    <a href={`mailto:${contact.privacyEmail}`}>{contact.privacyEmail}</a>.
+  </p>
+  <p>
+    We answer within <strong>7 days</strong> and complete the request within <strong>30</strong>. If
+    the request concerns one of <em>your</em> customers, we will point them back to you — you are the
+    controller, and it is not our place to act on your data without your instruction.
+  </p>
+  <p>
+    If a breach affects your data, we notify you without undue delay and no later than 72 hours after
+    we confirm it, with what happened, what we know, and what we are doing. We will not wait until we
+    have a tidy story.
+  </p>
+
+  <h2 id="changes">9. Changes and contact</h2>
+  <p>
+    When this policy changes materially we email every workspace admin and update the date at the top
+    of this page. We do not backdate revisions, and we do not treat continued use as consent to a
+    change you were never told about.
+  </p>
+  <p>
+    Write to <a href={`mailto:${contact.privacyEmail}`}>{contact.privacyEmail}</a> for anything on
+    this page — DPAs, deletion requests, security questionnaires, or a plain question. Postal address:
+    {" "}{site.legalName}, {contact.officeLines.join(", ")}.
+  </p>
+  <p>
+    Our practical security posture, including what we are <em>not</em> certified for, is on the
+    <a href="/security">security page</a>.
+  </p>
+</LegalLayout>

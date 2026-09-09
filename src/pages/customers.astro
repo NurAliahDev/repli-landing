@@ -1,0 +1,286 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import SectionHead from "../components/SectionHead.astro";
+import Testimonials from "../components/Testimonials.astro";
+import WordmarkRow from "../components/WordmarkRow.astro";
+import LedgerRail from "../components/LedgerRail.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import { testimonials, testimonialDisclosure, heroMetrics, customerBrands } from "../lib/content";
+import { cta } from "../lib/site";
+import { breadcrumbNode } from "../lib/schema";
+
+/* Only teams who gave us a number appear in the results table. */
+const measured = testimonials.filter((entry) => entry.metric !== undefined);
+
+/* Counted, never typed out — the copy on this page cannot drift from the data.
+   Every brand named here needs written sign-off first: see /BRAND-CONSENT.md. */
+const brandCount = customerBrands.length;
+---
+
+<BaseLayout
+  title="Customers"
+  description="Marketplaces, payments, travel and retail networks run their WhatsApp on Ainnect. What each team measured, and the numbers they reported in their first 90 days."
+  schema={[breadcrumbNode([], "Customers", "/customers")]}
+>
+  <PageHero
+    kicker="Customers"
+    title="You have probably messaged one of these companies this month."
+    current="Customers"
+    lead="Marketplaces, payments, travel, health, retail networks. The volume is wildly different from one to the next; the failure mode is identical — and on the other side of those chats there is now one inbox with an owner for every conversation."
+    primary={cta.primary}
+    secondary={{ label: "Read the FAQ", href: "/faq" }}
+  >
+    <LedgerRail items={heroMetrics} class="cust__ledger" />
+  </PageHero>
+
+  <!-- ── Who they are ─────────────────────────────────────────────────── -->
+  <section class="section-sm" aria-labelledby="who-title">
+    <div class="wrap">
+      <h2 id="who-title" class="sr-only">Who runs Ainnect today</h2>
+      <WordmarkRow label={`${brandCount} teams running their WhatsApp on Ainnect today`} />
+    </div>
+  </section>
+
+  <!-- ── The quotes ───────────────────────────────────────────────────── -->
+  <section class="section" aria-labelledby="quotes-title">
+    <div class="wrap">
+      <SectionHead
+        id="quotes-title"
+        num="01"
+        kicker="In their words"
+        title="What changed, described by the teams it changed for."
+        lead="Attributed by role rather than by individual name — these are the operations leads who own the queue. Unedited except for length."
+      />
+      <Testimonials disclosure={false} />
+    </div>
+  </section>
+
+  <!-- ── The numbers ──────────────────────────────────────────────────── -->
+  <section class="section bg-surface" aria-labelledby="numbers-title">
+    <div class="wrap">
+      <SectionHead
+        id="numbers-title"
+        num="02"
+        kicker="Reported results"
+        title="Their numbers, labelled the way they gave them to us."
+        lead="Self-reported by each team over their first 90 days. We publish the label they used, not a rounded-up marketing version of it."
+      />
+
+      <div class="results">
+        <table class="results__table">
+          <caption class="sr-only">
+            Reported results by customer over their first 90 days
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Company</th>
+              <th scope="col">Industry</th>
+              <th scope="col">What they measured</th>
+              <th scope="col" class="results__num">Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              measured.map((entry) => (
+                <tr>
+                  <th scope="row">
+                    <span class="results__co">
+                      <span class="results__avatar mono" aria-hidden="true">{entry.initials}</span>
+                      {entry.company}
+                    </span>
+                  </th>
+                  <td>{entry.industry}</td>
+                  <td>{entry.metric?.label}</td>
+                  <td class="results__num">{entry.metric?.value}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="results__note">
+        <Icon name="alert" size={14} />
+        {testimonialDisclosure}
+      </p>
+    </div>
+  </section>
+
+  <!-- ── What an account means ────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="deal-title">
+    <div class="wrap deal">
+      <div>
+        <p class="stamp"><span class="stamp__num">03</span> The arrangement</p>
+        <h2 id="deal-title" class="deal__title">What an Ainnect account actually comes with.</h2>
+        <p class="head__lead">
+          Ainnect is invite-only and we take on a handful of accounts at a time. That is not scarcity
+          marketing — it is the only way a team our size stays this close to inboxes this busy.
+        </p>
+      </div>
+
+      <ul class="checks deal__checks">
+        <li>
+          <Icon name="check" size={15} />
+          <span
+            ><strong>A named person for the first month.</strong> The same engineer who set your
+            workspace up answers your messages.</span
+          >
+        </li>
+        <li>
+          <Icon name="check" size={15} />
+          <span
+            ><strong>Your requests reach the roadmap.</strong> Four of the five modules exist because
+            a customer asked for them.</span
+          >
+        </li>
+        <li>
+          <Icon name="check" size={15} />
+          <span
+            ><strong>Everything commercial in writing first.</strong> The quote, the DPA, the hosting
+            region and the exit terms — on paper before you sign, not discovered afterwards.</span
+          >
+        </li>
+        <li>
+          <Icon name="check" size={15} />
+          <span
+            ><strong>In exchange: honesty and a monthly call.</strong> Tell us what is broken while
+            it is still cheap for us to fix.</span
+          >
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand
+    kicker="Next step"
+    title="There is room for a few more."
+    text="The cohort is small on purpose. If your team lives in WhatsApp and you are tired of guessing which chats matter, start with a call."
+    primary={cta.primary}
+    secondary={cta.secondary}
+  />
+</BaseLayout>
+
+<style>
+  .cust__ledger {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  /* ── Results table ──────────────────────────────────────────────────── */
+  .results {
+    margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+    overflow-x: auto;
+    border: 1px solid var(--rule-2);
+    border-radius: var(--r-3);
+    background: var(--surface);
+  }
+
+  .results__table {
+    width: 100%;
+    min-width: 44rem;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .results__table thead th {
+    padding: 0.85rem 1.1rem;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule-2);
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    white-space: nowrap;
+  }
+
+  .results__table tbody th,
+  .results__table tbody td {
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--t-sm);
+    color: var(--ink-70);
+    vertical-align: middle;
+  }
+
+  .results__table tbody tr:last-child th,
+  .results__table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .results__table tbody th {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .results__co {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .results__avatar {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-pill);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    font-size: var(--t-mono-sm);
+    color: var(--brand);
+  }
+
+  .results__num {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .results__table tbody td.results__num {
+    font-size: var(--t-body);
+    font-weight: 500;
+    color: var(--brand);
+    white-space: nowrap;
+  }
+
+  .results__note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    max-width: 52rem;
+    font-size: var(--t-xs);
+    line-height: 1.55;
+    color: var(--ink-55);
+  }
+
+  .results__note svg {
+    margin-top: 0.1rem;
+    color: var(--ink-40);
+  }
+
+  /* ── Partnership ────────────────────────────────────────────────────── */
+  .deal {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .deal__title {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: var(--t-h3);
+  }
+
+  @media (max-width: 1000px) {
+    .deal {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

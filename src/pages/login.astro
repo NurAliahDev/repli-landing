@@ -1,0 +1,15 @@
+---
+import AuthLayout from "../layouts/AuthLayout.astro";
+import LoginForm from "../components/LoginForm.astro";
+---
+
+<AuthLayout
+  title="Sign in"
+  description="Sign in to your Ainnect workspace."
+  kicker="Account access"
+  heading="Sign in to your workspace."
+  lead="Use the email your implementation partner set up during onboarding. Accounts are created by us, never self-served."
+  noindex={true}
+>
+  <LoginForm />
+</AuthLayout>

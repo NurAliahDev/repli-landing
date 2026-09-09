@@ -1,0 +1,298 @@
+---
+import Icon from "./Icon.astro";
+import { contact } from "../lib/site";
+
+interface Props {
+  /** Distinguishes the composed message and the heading. */
+  subject?: string;
+  showTopic?: boolean;
+  submitLabel?: string;
+  class?: string;
+}
+
+const {
+  subject = "Access request",
+  showTopic = false,
+  submitLabel = "Send by email",
+  class: className,
+} = Astro.props;
+
+const teamSizes = ["Just me", "2–5 people", "6–15 people", "16–40 people", "40+ people"];
+const currentTools = [
+  "WhatsApp on personal phones",
+  "WhatsApp Business app",
+  "A spreadsheet",
+  "Another WhatsApp CRM",
+  "A traditional CRM (HubSpot, Zoho, …)",
+  "Something else",
+];
+const volumes = ["Under 500", "500–1,500", "1,500–5,000", "5,000–20,000", "Over 20,000"];
+const topics = [
+  "Sales & pricing",
+  "Product question",
+  "Migration from another tool",
+  "Security or DPA",
+  "Partnership",
+  "Support (existing customer)",
+];
+---
+
+<form
+  class:list={["reqform", className]}
+  id="request-form"
+  novalidate
+  data-subject={subject}
+  data-mail={contact.salesEmail}
+>
+  <div class="reqform__grid">
+    <div class="field">
+      <label class="field__label" for="rf-name">Your name <span class="req">*</span></label>
+      <input id="rf-name" name="name" type="text" autocomplete="name" placeholder="Andi Pratama" required />
+      <p class="field__error">Tell us who we are talking to.</p>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="rf-company">Company <span class="req">*</span></label>
+      <input
+        id="rf-company"
+        name="company"
+        type="text"
+        autocomplete="organization"
+        placeholder="PT Sinar Abadi"
+        required
+      />
+      <p class="field__error">We like to know whose inbox we are looking at.</p>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="rf-email">Work email <span class="req">*</span></label>
+      <input
+        id="rf-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+        placeholder="andi@sinarabadi.co.id"
+        required
+      />
+      <p class="field__error">That does not look like an email address.</p>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="rf-phone">WhatsApp number <span class="req">*</span></label>
+      <input
+        id="rf-phone"
+        name="phone"
+        type="tel"
+        autocomplete="tel"
+        inputmode="tel"
+        placeholder="+62 812 3456 7890"
+        required
+      />
+      <p class="field__error">Include the country code, please.</p>
+    </div>
+
+    {
+      showTopic && (
+        <div class="field reqform__wide">
+          <label class="field__label" for="rf-topic">What is this about</label>
+          <select id="rf-topic" name="topic">
+            {topics.map((item) => (
+              <option value={item}>{item}</option>
+            ))}
+          </select>
+        </div>
+      )
+    }
+
+    <div class="field">
+      <label class="field__label" for="rf-team">Team size</label>
+      <select id="rf-team" name="team">
+        {teamSizes.map((item) => <option value={item}>{item}</option>)}
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="rf-volume">Chats per month</label>
+      <select id="rf-volume" name="volume">
+        {volumes.map((item) => <option value={item}>{item}</option>)}
+      </select>
+    </div>
+
+    <div class="field reqform__wide">
+      <label class="field__label" for="rf-tool">What you use today</label>
+      <select id="rf-tool" name="tool">
+        {currentTools.map((item) => <option value={item}>{item}</option>)}
+      </select>
+    </div>
+
+    <div class="field reqform__wide">
+      <label class="field__label" for="rf-notes">Anything we should know</label>
+      <textarea
+        id="rf-notes"
+        name="notes"
+        placeholder="Two people on one number, we lose quotes after a few days, and nobody answers after 6pm."></textarea>
+      <p class="field__hint">Optional. The more specific, the more useful the call.</p>
+    </div>
+  </div>
+
+  <div class="reqform__foot">
+    <div class="reqform__actions">
+      <button type="submit" class="btn btn--primary btn--lg">
+        <Icon name="mail" size={17} />
+        {submitLabel}
+      </button>
+    </div>
+
+    <p class="form-note">
+      <Icon name="lock" size={13} />
+      <span
+        >This form stores nothing and sends nothing on its own. It opens your mail app with the
+        details filled in, so your message goes straight to a person on our team. See our <a
+          href="/privacy">Privacy Policy</a
+        >.</span
+      >
+    </p>
+  </div>
+</form>
+
+<style>
+  .reqform__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .reqform__wide {
+    grid-column: 1 / -1;
+  }
+
+  .reqform__foot {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .reqform__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .form-note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .form-note svg {
+    margin-top: 0.2rem;
+    color: var(--ink-40);
+  }
+
+  @media (max-width: 780px) {
+    .reqform__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#request-form");
+
+  if (form) {
+    const REQUIRED = ["name", "company", "email", "phone"] as const;
+    const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+    const control = (name: string): Control | null =>
+      form.querySelector<Control>(`[name="${name}"]`);
+
+    const mark = (input: HTMLElement, invalid: boolean): void => {
+      const field = input.closest<HTMLElement>(".field");
+      if (!field) return;
+      if (invalid) field.setAttribute("data-invalid", "");
+      else field.removeAttribute("data-invalid");
+      input.setAttribute("aria-invalid", String(invalid));
+    };
+
+    const isValid = (name: string, value: string): boolean => {
+      if (value.trim() === "") return false;
+      if (name === "email") return EMAIL.test(value.trim());
+      /* Digits only, country code included: at least 8 of them. */
+      if (name === "phone") return value.replace(/\D/g, "").length >= 8;
+      return true;
+    };
+
+    const validate = (): Control | null => {
+      let firstBad: Control | null = null;
+
+      for (const name of REQUIRED) {
+        const input = control(name);
+        if (!input) continue;
+        const bad = !isValid(name, input.value);
+        mark(input, bad);
+        if (bad && !firstBad) firstBad = input;
+      }
+
+      return firstBad;
+    };
+
+    /* Clear the error as soon as the field becomes acceptable. */
+    for (const name of REQUIRED) {
+      const input = control(name);
+      input?.addEventListener("input", () => {
+        if (isValid(name, input.value)) mark(input, false);
+      });
+    }
+
+    const read = (name: string): string => control(name)?.value.trim() ?? "";
+
+    const compose = (): string => {
+      const subject = form.dataset.subject ?? "Access request";
+      const lines = [
+        `Ainnect — ${subject}`,
+        "",
+        `Name: ${read("name")}`,
+        `Company: ${read("company")}`,
+        `Email: ${read("email")}`,
+        `WhatsApp: ${read("phone")}`,
+      ];
+
+      const topic = read("topic");
+      if (topic) lines.push(`Topic: ${topic}`);
+
+      lines.push(`Team size: ${read("team")}`, `Chats per month: ${read("volume")}`, `Using today: ${read("tool")}`);
+
+      const notes = read("notes");
+      if (notes) lines.push("", "Notes:", notes);
+
+      return lines.join("\n");
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const firstBad = validate();
+      if (firstBad) {
+        firstBad.focus();
+        firstBad.scrollIntoView({ block: "center", behavior: "smooth" });
+        return;
+      }
+
+      const body = compose();
+      const subject = form.dataset.subject ?? "Access request";
+      const mail = form.dataset.mail ?? "";
+
+      /* Handoff only — nothing is posted anywhere, the browser just opens the
+         user's own mail client with the message already written. */
+      window.location.href = `mailto:${mail}?subject=${encodeURIComponent(
+        `Ainnect — ${subject}`,
+      )}&body=${encodeURIComponent(body)}`;
+    });
+  }
+</script>

@@ -1,0 +1,297 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import FaqList from "../components/FaqList.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import { faqGroups } from "../lib/content";
+import { contact, cta } from "../lib/site";
+import { breadcrumbNode, faqNode } from "../lib/schema";
+
+/* One flat list for the structured data — groups are a reading aid, not a taxonomy. */
+const allItems = faqGroups.flatMap((group) => group.items);
+
+const slugFor = (heading: string) => heading.toLowerCase().replace(/[^a-z]+/g, "-");
+---
+
+<BaseLayout
+  title="Frequently asked questions"
+  description="Straight answers about getting started with Ainnect, how the AI agent behaves, what happens to your WhatsApp data, and how billing works."
+  schema={[breadcrumbNode([], "FAQ", "/faq"), faqNode(allItems)]}
+>
+  <PageHero
+    kicker="Questions"
+    title="The answers we give on the call, written down."
+    current="FAQ"
+    lead={`${allItems.length} questions, including the awkward ones. If something here reads like it is dodging the question, tell us and we will rewrite it.`}
+    primary={cta.primary}
+    secondary={{ label: "Ask something else", href: "/contact" }}
+  >
+    <nav class="jump" aria-label="Jump to a topic">
+      <p class="jump__label mono">Four topics</p>
+      <ol class="jump__list">
+        {
+          faqGroups.map((group) => (
+            <li>
+              <a href={`#${slugFor(group.heading)}`}>
+                <Icon name={group.icon} size={16} />
+                {group.heading}
+                <span class="jump__count mono">{group.items.length}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  </PageHero>
+
+  {
+    faqGroups.map((group, index) => (
+      <section
+        id={slugFor(group.heading)}
+        class:list={["section-sm fq", index % 2 === 1 && "bg-surface"]}
+        aria-labelledby={`${slugFor(group.heading)}-title`}
+      >
+        <div class="wrap fq__grid">
+          <header class="fq__head">
+            <p class="stamp">
+              <span class="stamp__num">{String(index + 1).padStart(2, "0")}</span>
+              Topic
+            </p>
+            <h2 id={`${slugFor(group.heading)}-title`} class="fq__title">
+              <span class="fq__icon">
+                <Icon name={group.icon} size={19} />
+              </span>
+              {group.heading}
+            </h2>
+            <p class="fq__count mono">
+              {group.items.length} question{group.items.length === 1 ? "" : "s"}
+            </p>
+          </header>
+
+          <FaqList items={group.items} />
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- ── Three doors out of the FAQ ───────────────────────────────────── -->
+  <section class="section-sm" aria-labelledby="more-title">
+    <div class="wrap more">
+      <div class="more__cell">
+        <span class="more__icon">
+          <Icon name="doc" size={19} />
+        </span>
+        <h2 id="more-title" class="more__title">A written quote</h2>
+        <p class="more__text">
+          There is no public price list while Ainnect is invite-only. Tell us your seat count, how
+          many numbers you run and whether you want the voice agent, and the numbers come back in
+          writing.
+        </p>
+        <a class="arrow-link" href="/contact">
+          Ask for pricing
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </div>
+
+      <div class="more__cell">
+        <span class="more__icon more__icon--amber">
+          <Icon name="shield" size={19} />
+        </span>
+        <h2 class="more__title">Security review</h2>
+        <p class="more__text">
+          Hosting region, encryption, access control, retention, sub-processors — plus a plain list
+          of the certifications we do not hold yet.
+        </p>
+        <a class="arrow-link" href="/security">
+          Read the security page
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </div>
+
+      <div class="more__cell">
+        <span class="more__icon more__icon--ink">
+          <Icon name="mail" size={19} />
+        </span>
+        <h2 class="more__title">Still unanswered</h2>
+        <p class="more__text">
+          Email sales and ask. During office hours ({contact.hours}) you will usually have an answer
+          inside the hour, from a founder.
+        </p>
+        <a class="arrow-link" href={`mailto:${contact.salesEmail}`}>
+          {contact.salesEmail}
+          <Icon name="arrowUpRight" size={15} />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    kicker="Next step"
+    title="The rest is easier to answer live."
+    text="Thirty minutes, your actual inbox on screen, no slide deck. If Ainnect is wrong for you we will say so on that call rather than three invoices later."
+  />
+</BaseLayout>
+
+<style>
+  /* ── Jump nav ───────────────────────────────────────────────────────── */
+  .jump {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .jump__label {
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .jump__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.15rem 1.5rem;
+    margin-top: 0.6rem;
+    list-style: none;
+  }
+
+  .jump__list a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.4rem;
+    font-size: var(--t-sm);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink-2);
+  }
+
+  .jump__list svg {
+    color: var(--brand);
+  }
+
+  .jump__list a:hover {
+    color: var(--brand);
+  }
+
+  /* Touch sizing — see tokens.css. 35px on a mouse. */
+  @media (pointer: coarse) {
+    .jump__list a {
+      min-height: 44px;
+    }
+  }
+
+  .jump__count {
+    font-size: var(--t-mono-sm);
+    font-weight: 400;
+    color: var(--ink-55);
+  }
+
+  /* ── FAQ group ──────────────────────────────────────────────────────── */
+  .fq__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  .fq__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .fq__title {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 0.85rem;
+    font-size: var(--t-h4);
+  }
+
+  .fq__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .fq__count {
+    margin-top: 0.6rem;
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  @media (max-width: 1000px) {
+    .fq__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fq__head {
+      position: static;
+    }
+  }
+
+  /* ── Elsewhere ──────────────────────────────────────────────────────── */
+  .more {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-3);
+    overflow: hidden;
+  }
+
+  .more__cell {
+    display: grid;
+    align-content: start;
+    gap: 0.55rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    background: var(--paper);
+  }
+
+  .more__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.35rem;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-tint-2);
+    color: var(--brand);
+  }
+
+  .more__icon--amber {
+    background: var(--amber-tint);
+    border-color: color-mix(in srgb, var(--amber) 30%, transparent);
+    color: var(--amber-ink);
+  }
+
+  .more__icon--ink {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--signal);
+  }
+
+  .more__title {
+    font-size: 1.0625rem;
+    letter-spacing: -0.025em;
+  }
+
+  .more__text {
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .more__cell .arrow-link {
+    margin-top: 0.35rem;
+  }
+</style>

@@ -1,0 +1,223 @@
+---
+import Icon from "../Icon.astro";
+import MockFrame from "./MockFrame.astro";
+import type { IconName } from "../../lib/icons";
+
+interface Node {
+  kind: string;
+  icon: IconName;
+  title: string;
+  meta: string;
+  tone?: "trigger" | "branch" | "delay";
+}
+
+const nodes: readonly Node[] = [
+  {
+    kind: "Trigger",
+    icon: "inbox",
+    title: "New WhatsApp message",
+    meta: "Any team number",
+    tone: "trigger",
+  },
+  {
+    kind: "Condition",
+    icon: "filter",
+    title: "Message mentions price, cost or promo",
+    meta: "Else → route to Support",
+    tone: "branch",
+  },
+  { kind: "Action", icon: "users", title: "Assign to the sales rota", meta: "Round-robin, 3 reps" },
+  {
+    kind: "Action",
+    icon: "sparkle",
+    title: "Draft a reply with the current price list",
+    meta: "Held for approval",
+  },
+  { kind: "Wait", icon: "clock", title: "Wait 2 hours", meta: "Business hours only", tone: "delay" },
+  {
+    kind: "Action",
+    icon: "bell",
+    title: "Nudge the rep if the chat is still unread",
+    meta: "Then escalate to Sari",
+  },
+];
+
+const stats = [
+  { label: "Runs today", value: "412" },
+  { label: "Avg. first reply", value: "42s" },
+  { label: "Held for approval", value: "100%" },
+] as const;
+---
+
+<MockFrame
+  alt="Automation builder: a six-step rule that catches price questions, assigns a rep, drafts a reply for approval, waits two hours, then nudges."
+  label="Automations / Price enquiry"
+  status="On"
+>
+  <div class="fm">
+    <ol class="fm__flow">
+      {
+        nodes.map((node, index) => (
+          <li class="fm__node" data-tone={node.tone}>
+            <span class="fm__rail" aria-hidden="true">
+              <span class="fm__chip">
+                <Icon name={node.icon} size={14} />
+              </span>
+              {index < nodes.length - 1 && <span class="fm__line"></span>}
+            </span>
+
+            <div class="fm__body">
+              <span class="fm__kind">{node.kind}</span>
+              <p class="fm__title">{node.title}</p>
+              <p class="fm__meta">{node.meta}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <dl class="fm__stats">
+      {
+        stats.map((stat) => (
+          <div>
+            <dt>{stat.label}</dt>
+            <dd>{stat.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</MockFrame>
+
+<style>
+  .fm {
+    display: grid;
+    gap: 1rem;
+    font-size: var(--t-xs);
+  }
+
+  .fm__flow {
+    display: grid;
+    list-style: none;
+  }
+
+  .fm__node {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 0.7rem;
+  }
+
+  /* --- Connector rail ----------------------------------------------------- */
+  .fm__rail {
+    display: grid;
+    justify-items: center;
+    grid-template-rows: auto 1fr;
+  }
+
+  .fm__chip {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-2);
+    background: var(--paper-2);
+    border: 1px solid var(--rule-2);
+    color: var(--ink-70);
+  }
+
+  .fm__line {
+    width: 1px;
+    min-height: 0.75rem;
+    margin-block: 0.2rem;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--rule-2) 0 4px,
+      transparent 4px 8px
+    );
+  }
+
+  .fm__node[data-tone="trigger"] .fm__chip {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+  }
+
+  .fm__node[data-tone="branch"] .fm__chip {
+    background: var(--amber-tint);
+    border-color: color-mix(in srgb, var(--amber) 45%, transparent);
+    color: var(--amber-ink);
+  }
+
+  .fm__node[data-tone="delay"] .fm__chip {
+    border-style: dashed;
+  }
+
+  /* --- Node body ---------------------------------------------------------- */
+  .fm__body {
+    padding-bottom: 0.85rem;
+  }
+
+  .fm__node:last-child .fm__body {
+    padding-bottom: 0;
+  }
+
+  .fm__kind {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .fm__node[data-tone="trigger"] .fm__kind {
+    color: var(--brand);
+  }
+
+  .fm__node[data-tone="branch"] .fm__kind {
+    color: var(--amber-ink);
+  }
+
+  .fm__title {
+    margin-top: 0.15rem;
+    font-size: var(--t-sm);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .fm__meta {
+    margin-top: 0.15rem;
+    color: var(--ink-55);
+    line-height: 1.45;
+  }
+
+  /* --- Stats -------------------------------------------------------------- */
+  /* 7.5rem clears the longest value here (126px) with room to spare, so the rail
+     folds to two columns on its own instead of wrapping labels. It previously
+     held three columns at every width, including a 320px phone. */
+  .fm__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: 0.75rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .fm__stats dt {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .fm__stats dd {
+    margin-top: 0.1rem;
+    font-size: var(--t-sm);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

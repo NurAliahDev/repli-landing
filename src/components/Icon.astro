@@ -1,0 +1,39 @@
+---
+import { icons, type IconName } from "../lib/icons";
+
+interface Props {
+  name: IconName;
+  size?: number;
+  stroke?: number;
+  class?: string;
+  /** Supply only when the icon carries meaning on its own. */
+  label?: string;
+  /** Anything else is forwarded to the <svg>, including the scope attribute
+      Astro passes down so a parent's scoped styles can target this icon. */
+  [key: string]: unknown;
+}
+
+const { name, size = 20, stroke = 1.7, class: className, label, ...rest } = Astro.props;
+
+const icon = icons[name];
+const isFilled = "fill" in icon && icon.fill === true;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill={isFilled ? "currentColor" : "none"}
+  stroke={isFilled ? undefined : "currentColor"}
+  stroke-width={isFilled ? undefined : stroke}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+  focusable="false"
+  {...rest}
+>
+  {icon.d.map((d) => <path d={d} />)}
+</svg>

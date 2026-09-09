@@ -1,0 +1,413 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/PageHero.astro";
+import SectionHead from "../../components/SectionHead.astro";
+import Icon from "../../components/Icon.astro";
+import FeatureMock from "../../components/mocks/FeatureMock.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import { features } from "../../lib/features";
+import { integrationGroups, integrationNote } from "../../lib/platform";
+import { cta } from "../../lib/site";
+import { breadcrumbNode } from "../../lib/schema";
+
+/* The AI agent block is the one we invert — it is the part nobody else has. */
+const INK_INDEX = 2;
+
+const liveCount = integrationGroups
+  .flatMap((group) => group.items)
+  .filter((item) => item.status === "Live").length;
+---
+
+<BaseLayout
+  title="Product tour"
+  description="A walk through all five parts of Ainnect: the shared WhatsApp inbox, AI lead scoring, the chat and voice agent, no-code automation, and the analytics behind them."
+  schema={[breadcrumbNode([], "Product", "/product")]}
+>
+  <PageHero
+    num="00"
+    kicker="The platform"
+    title="Five parts. One record of every conversation."
+    current="Product"
+    lead="Ainnect is not a bundle of disconnected tools. Each part writes to the same conversation record, which is why the scoring knows what the inbox saw and the agent knows what the automation already sent."
+    primary={cta.primary}
+    secondary={{ label: "See who runs on it", href: "/customers" }}
+    note={cta.note}
+  >
+    <nav class="jump" aria-label="Jump to a part of the platform">
+      <p class="jump__label mono">On this page</p>
+      <ol class="jump__list">
+        {
+          features.map((feature) => (
+            <li>
+              <a href={`#${feature.slug}`}>
+                <span class="mono">{feature.num}</span>
+                {feature.name}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  </PageHero>
+
+  {
+    features.map((feature, index) => {
+      const isInk = index === INK_INDEX;
+      return (
+        <section
+          id={feature.slug}
+          class:list={[
+            "section feat",
+            isInk && "on-ink blueprint",
+            !isInk && index % 2 === 1 && "bg-surface",
+          ]}
+          data-flip={index % 2 === 1 ? "" : undefined}
+          aria-labelledby={`${feature.slug}-title`}
+        >
+          <div class="wrap feat__grid">
+            <div class="feat__copy">
+              <p class="stamp">
+                <span class="stamp__num">{feature.num}</span>
+                {feature.kicker}
+              </p>
+              <h2 id={`${feature.slug}-title`} class="feat__title">
+                {feature.title}
+              </h2>
+              <p class="feat__lead">{feature.lead}</p>
+
+              <ul class="feat__points">
+                {feature.points.slice(0, 3).map((point) => (
+                  <li>
+                    <span class="feat__icon">
+                      <Icon name={point.icon} size={16} />
+                    </span>
+                    <div>
+                      <h3 class="feat__ptitle">{point.title}</h3>
+                      <p class="feat__ptext">{point.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <p class="feat__link">
+                <a class="arrow-link" href={`/product/${feature.slug}`}>
+                  {feature.name} in detail
+                  <Icon name="arrowRight" size={15} />
+                </a>
+              </p>
+            </div>
+
+            <div class="feat__stage" data-reveal>
+              <FeatureMock name={feature.mock} />
+              <dl class="feat__metrics">
+                {feature.metrics.map((metric) => (
+                  <div>
+                    <dt>{metric.label}</dt>
+                    <dd>{metric.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <!-- ── Integrations teaser ──────────────────────────────────────────── -->
+  <section class="section bg-paper-2" aria-labelledby="stack-title">
+    <div class="wrap">
+      <SectionHead
+        id="stack-title"
+        num="06"
+        kicker="Around the edges"
+        title="It has to sit inside the stack you already pay for."
+        lead={integrationNote}
+      />
+
+      <ul class="stack">
+        {
+          integrationGroups.map((group) => (
+            <li class="stack__group" data-reveal>
+              <h3 class="stack__heading">
+                <Icon name={group.icon} size={16} />
+                {group.heading}
+              </h3>
+              <ul class="stack__items">
+                {group.items.map((item) => (
+                  <li>
+                    <span class="stack__name">{item.name}</span>
+                    <span class="stack__status" data-status={item.status}>
+                      {item.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="stack__foot">
+        <a class="arrow-link" href="/integrations">
+          All {liveCount} live integrations and the API
+          <Icon name="arrowRight" size={15} />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  /* ── Jump nav inside the hero ────────────────────────────────────────── */
+  .jump {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .jump__label {
+    font-size: var(--t-mono-sm);
+    letter-spacing: var(--track-mono);
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .jump__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.15rem 1.5rem;
+    margin-top: 0.6rem;
+    list-style: none;
+  }
+
+  .jump__list a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding-block: 0.35rem;
+    font-size: var(--t-sm);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink-2);
+  }
+
+  .jump__list span {
+    font-size: var(--t-mono-sm);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--brand);
+  }
+
+  .jump__list a:hover {
+    color: var(--brand);
+  }
+
+  /* Touch sizing — see tokens.css. 35px on a mouse. */
+  @media (pointer: coarse) {
+    .jump__list a {
+      min-height: 44px;
+      align-items: center;
+    }
+  }
+
+  /* ── Feature blocks ─────────────────────────────────────────────────── */
+  .feat__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+    align-items: center;
+  }
+
+  .feat[data-flip] .feat__copy {
+    order: 2;
+  }
+
+  .feat__title {
+    margin-top: 1rem;
+    max-width: 20ch;
+  }
+
+  .feat__lead {
+    margin-top: 1.1rem;
+    max-width: 36rem;
+    font-size: var(--t-lead);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .on-ink .feat__lead {
+    color: var(--on-ink-70);
+  }
+
+  .feat__points {
+    margin-top: 1.75rem;
+    list-style: none;
+    display: grid;
+  }
+
+  .feat__points li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.85rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .on-ink .feat__points li {
+    border-top-color: var(--rule-ink);
+  }
+
+  .feat__points li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .feat__icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-2);
+    background: var(--brand-tint);
+    color: var(--brand);
+  }
+
+  .on-ink .feat__icon {
+    background: var(--rule-ink-2);
+    color: var(--signal);
+  }
+
+  .feat__ptitle {
+    font-size: var(--t-body);
+    letter-spacing: -0.025em;
+    padding-top: 0.3rem;
+  }
+
+  .feat__ptext {
+    margin-top: 0.3rem;
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--ink-70);
+  }
+
+  .on-ink .feat__ptext {
+    color: var(--on-ink-70);
+  }
+
+  .feat__link {
+    margin-top: 1.5rem;
+  }
+
+  /* ── Metrics under each mock ─────────────────────────────────────────── */
+  /* 9rem is the widest label in this rail (182px) plus room, so three columns
+     survive the 505px desktop stage and fold to two the moment the stage
+     narrows — a tablet split leaves ~425px, where three would wrap. */
+  .feat__metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 1rem;
+    margin-top: 1.35rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .on-ink .feat__metrics {
+    border-top-color: var(--rule-ink-2);
+  }
+
+  .feat__metrics dt {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .on-ink .feat__metrics dt {
+    color: var(--on-ink-70);
+  }
+
+  .feat__metrics dd {
+    margin-top: 0.25rem;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 1000px) {
+    .feat__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .feat[data-flip] .feat__copy {
+      order: 0;
+    }
+  }
+
+  /* ── Integration groups ─────────────────────────────────────────────── */
+  .stack {
+    margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: clamp(1.25rem, 1rem + 1vw, 2rem);
+  }
+
+  .stack__heading {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule-2);
+    font-size: var(--t-sm);
+    letter-spacing: -0.02em;
+  }
+
+  .stack__heading svg {
+    color: var(--brand);
+  }
+
+  .stack__items {
+    list-style: none;
+    display: grid;
+  }
+
+  .stack__items li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .stack__name {
+    font-size: var(--t-xs);
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+
+  .stack__status {
+    font-family: var(--font-mono);
+    font-size: var(--t-mono-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+
+  .stack__status[data-status="Live"] {
+    color: var(--brand);
+  }
+
+  .stack__status[data-status="Beta"] {
+    color: var(--amber-ink);
+  }
+
+  .stack__foot {
+    margin-top: 2rem;
+  }
+</style>
