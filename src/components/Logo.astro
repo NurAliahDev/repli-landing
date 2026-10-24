@@ -1,12 +1,13 @@
 ---
 /**
- * Ainnect mark: a plate with an "A" whose crossbar runs on past the stem —
- * a connection line — and a live-signal dot in the corner.
+ * Repli mark: a square frame left open at the top-right corner, with a
+ * solid block set into the gap. Drawn on a 40-unit grid: 6-unit strokes,
+ * a 3-unit gap either side of the 13-unit block.
  */
 interface Props {
   /** `mark` drops the wordmark, for tight spaces and favicons. */
   variant?: "full" | "mark";
-  /** `light` is for use on the ink background. */
+  /** `light` is for use on the ink background: the mark sits on a white plate. */
   tone?: "brand" | "light";
   size?: number;
   class?: string;
@@ -14,45 +15,41 @@ interface Props {
 
 const { variant = "full", tone = "brand", size = 30, class: className } = Astro.props;
 
-const plate = tone === "light" ? "var(--on-ink)" : "var(--brand)";
-const glyph = tone === "light" ? "var(--ink)" : "#ffffff";
-const led = tone === "light" ? "var(--brand)" : "var(--signal)";
+const hasPlate = tone === "light";
+/* On the plate the mark keeps the proportions of the app icon: 23 of 32 units,
+   centred. Bare, it fills the box. */
+const markTransform = hasPlate ? "translate(4.5 4.5) scale(0.575)" : undefined;
+const viewBox = hasPlate ? "0 0 32 32" : "0 0 40 40";
 ---
 
-<span class:list={["logo", className]} data-variant={variant}>
+<span class:list={["logo", className]} data-variant={variant} data-tone={tone}>
   <svg
     width={size}
     height={size}
-    viewBox="0 0 32 32"
+    viewBox={viewBox}
     aria-hidden="true"
     focusable="false"
     class="logo__mark"
   >
-    <rect width="32" height="32" rx="8.5" fill={plate} />
-    <path
-      d="M9.4 23.6 16 8.4l6.6 15.2"
-      fill="none"
-      stroke={glyph}
-      stroke-width="2.6"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path d="M12.3 18.6h9" fill="none" stroke={glyph} stroke-width="2.6" stroke-linecap="round" />
-    <circle cx="25.4" cy="6.6" r="2.1" fill={led} />
+    {hasPlate && <rect width="32" height="32" rx="4.5" fill="#ffffff" />}
+    <g transform={markTransform} fill="var(--brand)">
+      <path d="M0 0H24V6H6V34H34V16H40V40H0Z" />
+      <rect x="27" width="13" height="13" />
+    </g>
   </svg>
-  {variant === "full" && <span class="logo__word">Ainnect</span>}
+  {variant === "full" && <span class="logo__word">Repli</span>}
 </span>
 
 <style>
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.6rem;
   }
 
-  .logo__mark {
-    border-radius: 8.5px;
-    box-shadow: 0 1px 2px rgba(10, 20, 15, 0.14);
+  .logo[data-tone="light"] .logo__mark {
+    border-radius: 4.5px;
+    box-shadow: 0 1px 2px rgba(10, 12, 14, 0.3);
   }
 
   .logo__word {

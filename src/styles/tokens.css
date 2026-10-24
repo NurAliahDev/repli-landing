@@ -1,54 +1,69 @@
 /* ==========================================================================
-   Ainnect design tokens — "Field Manual"
-   Warm paper stock, deep forest ink, emerald action, amber signal.
-   Every value here is deliberate: contrast ratios for text colours were
-   checked against --paper (#FAF7F2) and --ink (#0A140F).
+   Repli design tokens — "Field Manual"
+   Cool white stock, graphite ink, violet action, indigo second voice.
+   The anchors are sampled straight from the brand artwork: the mark is
+   #8022FE, the banner gradient runs #7741ED → #6560F0 → #7C6BED, and the
+   dark body is #1B1F23. Everything else is a step derived from those.
+   Contrast ratios for text colours were checked against --paper (#F7F7F9)
+   and --ink (#1B1F23).
    ========================================================================== */
 
 :root {
   /* --- Paper (light surfaces) ------------------------------------------- */
-  --paper: #faf7f2;
-  --paper-2: #f2ede3;
-  --paper-3: #e9e2d5;
+  --paper: #f7f7f9;
+  --paper-2: #efeff3;
+  --paper-3: #e5e5ec;
   --surface: #ffffff;
 
   /* --- Ink (text + dark surfaces) --------------------------------------- */
-  --ink: #0a140f;
-  --ink-2: #14231b;
-  --ink-3: #1e3227;
-  --ink-70: #4a5b52; /* 6.75:1 on paper — body copy */
-  --ink-55: #5f6e65; /* 5.03:1 on paper — meta, labels */
-  --ink-40: #8a9690; /* 2.64:1 — decorative only, never text */
+  --ink: #1b1f23;
+  --ink-2: #23282d;
+  --ink-3: #2d3339;
+  --ink-70: #4b535b; /* 7.3:1 on paper — body copy */
+  --ink-55: #5f6770; /* 5.36:1 on paper — meta, labels */
+  --ink-40: #8e959c; /* 2.83:1 — decorative only, never text */
 
   /* --- Rules (hairlines) ------------------------------------------------ */
-  --rule: #ded6c8;
-  --rule-2: #cec4b2;
-  --rule-3: #bdb19b;
+  --rule: #e0e1e7;
+  --rule-2: #cfd1d9;
+  --rule-3: #b9bcc6;
 
-  /* --- Brand: deep emerald --------------------------------------------- */
-  --brand: #07753f; /* 5.71:1 on paper, 6.1:1 with white text */
-  --brand-hover: #056133;
-  --brand-press: #044c28;
-  --brand-tint: #e7f1e9;
-  --brand-tint-2: #d3e6d8;
-  --signal: #35d07f; /* 9.34:1 on ink — live states, dark sections */
+  /* --- Brand: the mark's violet ---------------------------------------- */
+  --brand: #8022fe; /* 5.49:1 on paper, 5.87:1 with white text */
+  --brand-hover: #6c12e6;
+  --brand-press: #5a0cc2;
+  --brand-tint: #f2eaff;
+  --brand-tint-2: #e4d5ff;
+  --signal: #b3a6ff; /* 7.75:1 on ink — live states, dark sections */
 
-  /* --- Amber: the second voice (AI, highlights) ------------------------ */
-  --amber: #e8853a; /* fills only */
-  --amber-ink: #a8501a; /* 5.13:1 on paper — amber as text */
-  --amber-tint: #fbeee0;
+  /* The banner gradient, stop for stop. Large type only on top of it: white
+     holds 5.58:1 on the violet end but 4.05:1 on the lavender end. */
+  --brand-gradient: linear-gradient(
+    100deg,
+    #7741ed 0%,
+    #7741ed 36%,
+    #6560f0 52%,
+    #7c6bed 70%,
+    #7c6bed 100%
+  );
+
+  /* --- Accent: the second voice (AI, highlights) ----------------------- */
+  --accent: #6560f0; /* fills only — the gradient's indigo */
+  --accent-ink: #4f46d8; /* 6.13:1 on paper — accent as text */
+  --accent-tint: #ecebfe;
+  --accent-tint-2: #d9d7fc;
   --clay: #b4462f; /* negative deltas, charts */
 
   /* --- On dark ---------------------------------------------------------- */
-  --on-ink: #f4f1ea;
-  --on-ink-70: #a8b5ac; /* 8.8:1 on ink */
-  --on-ink-40: rgba(244, 241, 234, 0.42);
-  --rule-ink: rgba(244, 241, 234, 0.14);
-  --rule-ink-2: rgba(244, 241, 234, 0.24);
+  --on-ink: #f5f6f8;
+  --on-ink-70: #a9b0b8; /* 7.57:1 on ink */
+  --on-ink-40: rgba(245, 246, 248, 0.42);
+  --rule-ink: rgba(245, 246, 248, 0.14);
+  --rule-ink-2: rgba(245, 246, 248, 0.24);
 
   /* Dim behind an open overlay (mobile nav). Deep enough to push the page back,
      light enough that you can still see what you were reading. */
-  --scrim: rgba(10, 20, 15, 0.34);
+  --scrim: rgba(27, 31, 35, 0.34);
 
   /* --- Type ------------------------------------------------------------- */
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
@@ -90,12 +105,12 @@
   --r-4: 16px;
   --r-pill: 999px;
 
-  /* --- Depth: warm, restrained ---------------------------------------- */
-  --shadow-1: 0 1px 2px rgba(10, 20, 15, 0.05);
-  --shadow-2: 0 1px 2px rgba(10, 20, 15, 0.04), 0 10px 24px -10px rgba(10, 20, 15, 0.16);
-  --shadow-3: 0 2px 4px rgba(10, 20, 15, 0.05), 0 28px 60px -22px rgba(10, 20, 15, 0.3);
-  --shadow-ink: 0 30px 70px -25px rgba(4, 12, 8, 0.65);
-  --focus: 0 0 0 3px rgba(7, 117, 63, 0.28);
+  /* --- Depth: cool, restrained ---------------------------------------- */
+  --shadow-1: 0 1px 2px rgba(27, 31, 35, 0.05);
+  --shadow-2: 0 1px 2px rgba(27, 31, 35, 0.04), 0 10px 24px -10px rgba(27, 31, 35, 0.16);
+  --shadow-3: 0 2px 4px rgba(27, 31, 35, 0.05), 0 28px 60px -22px rgba(27, 31, 35, 0.3);
+  --shadow-ink: 0 30px 70px -25px rgba(10, 12, 14, 0.65);
+  --focus: 0 0 0 3px rgba(128, 34, 254, 0.28);
 
   /* --- Motion ----------------------------------------------------------- */
   --fast: 130ms;

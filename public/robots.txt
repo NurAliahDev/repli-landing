@@ -4,4 +4,4 @@ Allow: /
 # /login is served with a noindex meta tag rather than blocked here, so crawlers
 # can read the directive instead of guessing.
 
-Sitemap: https://ainnect.site/sitemap.xml
+Sitemap: https://repli.site/sitemap.xml

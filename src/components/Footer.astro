@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
 
 /* Partner marks sit on a paper plate, not straight on the ink. The Meta file we
    have is the light-background variant: its wordmark is #192830, which lands at
-   1.24:1 against this footer's #0a140f — invisible. Recolouring someone else's
+   1.10:1 against this footer's #1b1f23 — invisible. Recolouring someone else's
    trademark to fix that is a guess about their brand rules, so the mark ships
    untouched on a surface it was drawn for. Height is fixed and the width comes
    from the measured ink ratio, so a second partner cannot skew the row. */
@@ -23,7 +23,7 @@ const partners = businessPartners.map((partner) => ({
   <div class="wrap">
     <div class="footer__top">
       <div class="footer__brand">
-        <a href="/" aria-label="Ainnect — home">
+        <a href="/" aria-label="Repli — home">
           <Logo tone="light" />
         </a>
         <p class="footer__pitch">{site.tagline}.</p>

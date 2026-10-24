@@ -52,7 +52,7 @@ export const websiteNode: Node = {
 };
 
 /**
- * The product itself. No `offers` node: Ainnect is quoted per team and there is
+ * The product itself. No `offers` node: Repli is quoted per team and there is
  * no public price list, and a price-free Offer is worse than none at all.
  */
 export const softwareNode: Node = {

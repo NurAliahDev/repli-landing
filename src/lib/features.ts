@@ -36,7 +36,7 @@ export const features: Feature[] = [
     kicker: "Shared inbox",
     summary: "Route every chat to one owner, keep the history when staff leave.",
     lead:
-      "Deals are lost in the handover, not the pitch. Ainnect puts your business number into a shared inbox with real assignment, internal notes, and a conversation history that outlives whoever was holding the phone.",
+      "Deals are lost in the handover, not the pitch. Repli puts your business number into a shared inbox with real assignment, internal notes, and a conversation history that outlives whoever was holding the phone.",
     points: [
       {
         icon: "users",
@@ -46,7 +46,7 @@ export const features: Feature[] = [
       {
         icon: "doc",
         title: "Internal notes the customer never sees",
-        text: "Leave the context that matters: budget, objections, the discount someone already promised. Notes live in Ainnect, never in the WhatsApp thread.",
+        text: "Leave the context that matters: budget, objections, the discount someone already promised. Notes live in Repli, never in the WhatsApp thread.",
       },
       {
         icon: "bell",
@@ -73,7 +73,7 @@ export const features: Feature[] = [
       heading: "Built for the way small teams actually sell",
       body: [
         "Most WhatsApp teams start with one phone on a desk and end up with five phones, five chat histories, and no idea which customer was promised what. The usual fix — a spreadsheet and a group chat — collapses the moment volume doubles.",
-        "The shared inbox is deliberately boring: assignment, ownership, notes, search. It is the part of Ainnect your team touches a hundred times a day, so it loads fast, works on a mid-range Android, and keeps its keyboard shortcuts consistent.",
+        "The shared inbox is deliberately boring: assignment, ownership, notes, search. It is the part of Repli your team touches a hundred times a day, so it loads fast, works on a mid-range Android, and keeps its keyboard shortcuts consistent.",
       ],
       checks: [
         "Assignment, reassignment and unassigned queue",
@@ -124,14 +124,14 @@ export const features: Feature[] = [
       { label: "Retrain cadence", value: "Weekly", note: "on your own outcomes" },
     ],
     how: [
-      { title: "Import what you know", text: "Point Ainnect at your past won and lost deals, or start cold and let the first weeks calibrate it." },
+      { title: "Import what you know", text: "Point Repli at your past won and lost deals, or start cold and let the first weeks calibrate it." },
       { title: "Set your thresholds", text: "Define what hot, warm and cold mean for your business. Two numbers, changeable any time." },
       { title: "Let it sort the queue", text: "The inbox re-orders itself by score, so the first chat your closer opens is the one worth opening." },
     ],
     deeper: {
       heading: "A score you can argue with",
       body: [
-        "Opaque scores get ignored. Every Ainnect score exposes its top contributing signals in plain language — \"asked for bulk pricing\", \"replied within 40 seconds twice\", \"mentioned a competitor by name\" — so a sales lead can sanity-check the model instead of trusting it blindly.",
+        "Opaque scores get ignored. Every Repli score exposes its top contributing signals in plain language — \"asked for bulk pricing\", \"replied within 40 seconds twice\", \"mentioned a competitor by name\" — so a sales lead can sanity-check the model instead of trusting it blindly.",
         "When an agent overrides a score, we keep both the model's answer and the human's. Those disagreements are the most valuable training data you own.",
       ],
       checks: [
@@ -183,7 +183,7 @@ export const features: Feature[] = [
       { label: "Resolved by AI", value: "62%", note: "no human, median across pilots" },
     ],
     how: [
-      { title: "Feed the knowledge base", text: "Drop in files or a website URL. Ainnect indexes it and shows you exactly what it learned." },
+      { title: "Feed the knowledge base", text: "Drop in files or a website URL. Repli indexes it and shows you exactly what it learned." },
       { title: "Set the rules of engagement", text: "Tone, languages, working hours, and the topics that must always reach a person." },
       { title: "Run it in shadow mode", text: "It drafts, your agents send. When you trust the drafts, flip it live — per pipeline, not all at once." },
     ],
@@ -249,7 +249,7 @@ export const features: Feature[] = [
     deeper: {
       heading: "Automation your customers do not resent",
       body: [
-        "Bad automation is obvious: the same message at the same interval to everyone, including the person who already replied. Ainnect kills a sequence the moment a human answers, and refuses to send twice in one day to the same contact by default.",
+        "Bad automation is obvious: the same message at the same interval to everyone, including the person who already replied. Repli kills a sequence the moment a human answers, and refuses to send twice in one day to the same contact by default.",
         "Frequency caps, quiet hours, and an opt-out that actually sticks are built in rather than bolted on. You can raise the caps — you have to do it deliberately.",
       ],
       checks: [
@@ -308,7 +308,7 @@ export const features: Feature[] = [
     deeper: {
       heading: "Reports that survive a Monday meeting",
       body: [
-        "Most CRM dashboards fail for one reason: they depend on humans logging activity. Ainnect derives its numbers from the message stream, so the report and the reality cannot drift apart.",
+        "Most CRM dashboards fail for one reason: they depend on humans logging activity. Repli derives its numbers from the message stream, so the report and the reality cannot drift apart.",
         "Where a number is estimated rather than measured — attributed revenue, for instance — we label it as an estimate and show the assumption behind it.",
       ],
       checks: [

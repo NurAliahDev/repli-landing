@@ -16,7 +16,7 @@ interface Props {
 const {
   kicker = "Next step",
   title = "Ready to see it on your own inbox?",
-  text = "Thirty minutes, your real WhatsApp traffic, no slide deck. We will tell you honestly whether Ainnect is the right fit.",
+  text = "Thirty minutes, your real WhatsApp traffic, no slide deck. We will tell you honestly whether Repli is the right fit.",
   primary = cta.primary,
   secondary = cta.secondary,
   note = cta.note,
@@ -69,8 +69,27 @@ const {
 </section>
 
 <style>
+  /* The band wears the brand banner: the gradient from the artwork, white type
+     on top. Every child that would take a dark-surface tint goes white
+     instead — the lavender --signal disappears against the gradient. */
   .cta-band {
     padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+    background: var(--brand-gradient);
+    color: #fff;
+  }
+
+  .cta-band .stamp--brand {
+    color: #fff;
+  }
+
+  .cta-band .dot {
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.24);
+  }
+
+  /* --signal is ~2:1 on the lavender end; white keeps the ring above 3:1. */
+  .cta-band :focus-visible {
+    outline-color: #fff;
   }
 
   .cta-band__inner {
@@ -92,13 +111,21 @@ const {
     max-width: 40ch;
     font-size: var(--t-lead);
     line-height: 1.6;
-    color: var(--on-ink-70);
+    color: #fff;
   }
 
+  /* The side column lands on the lavender end, where white is only 4.05:1 —
+     fine for the title, short of AA for the small note and contact lines.
+     An ink scrim under the column lifts the worst case to 5.06:1 without
+     touching the gradient itself. */
   .cta-band__side {
     display: grid;
     gap: 1.25rem;
     justify-items: start;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    background: rgba(27, 31, 35, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--r-3);
   }
 
   .cta-band__actions {
@@ -111,7 +138,7 @@ const {
     max-width: 38ch;
     font-size: var(--t-xs);
     line-height: 1.6;
-    color: var(--on-ink-70);
+    color: #fff;
   }
 
   .cta-band__contact {
@@ -119,7 +146,7 @@ const {
     flex-wrap: wrap;
     gap: 0.5rem 1.5rem;
     padding-top: 1.25rem;
-    border-top: 1px solid var(--rule-ink);
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
     width: 100%;
     list-style: none;
   }
@@ -132,7 +159,7 @@ const {
     font-family: var(--font-mono);
     font-size: var(--t-mono);
     letter-spacing: 0.04em;
-    color: var(--on-ink-70);
+    color: #fff;
     transition: color var(--fast) var(--ease);
   }
 
@@ -144,11 +171,12 @@ const {
   }
 
   .cta-band__contact svg {
-    color: var(--signal);
+    color: #fff;
   }
 
   .cta-band__contact a:hover {
-    color: var(--on-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   @media (max-width: 1000px) {

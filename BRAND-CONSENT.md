@@ -1,9 +1,9 @@
 # Brand consent — required before launch
 
-**Status: NOT CLEARED. Do not publish this site to `ainnect.site` until every row
+**Status: NOT CLEARED. Do not publish this site to `repli.site` until every row
 in the table below says `yes`.**
 
-This site names real, well-known Indonesian companies as Ainnect customers, and
+This site names real, well-known Indonesian companies as Repli customers, and
 attaches quotes, named individuals with their photographs, and performance
 figures to them. As shipped, that content is placeholder: it was written to the
 requested design, not from signed reference agreements. Publishing it as-is means
@@ -106,7 +106,7 @@ employer's — see point 3 above.
 | Meta | no | no | |
 
 The footer says "Business Partners" and shows the Meta corporate logo. Two
-separate problems: Ainnect is not a listed Meta Business Partner, and even once
+separate problems: Repli is not a listed Meta Business Partner, and even once
 it is, the programme requires **their** partner badge, not the corporate mark —
 using the corporate logo to imply a partnership is the trademark issue above in a
 different coat. Until both cells say `yes`, drop `businessPartners` to an empty

@@ -31,8 +31,8 @@
   color: var(--brand);
 }
 
-.stamp--amber {
-  color: var(--amber-ink);
+.stamp--accent {
+  color: var(--accent-ink);
 }
 
 .stamp--boxed {
@@ -64,7 +64,7 @@
 
 .on-ink .stamp--boxed {
   border-color: var(--rule-ink-2);
-  background: rgba(244, 241, 234, 0.05);
+  background: rgba(245, 246, 248, 0.05);
 }
 
 /* --------------------------------------------------------------------------
@@ -161,7 +161,7 @@
 
 .btn--ghost-ink:hover {
   border-color: var(--on-ink);
-  background: rgba(244, 241, 234, 0.07);
+  background: rgba(245, 246, 248, 0.07);
 }
 
 .btn--lg {
@@ -303,10 +303,10 @@
   border: 1px solid var(--brand-tint-2);
 }
 
-.card__icon--amber {
-  background: var(--amber-tint);
-  color: var(--amber-ink);
-  border-color: #f2dcc4;
+.card__icon--accent {
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+  border-color: var(--accent-tint-2);
 }
 
 .card__icon--ink {
@@ -515,7 +515,7 @@
 
 .on-ink .dot {
   background: var(--signal);
-  box-shadow: 0 0 0 3px rgba(53, 208, 127, 0.2);
+  box-shadow: 0 0 0 3px rgba(179, 166, 255, 0.2);
 }
 
 @keyframes dot-pulse {
@@ -698,7 +698,7 @@
 .alert--ok {
   background: var(--brand-tint);
   border-color: var(--brand-tint-2);
-  color: #05401f;
+  color: #3d0a85;
 }
 
 .alert--ok svg {
@@ -707,13 +707,13 @@
 }
 
 .alert--info {
-  background: var(--amber-tint);
-  border-color: #f2dcc4;
-  color: #6b3410;
+  background: var(--accent-tint);
+  border-color: var(--accent-tint-2);
+  color: #2e2a8a;
 }
 
 .alert--info svg {
-  color: var(--amber-ink);
+  color: var(--accent-ink);
   margin-top: 0.15rem;
 }
 

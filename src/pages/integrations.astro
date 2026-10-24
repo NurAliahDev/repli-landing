@@ -22,8 +22,8 @@ const legend = [
 ] as const;
 
 /* Response shape follows our house rule: JSON is camelCase. */
-const sample = `curl https://api.ainnect.site/v1/conversations \\
-  -H "Authorization: Bearer $AINNECT_API_KEY"
+const sample = `curl https://api.repli.site/v1/conversations \\
+  -H "Authorization: Bearer $REPLI_API_KEY"
 
 {
   "success": true,
@@ -43,7 +43,7 @@ const sample = `curl https://api.ainnect.site/v1/conversations \\
 
 <BaseLayout
   title="Integrations"
-  description="Every channel, commerce platform and work tool Ainnect connects to — with an honest status on each one — plus the REST API, signed webhooks and CSV import."
+  description="Every channel, commerce platform and work tool Repli connects to — with an honest status on each one — plus the REST API, signed webhooks and CSV import."
   schema={[breadcrumbNode([], "Integrations", "/integrations")]}
 >
   <PageHero
@@ -223,8 +223,8 @@ const sample = `curl https://api.ainnect.site/v1/conversations \\
 
   .legend__tag[data-status="Beta"],
   .ig__status[data-status="Beta"] {
-    background: var(--amber-tint);
-    color: var(--amber-ink);
+    background: var(--accent-tint);
+    color: var(--accent-ink);
   }
 
   .legend__text {

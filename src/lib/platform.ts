@@ -123,7 +123,7 @@ export const securityGroups: SecurityGroup[] = [
 
 export const securityHonesty = {
   heading: "What we do not claim yet",
-  body: "We are a pre-seed company and will not pretend otherwise. Ainnect is not SOC 2 or ISO 27001 certified today — an SOC 2 Type I readiness assessment is scheduled, and we will publish the report when we have it rather than before. If your procurement process requires a certificate we do not hold, tell us early and we will tell you honestly whether we can meet the deadline.",
+  body: "We are a pre-seed company and will not pretend otherwise. Repli is not SOC 2 or ISO 27001 certified today — an SOC 2 Type I readiness assessment is scheduled, and we will publish the report when we have it rather than before. If your procurement process requires a certificate we do not hold, tell us early and we will tell you honestly whether we can meet the deadline.",
   contact: "Security questions, DPAs and questionnaires go straight to a founder.",
 };
 
@@ -132,7 +132,7 @@ export const securityHonesty = {
    -------------------------------------------------------------------------- */
 
 export const companyStory: string[] = [
-  "Ainnect started because of a spreadsheet. A friend running a printing business in Bandung was tracking sixty active quotes in one sheet, cross-referencing them against four phones, and losing roughly one deal a week to a message nobody answered.",
+  "Repli started because of a spreadsheet. A friend running a printing business in Bandung was tracking sixty active quotes in one sheet, cross-referencing them against four phones, and losing roughly one deal a week to a message nobody answered.",
   "Every CRM we looked at for them assumed the deal starts with an email and a form. Theirs started — and finished — inside WhatsApp. The tools that did handle WhatsApp treated it as a broadcast channel for marketing blasts, which is close to the opposite of what a sales team needs.",
   "So we built the thing that was missing: a CRM where the WhatsApp conversation is the record, not an attachment to it. Then we put an AI agent inside it, because a five-person team cannot answer messages at 11pm and should not have to.",
 ];
@@ -141,7 +141,7 @@ export const principles: { icon: IconName; title: string; text: string }[] = [
   {
     icon: "phone",
     title: "Sell on a call, not through a funnel",
-    text: "Every account starts with a conversation, and we will tell you when Ainnect is the wrong fit. It costs us signups and saves everyone a bad quarter.",
+    text: "Every account starts with a conversation, and we will tell you when Repli is the wrong fit. It costs us signups and saves everyone a bad quarter.",
   },
   {
     icon: "eye",

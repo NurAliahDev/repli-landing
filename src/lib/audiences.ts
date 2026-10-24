@@ -227,7 +227,7 @@ export type Size = {
   name: string;
   who: string;
   fit: string[];
-  /** The plan band this size lands in. No figure: Ainnect is invite-only and
+  /** The plan band this size lands in. No figure: Repli is invite-only and
       quoted per team, so every one of these leads to a conversation. */
   plan: { label: string; href: string };
 };
