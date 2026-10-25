@@ -1,18 +1,18 @@
-# Landing Page Brief — Repli
+# Landing Page Brief — Replai
 
 ## Tentang Produk
 
-Repli adalah B2B SaaS WhatsApp CRM yang menargetkan SMB (small-medium business) di Indonesia dan ASEAN. Produk ini menggabungkan AI lead scoring, sinkronisasi multi-user WhatsApp, otomasi workflow no-code, dan analitik penjualan — semua dalam satu platform berbasis WhatsApp Business API.
+Replai adalah B2B SaaS WhatsApp CRM yang menargetkan SMB (small-medium business) di Indonesia dan ASEAN. Produk ini menggabungkan AI lead scoring, sinkronisasi multi-user WhatsApp, otomasi workflow no-code, dan analitik penjualan — semua dalam satu platform berbasis WhatsApp Business API.
 
 **Tahap:** Pre-seed
 **Target pasar:** SMB Indonesia & ASEAN (owner bisnis, tim sales kecil-menengah)
-**Domain:** repli.site
+**Domain:** replai.site
 
 ---
 
 ## Tujuan Landing Page
 
-1. Menjelaskan value proposition Repli secara singkat dan jelas dalam 5 detik pertama
+1. Menjelaskan value proposition Replai secara singkat dan jelas dalam 5 detik pertama
 2. Mendorong konversi ke sign-up / demo request / WhatsApp trial
 3. Membangun kepercayaan (trust) untuk produk pre-seed yang belum punya brand awareness besar
 4. Berfungsi optimal di mobile (target audiens banyak mengakses lewat HP)
@@ -24,7 +24,7 @@ Repli adalah B2B SaaS WhatsApp CRM yang menargetkan SMB (small-medium business) 
 ### 1. Hero Section
 
 - **Headline:** Fokus pada outcome bisnis, bukan fitur teknis. Contoh arah: "Ubah Chat WhatsApp Jadi Mesin Penjualan Otomatis"
-- **Subheadline:** Jelaskan singkat bahwa Repli = CRM + AI + WhatsApp dalam satu platform
+- **Subheadline:** Jelaskan singkat bahwa Replai = CRM + AI + WhatsApp dalam satu platform
 - **CTA utama:** "Coba Gratis" / "Request Demo" (tombol besar, warna kontras)
 - **CTA sekunder:** "Lihat Cara Kerja" (scroll ke demo/video)
 - **Visual:** Mockup interface WhatsApp + dashboard CRM berdampingan, atau video singkat (15-30 detik)

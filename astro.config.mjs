@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://repli.site',
+  site: 'https://replai.site',
   compressHTML: true,
   /* Paths people type, or that we used to ship, which are not routes any more.
      Access and pricing are both handled on a call now, so every one of those

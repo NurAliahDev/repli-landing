@@ -322,7 +322,7 @@ export const industries: Industry[] = [
       "Renewals that lapse because nobody was reminded",
     ],
     plays: [
-      { title: "Every conversation on a company number", text: "Agents work inside Repli, so the transcript, the attachments and the assignment history survive the agent leaving." },
+      { title: "Every conversation on a company number", text: "Agents work inside Replai, so the transcript, the attachments and the assignment history survive the agent leaving." },
       { title: "Document intake with a checklist", text: "KTP, payslip, existing policy — requested, tracked and chased once a day until the set is complete, then locked to the record." },
       { title: "Renewal and premium reminders", text: "Fire on the policy date inside quiet hours and frequency caps, and stop the moment payment clears." },
     ],

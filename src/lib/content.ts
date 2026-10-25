@@ -79,7 +79,7 @@ export const outcomes: { icon: IconName; title: string; text: string }[] = [
 
    ⚠️  BRAND CONSENT REQUIRED BEFORE THIS GOES LIVE
    Every company named below is a real, well-known Indonesian brand. Listing
-   them as Repli customers — and attaching quotes and figures to them — needs
+   them as Replai customers — and attaching quotes and figures to them — needs
    written sign-off from each brand, plus their own brand kit for any logo file.
    Without that sign-off these are false endorsements and trademark use we have
    no licence for. Checklist and status: /BRAND-CONSENT.md in the repo root.
@@ -182,7 +182,7 @@ export const testimonials: Testimonial[] = [
    true before launch — if a name, photo or figure is not cleared, the entry comes
    out rather than the line being softened. */
 export const testimonialDisclosure =
-  "Every name, photograph, quote and figure here is published with the permission of the person and the company named. Figures are their own reported numbers over their first 90 days on Repli.";
+  "Every name, photograph, quote and figure here is published with the permission of the person and the company named. Figures are their own reported numbers over their first 90 days on Replai.";
 
 export type CustomerBrand = {
   name: string;
@@ -234,7 +234,7 @@ export type BusinessPartner = {
 
 /** ⚠️  Same consent problem as the customer brands, plus one specific to Meta:
     "Meta Business Partner" is a badge programme with its own rules, and the
-    badge asset is not the corporate Meta logo. Until Repli is an approved
+    badge asset is not the corporate Meta logo. Until Replai is an approved
     partner with the badge file in hand, this row is a claim we cannot make.
     See BRAND-CONSENT.md. */
 export const businessPartners: BusinessPartner[] = [
@@ -276,7 +276,7 @@ export const faqGroups: FaqGroup[] = [
     items: [
       {
         q: "Why can't I just sign up with a credit card?",
-        a: "Because connecting a WhatsApp number wrong is painful to undo. Every Repli account starts with a 30-minute call where we verify your number, set up your pipelines, and configure your first automations with you. It costs you half an hour and saves a week of confusion.",
+        a: "Because connecting a WhatsApp number wrong is painful to undo. Every Replai account starts with a 30-minute call where we verify your number, set up your pipelines, and configure your first automations with you. It costs you half an hour and saves a week of confusion.",
       },
       {
         q: "How long does setup take?",
@@ -288,7 +288,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: "Can I keep using WhatsApp on my phone?",
-        a: "Yes. Your team can work from the Repli web app, and the number continues to behave like a normal business number to your customers. What changes is that the history, assignment and notes live somewhere durable.",
+        a: "Yes. Your team can work from the Replai web app, and the number continues to behave like a normal business number to your customers. What changes is that the history, assignment and notes live somewhere durable.",
       },
     ],
   },

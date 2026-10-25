@@ -8,23 +8,23 @@ import { industries } from "./solutions";
 import { teams, useCases } from "./audiences";
 
 export const site = {
-  name: "Repli",
+  name: "Replai",
   /* The contracting entity. Used in the footer, the legal pages and the
-     Organization node — Repli is the product, this is who signs. */
+     Organization node — Replai is the product, this is who signs. */
   legalName: "PT Nusa Inti Telekomunikasi",
-  url: "https://repli.site",
+  url: "https://replai.site",
   tagline: "The WhatsApp CRM with an AI agent that answers",
   description:
-    "Repli turns WhatsApp into a real sales system: one shared inbox for your team, AI lead scoring, no-code follow-up automation, and an AI agent that replies to chats and answers voice calls.",
+    "Replai turns WhatsApp into a real sales system: one shared inbox for your team, AI lead scoring, no-code follow-up automation, and an AI agent that replies to chats and answers voice calls.",
   founded: 2025,
   stage: "Pre-seed",
 } as const;
 
 export const contact = {
-  salesEmail: "sales@repli.site",
-  supportEmail: "support@repli.site",
-  pressEmail: "press@repli.site",
-  privacyEmail: "privacy@repli.site",
+  salesEmail: "sales@replai.site",
+  supportEmail: "support@replai.site",
+  pressEmail: "press@replai.site",
+  privacyEmail: "privacy@replai.site",
   /* Registered office, split one line per line of the printed address. The
      address the company gave us, in English: street and area names stay as
      written, administrative terms are translated. `officeShort` is the one-line
@@ -181,7 +181,7 @@ export const nav: NavItem[] = [
         {
           heading: "Company",
           links: [
-            { label: "About Repli", href: "/about", summary: "Why we build for WhatsApp-first teams", icon: "users" },
+            { label: "About Replai", href: "/about", summary: "Why we build for WhatsApp-first teams", icon: "users" },
             { label: "Contact us", href: "/contact", summary: "Talk to sales, or ask for pricing", icon: "mail" },
           ],
         },
@@ -249,5 +249,5 @@ export const footerGroups: { heading: string; links: { label: string; href: stri
 export const cta = {
   primary: { label: "Contact us", href: "/contact" },
   secondary: { label: "See the product tour", href: "/product" },
-  note: "Repli is invite-only and quoted per team, so there is no signup form and no public price list. Both start with the same call.",
+  note: "Replai is invite-only and quoted per team, so there is no signup form and no public price list. Both start with the same call.",
 } as const;

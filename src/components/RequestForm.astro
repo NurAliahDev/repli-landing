@@ -255,7 +255,7 @@ const topics = [
     const compose = (): string => {
       const subject = form.dataset.subject ?? "Access request";
       const lines = [
-        `Repli — ${subject}`,
+        `Replai — ${subject}`,
         "",
         `Name: ${read("name")}`,
         `Company: ${read("company")}`,
@@ -291,7 +291,7 @@ const topics = [
       /* Handoff only — nothing is posted anywhere, the browser just opens the
          user's own mail client with the message already written. */
       window.location.href = `mailto:${mail}?subject=${encodeURIComponent(
-        `Repli — ${subject}`,
+        `Replai — ${subject}`,
       )}&body=${encodeURIComponent(body)}`;
     });
   }
