@@ -12,7 +12,7 @@ export const site = {
   /* The contracting entity. Used in the footer, the legal pages and the
      Organization node — Replai is the product, this is who signs. */
   legalName: "PT Nusa Inti Telekomunikasi",
-  url: "https://replai.site",
+  url: "https://usereplai.site",
   tagline: "The WhatsApp CRM with an AI agent that answers",
   description:
     "Replai turns WhatsApp into a real sales system: one shared inbox for your team, AI lead scoring, no-code follow-up automation, and an AI agent that replies to chats and answers voice calls.",
@@ -21,10 +21,10 @@ export const site = {
 } as const;
 
 export const contact = {
-  salesEmail: "sales@replai.site",
-  supportEmail: "support@replai.site",
-  pressEmail: "press@replai.site",
-  privacyEmail: "privacy@replai.site",
+  salesEmail: "sales@usereplai.site",
+  supportEmail: "support@usereplai.site",
+  pressEmail: "press@usereplai.site",
+  privacyEmail: "privacy@usereplai.site",
   /* Registered office, split one line per line of the printed address. The
      address the company gave us, in English: street and area names stay as
      written, administrative terms are translated. `officeShort` is the one-line

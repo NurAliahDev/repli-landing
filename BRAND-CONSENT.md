@@ -1,6 +1,6 @@
 # Brand consent — required before launch
 
-**Status: NOT CLEARED. Do not publish this site to `replai.site` until every row
+**Status: NOT CLEARED. Do not publish this site to `usereplai.site` until every row
 in the table below says `yes`.**
 
 This site names real, well-known Indonesian companies as Replai customers, and

@@ -9,7 +9,7 @@ Design direction, palette and type decisions are recorded in
 [`LANDING-PAGE-BRIEF.md`](LANDING-PAGE-BRIEF.md).
 
 > [!WARNING]
-> **Do not point `replai.site` at this build yet.** The site names real
+> **Do not point `usereplai.site` at this build yet.** The site names real
 > Indonesian companies as customers and shows named people with their
 > photographs. None of it is cleared. Read
 > [`BRAND-CONSENT.md`](BRAND-CONSENT.md) first — it lists exactly what has to be
@@ -52,7 +52,7 @@ needs a secret, so there is nothing to configure in a host's env panel.
 
 ## Before a real domain
 
-`astro.config.mjs` sets `site: 'https://replai.site'`. That value builds the
+`astro.config.mjs` sets `site: 'https://usereplai.site'`. That value builds the
 canonical tags and the sitemap. **If you deploy to a different hostname, change
 it**, or every page will advertise a canonical URL that is not where it lives.
 Preview deployments are fine to leave alone — they are `noindex` by convention on
@@ -74,7 +74,7 @@ Vercel deploys a static Astro site with zero configuration and no adapter.
    - Install Command: `npm ci`
 3. Leave Environment Variables empty. This site has none.
 4. **Deploy.** First build is roughly a minute.
-5. **Project → Settings → Domains** to add `replai.site`. Vercel prints the DNS
+5. **Project → Settings → Domains** to add `usereplai.site`. Vercel prints the DNS
    records to create at your registrar (an `A` record for the apex, `CNAME` for
    `www`).
 
@@ -114,7 +114,7 @@ from a Git repo.
    lag behind: `NODE_VERSION` = `22`. (`.nvmrc` in the repo says the same thing;
    the variable is the one that is unambiguous.)
 4. **Save and Deploy.**
-5. **Custom domains** tab → add `replai.site`. If the domain's DNS is already on
+5. **Custom domains** tab → add `usereplai.site`. If the domain's DNS is already on
    Cloudflare, the records are created for you.
 
 Pages serves `404.html` for unmatched paths automatically, and resolves

@@ -6,7 +6,7 @@ Replai adalah B2B SaaS WhatsApp CRM yang menargetkan SMB (small-medium business)
 
 **Tahap:** Pre-seed
 **Target pasar:** SMB Indonesia & ASEAN (owner bisnis, tim sales kecil-menengah)
-**Domain:** replai.site
+**Domain:** usereplai.site
 
 ---
 
