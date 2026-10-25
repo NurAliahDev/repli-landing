@@ -809,6 +809,13 @@
   background: var(--surface);
 }
 
+/* The light stand-in for a dark band: a violet wash that still sets a section
+   apart. Body text keeps --ink-70 (6.69:1 here); dividers use --brand-tint-2,
+   since grey rules go muddy on the violet. */
+.bg-tint {
+  background: var(--brand-tint);
+}
+
 .text-mute {
   color: var(--ink-70);
 }

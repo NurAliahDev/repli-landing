@@ -106,7 +106,7 @@ const sample = `curl https://api.repli.site/v1/conversations \\
   }
 
   <!-- ── API ──────────────────────────────────────────────────────────── -->
-  <section class="section on-ink blueprint" aria-labelledby="api-title">
+  <section class="section bg-tint" aria-labelledby="api-title">
     <div class="wrap api">
       <div class="api__copy">
         <p class="stamp"><span class="stamp__num">05</span> Build your own</p>
@@ -141,11 +141,11 @@ const sample = `curl https://api.repli.site/v1/conversations \\
         </ul>
 
         <div class="api__actions">
-          <a class="btn btn--light" href="/contact">
+          <a class="btn btn--primary" href="/contact">
             Request API docs
             <Icon name="arrowRight" size={16} />
           </a>
-          <a class="btn btn--ghost-ink" href="/security">How we handle your data</a>
+          <a class="btn btn--outline" href="/security">How we handle your data</a>
         </div>
       </div>
 
@@ -336,9 +336,10 @@ const sample = `curl https://api.repli.site/v1/conversations \\
   }
 
   .api__figure {
-    border: 1px solid var(--rule-ink-2);
+    border: 1px solid var(--brand-tint-2);
     border-radius: var(--r-3);
-    background: rgba(0, 0, 0, 0.28);
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
     overflow: hidden;
   }
 
@@ -347,11 +348,11 @@ const sample = `curl https://api.repli.site/v1/conversations \\
     align-items: center;
     gap: 0.45rem;
     padding: 0.7rem 0.95rem;
-    border-bottom: 1px solid var(--rule-ink);
+    border-bottom: 1px solid var(--brand-tint-2);
     font-size: var(--t-mono-sm);
     letter-spacing: var(--track-mono);
     text-transform: uppercase;
-    color: var(--signal);
+    color: var(--brand);
   }
 
   .api__code {
@@ -361,7 +362,7 @@ const sample = `curl https://api.repli.site/v1/conversations \\
     font-family: var(--font-mono);
     font-size: var(--t-mono);
     line-height: 1.7;
-    color: var(--on-ink-70);
+    color: var(--ink-2);
     tab-size: 2;
   }
 

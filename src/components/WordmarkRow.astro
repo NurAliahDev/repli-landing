@@ -15,6 +15,7 @@
    ⚠️  The brands named here are real companies and none has signed off on being
    listed as a customer. See BRAND-CONSENT.md before this site goes live. */
 import { customerBrands, type CustomerBrand } from "../lib/content";
+import { opticalHeight, REF_RATIO, type LogoSizing } from "../lib/logos";
 
 interface Props {
   label?: string;
@@ -23,12 +24,8 @@ interface Props {
 
 const { label = "Teams running on Repli today", items = customerBrands } = Astro.props;
 
-/* Optical sizing. BASE is the height of a mark at REF proportion; the clamp
-   keeps a near-square mark from towering over the row. */
-const BASE_H = 26;
-const REF_RATIO = 3.5;
-const MIN_H = 20;
-const MAX_H = 32;
+/* Optical sizing: `base` is the height of a mark at REF_RATIO proportion. */
+const SIZING: LogoSizing = { base: 26, min: 20, max: 32 };
 
 /* Weight matching. Desaturating nine brand palettes gives nine different greys,
    so a flat opacity leaves the row ragged — measured at 0.62 alpha the marks ran
@@ -53,11 +50,9 @@ const GAP_PX = 56;
    same pace instead of speeding up to finish in time. */
 const SPEED_PX_S = 32;
 
-const clamp = (value: number) => Math.max(MIN_H, Math.min(MAX_H, Math.round(value)));
-
 const marks = items.map((brand) => {
   const ratio = brand.ratio ?? REF_RATIO;
-  const height = clamp(BASE_H / Math.sqrt(ratio / REF_RATIO));
+  const height = opticalHeight(ratio, SIZING);
   const alpha = brand.weight
     ? Math.max(MIN_ALPHA, Math.min(MAX_ALPHA, (REF_ALPHA * TARGET_WEIGHT) / brand.weight))
     : REF_ALPHA;

@@ -6,6 +6,7 @@ import SectionHead from "../../components/SectionHead.astro";
 import LedgerRail from "../../components/LedgerRail.astro";
 import StepList from "../../components/StepList.astro";
 import Icon from "../../components/Icon.astro";
+import NextCard from "../../components/NextCard.astro";
 import FeatureMock from "../../components/mocks/FeatureMock.astro";
 import CtaBand from "../../components/CtaBand.astro";
 import { features } from "../../lib/features";
@@ -119,24 +120,14 @@ const trail = [{ label: "Product", href: "/product" }];
   </section>
 
   <!-- ── Next module ──────────────────────────────────────────────────── -->
-  <section class="section-sm" aria-label="Continue the tour">
-    <div class="wrap">
-      <a class="nextcard" href={`/product/${next.slug}`}>
-        <span class="nextcard__label mono">Next · {next.num}</span>
-        <span class="nextcard__title">{next.name}</span>
-        <span class="nextcard__text">{next.summary}</span>
-        <span class="nextcard__go" aria-hidden="true">
-          <Icon name="arrowRight" size={18} />
-        </span>
-      </a>
-      <p class="nextcard__all">
-        <a class="arrow-link" href="/product">
-          Back to the full tour
-          <Icon name="arrowRight" size={15} />
-        </a>
-      </p>
-    </div>
-  </section>
+  <NextCard
+    label="Continue the tour"
+    href={`/product/${next.slug}`}
+    num={next.num}
+    title={next.name}
+    text={next.summary}
+    all={{ label: "Back to the full tour", href: "/product" }}
+  />
 
   <CtaBand />
 </BaseLayout>
@@ -284,79 +275,6 @@ const trail = [{ label: "Product", href: "/product" }];
 
     .how__head {
       position: static;
-    }
-  }
-
-  /* ── Next card ──────────────────────────────────────────────────────── */
-  .nextcard {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.25rem 1.5rem;
-    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
-    background: var(--ink);
-    color: var(--on-ink);
-    border-radius: var(--r-3);
-    transition: background var(--fast) var(--ease);
-  }
-
-  .nextcard:hover {
-    background: var(--ink-2);
-  }
-
-  .nextcard__label {
-    grid-column: 1;
-    font-size: var(--t-mono-sm);
-    letter-spacing: var(--track-mono);
-    text-transform: uppercase;
-    color: var(--signal);
-  }
-
-  .nextcard__title {
-    grid-column: 1;
-    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
-    font-weight: 800;
-    letter-spacing: var(--track-tight);
-  }
-
-  .nextcard__text {
-    grid-column: 1;
-    margin-top: 0.2rem;
-    max-width: 46ch;
-    font-size: var(--t-sm);
-    line-height: 1.55;
-    color: var(--on-ink-70);
-  }
-
-  .nextcard__go {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    display: grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    border-radius: var(--r-pill);
-    border: 1px solid var(--rule-ink-2);
-    transition:
-      transform var(--base) var(--ease),
-      background var(--fast) var(--ease),
-      color var(--fast) var(--ease);
-  }
-
-  .nextcard:hover .nextcard__go {
-    transform: translateX(4px);
-    background: var(--signal);
-    border-color: var(--signal);
-    color: var(--ink);
-  }
-
-  .nextcard__all {
-    margin-top: 1.5rem;
-  }
-
-  @media (max-width: 560px) {
-    .nextcard__go {
-      display: none;
     }
   }
 </style>

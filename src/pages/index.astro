@@ -16,6 +16,8 @@ import { heroMetrics, problems, outcomes, trustPoints, faqGroups } from "../lib/
 import { organizationNode, websiteNode, softwareNode, faqNode } from "../lib/schema";
 
 const agent = features[2];
+/* Two full rows of the four-column grid, so no cell sits empty on desktop. */
+const HOME_INDUSTRY_COUNT = 8;
 const homeFaq = faqGroups[0].items.slice(0, 4);
 ---
 
@@ -182,7 +184,7 @@ const homeFaq = faqGroups[0].items.slice(0, 4);
   </section>
 
   <!-- ── AI agent spotlight ───────────────────────────────────────────── -->
-  <section class="section on-ink blueprint" aria-labelledby="agent-title">
+  <section class="section bg-tint" aria-labelledby="agent-title">
     <div class="wrap agent">
       <div class="agent__copy">
         <p class="stamp"><span class="stamp__num">04</span> {agent.kicker}</p>
@@ -201,11 +203,11 @@ const homeFaq = faqGroups[0].items.slice(0, 4);
         </ul>
 
         <div class="agent__actions">
-          <a class="btn btn--light" href={`/product/${agent.slug}`}>
+          <a class="btn btn--primary" href={`/product/${agent.slug}`}>
             How the agent works
             <Icon name="arrowRight" size={16} />
           </a>
-          <a class="btn btn--ghost-ink" href="/contact">Hear a sample call</a>
+          <a class="btn btn--outline" href="/contact">Hear a sample call</a>
         </div>
 
         <p class="agent__guard">
@@ -233,7 +235,7 @@ const homeFaq = faqGroups[0].items.slice(0, 4);
 
       <ul class="inds">
         {
-          industries.slice(0, 6).map((industry) => (
+          industries.slice(0, HOME_INDUSTRY_COUNT).map((industry) => (
             <li data-reveal>
               <a class="inds__link" href={`/solutions/${industry.slug}`}>
                 <span class="inds__icon">
@@ -775,13 +777,13 @@ const homeFaq = faqGroups[0].items.slice(0, 4);
     max-width: 34rem;
     font-size: var(--t-xs);
     line-height: 1.55;
-    color: var(--on-ink-70);
+    color: var(--ink-70);
   }
 
   .agent__guard svg {
     flex: 0 0 auto;
     margin-top: 0.1rem;
-    color: var(--signal);
+    color: var(--brand);
   }
 
   @media (max-width: 1000px) {
@@ -795,7 +797,9 @@ const homeFaq = faqGroups[0].items.slice(0, 4);
     margin-top: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    /* Fixed counts rather than auto-fit: eight cards divide evenly into four,
+       two and one, where auto-fit's three-column step would leave a hole. */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1px;
     background: var(--rule-2);
     border: 1px solid var(--rule-2);
@@ -871,6 +875,18 @@ const homeFaq = faqGroups[0].items.slice(0, 4);
 
   .inds__more {
     margin-top: 1.5rem;
+  }
+
+  @media (max-width: 1100px) {
+    .inds {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .inds {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
   @media (max-width: 560px) {

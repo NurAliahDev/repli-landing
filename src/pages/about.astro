@@ -12,14 +12,14 @@ import { breadcrumbNode, organizationNode } from "../lib/schema";
 
 <BaseLayout
   title="About"
-  description="Repli is a pre-seed team in Jakarta building a WhatsApp-native CRM. Why we started, what we believe about building sales tools, and what we are not yet."
+  description="Repli is a pre-seed team in Surabaya building a WhatsApp-native CRM. Why we started, what we believe about building sales tools, and what we are not yet."
   schema={[organizationNode, breadcrumbNode([], "About", "/about")]}
 >
   <PageHero
     kicker="Company"
     title="We built the CRM the spreadsheet was standing in for."
     current="About"
-    lead={`${site.name} is a small ${site.stage.toLowerCase()} team in Jakarta, operating as ${site.legalName}. We take on a handful of accounts at a time and stay close to each one, because a shared inbox is not something you hand over and hope.`}
+    lead={`${site.name} is a small ${site.stage.toLowerCase()} team in Surabaya, operating as ${site.legalName}. We take on a handful of accounts at a time and stay close to each one, because a shared inbox is not something you hand over and hope.`}
     primary={{ label: "Talk to us", href: "/contact" }}
     secondary={{ label: "See the product", href: "/product" }}
   >
@@ -84,7 +84,7 @@ import { breadcrumbNode, organizationNode } from "../lib/schema";
   </section>
 
   <!-- ── What we are not ──────────────────────────────────────────────── -->
-  <section class="section on-ink blueprint" aria-labelledby="notyet-title">
+  <section class="section bg-tint" aria-labelledby="notyet-title">
     <div class="wrap notyet">
       <div>
         <p class="stamp"><span class="stamp__num">03</span> Plainly</p>
@@ -335,7 +335,7 @@ import { breadcrumbNode, organizationNode } from "../lib/schema";
     grid-template-columns: auto minmax(0, 1fr);
     gap: 0.85rem;
     padding: 1.25rem 0;
-    border-top: 1px solid var(--rule-ink);
+    border-top: 1px solid var(--brand-tint-2);
   }
 
   .notyet__list li:first-child {
@@ -350,8 +350,9 @@ import { breadcrumbNode, organizationNode } from "../lib/schema";
     height: 28px;
     margin-top: 0.15rem;
     border-radius: var(--r-pill);
-    border: 1px solid var(--rule-ink-2);
-    color: var(--on-ink-70);
+    border: 1px solid var(--brand-tint-2);
+    background: var(--surface);
+    color: var(--brand);
   }
 
   .notyet__list h3 {
@@ -363,11 +364,11 @@ import { breadcrumbNode, organizationNode } from "../lib/schema";
     margin-top: 0.4rem;
     font-size: var(--t-sm);
     line-height: 1.6;
-    color: var(--on-ink-70);
+    color: var(--ink-70);
   }
 
   .notyet__list a {
-    color: var(--signal);
+    color: var(--brand);
     text-decoration: underline;
     text-underline-offset: 2px;
   }

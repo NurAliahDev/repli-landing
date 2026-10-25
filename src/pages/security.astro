@@ -79,7 +79,7 @@ const summary = [
   }
 
   <!-- ── The honest part ──────────────────────────────────────────────── -->
-  <section class="section on-ink" aria-labelledby="honest-title">
+  <section class="section bg-tint" aria-labelledby="honest-title">
     <div class="wrap wrap-narrow honest">
       <p class="stamp"><span class="stamp__num">05</span> Full disclosure</p>
       <h2 id="honest-title" class="honest__title">{securityHonesty.heading}</h2>
@@ -90,7 +90,7 @@ const summary = [
           <Icon name="mail" size={15} />
           {securityHonesty.contact}
         </p>
-        <a class="btn btn--light" href={`mailto:${contact.privacyEmail}`}>
+        <a class="btn btn--primary" href={`mailto:${contact.privacyEmail}`}>
           {contact.privacyEmail}
           <Icon name="arrowRight" size={16} />
         </a>
@@ -312,7 +312,7 @@ const summary = [
     margin-top: 1.1rem;
     font-size: var(--t-lead);
     line-height: 1.65;
-    color: var(--on-ink-70);
+    color: var(--ink-70);
   }
 
   .honest__foot {
@@ -323,7 +323,7 @@ const summary = [
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid var(--rule-ink-2);
+    border-top: 1px solid var(--brand-tint-2);
   }
 
   .honest__contact {
@@ -331,11 +331,11 @@ const summary = [
     align-items: center;
     gap: 0.5rem;
     font-size: var(--t-sm);
-    color: var(--on-ink);
+    color: var(--ink);
   }
 
   .honest__contact svg {
-    color: var(--signal);
+    color: var(--brand);
   }
 
   /* ── Procurement docs ───────────────────────────────────────────────── */

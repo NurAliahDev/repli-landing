@@ -163,6 +163,6 @@ export const principles: { icon: IconName; title: string; text: string }[] = [
 export const companyFacts: { label: string; value: string }[] = [
   { label: "Founded", value: "2025" },
   { label: "Stage", value: "Pre-seed" },
-  { label: "Base", value: "Jakarta, ID" },
-  { label: "Serving", value: "ID & ASEAN" },
+  { label: "Base", value: "Surabaya, ID" },
+  { label: "Serving", value: "ASEAN" },
 ];

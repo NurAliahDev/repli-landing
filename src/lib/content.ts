@@ -98,9 +98,8 @@ export type Testimonial = {
   role: string;
   company: string;
   industry: string;
-  /** Company initials, not the person's. The results table on /customers uses
-      them as a company chip, and the quote card falls back to them when there
-      is no cleared photograph. */
+  /** Company initials, not the person's. The quote card falls back to them
+      when there is no cleared photograph. */
   initials: string;
   /** Square portrait under /public/people. Five of the six ship at 100×100 and
       one at 800×800, so the avatar is capped at 44 CSS px — anything larger
@@ -217,6 +216,9 @@ export const customerBrands: CustomerBrand[] = [
   { name: "Halodoc", logo: "/logo/halodoc.svg", ratio: 5.46, weight: 120 },
   { name: "Ruangguru", logo: "/logo/ruangguru.svg", ratio: 1.79, weight: 58 },
 ];
+
+export const brandByName = (name: string): CustomerBrand | undefined =>
+  customerBrands.find((brand) => brand.name === name);
 
 /* --------------------------------------------------------------------------
    Business partners — the footer row

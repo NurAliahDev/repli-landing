@@ -10,8 +10,8 @@ import { integrationGroups, integrationNote } from "../../lib/platform";
 import { cta } from "../../lib/site";
 import { breadcrumbNode } from "../../lib/schema";
 
-/* The AI agent block is the one we invert — it is the part nobody else has. */
-const INK_INDEX = 2;
+/* The AI agent block is the one we set apart — it is the part nobody else has. */
+const SPOTLIGHT_INDEX = 2;
 
 const liveCount = integrationGroups
   .flatMap((group) => group.items)
@@ -52,14 +52,14 @@ const liveCount = integrationGroups
 
   {
     features.map((feature, index) => {
-      const isInk = index === INK_INDEX;
+      const isSpotlight = index === SPOTLIGHT_INDEX;
       return (
         <section
           id={feature.slug}
           class:list={[
             "section feat",
-            isInk && "on-ink blueprint",
-            !isInk && index % 2 === 1 && "bg-surface",
+            isSpotlight && "bg-tint",
+            !isSpotlight && index % 2 === 1 && "bg-surface",
           ]}
           data-flip={index % 2 === 1 ? "" : undefined}
           aria-labelledby={`${feature.slug}-title`}
@@ -238,10 +238,6 @@ const liveCount = integrationGroups
     color: var(--ink-70);
   }
 
-  .on-ink .feat__lead {
-    color: var(--on-ink-70);
-  }
-
   .feat__points {
     margin-top: 1.75rem;
     list-style: none;
@@ -256,8 +252,8 @@ const liveCount = integrationGroups
     border-top: 1px solid var(--rule);
   }
 
-  .on-ink .feat__points li {
-    border-top-color: var(--rule-ink);
+  .bg-tint .feat__points li {
+    border-top-color: var(--brand-tint-2);
   }
 
   .feat__points li:first-child {
@@ -275,9 +271,9 @@ const liveCount = integrationGroups
     color: var(--brand);
   }
 
-  .on-ink .feat__icon {
-    background: var(--rule-ink-2);
-    color: var(--signal);
+  /* The usual tint chip would vanish into the tinted band. */
+  .bg-tint .feat__icon {
+    background: var(--surface);
   }
 
   .feat__ptitle {
@@ -291,10 +287,6 @@ const liveCount = integrationGroups
     font-size: var(--t-sm);
     line-height: 1.6;
     color: var(--ink-70);
-  }
-
-  .on-ink .feat__ptext {
-    color: var(--on-ink-70);
   }
 
   .feat__link {
@@ -314,8 +306,8 @@ const liveCount = integrationGroups
     border-top: 1px solid var(--rule-2);
   }
 
-  .on-ink .feat__metrics {
-    border-top-color: var(--rule-ink-2);
+  .bg-tint .feat__metrics {
+    border-top-color: var(--brand-tint-2);
   }
 
   .feat__metrics dt {
@@ -324,10 +316,6 @@ const liveCount = integrationGroups
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-55);
-  }
-
-  .on-ink .feat__metrics dt {
-    color: var(--on-ink-70);
   }
 
   .feat__metrics dd {

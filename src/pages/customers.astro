@@ -7,12 +7,25 @@ import WordmarkRow from "../components/WordmarkRow.astro";
 import LedgerRail from "../components/LedgerRail.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Icon from "../components/Icon.astro";
-import { testimonials, testimonialDisclosure, heroMetrics, customerBrands } from "../lib/content";
+import { testimonials, testimonialDisclosure, heroMetrics, customerBrands, brandByName } from "../lib/content";
+import { opticalHeight, REF_RATIO, type LogoSizing } from "../lib/logos";
 import { cta } from "../lib/site";
 import { breadcrumbNode } from "../lib/schema";
 
-/* Only teams who gave us a number appear in the results table. */
-const measured = testimonials.filter((entry) => entry.metric !== undefined);
+/* Table logos share a row line with body text, so they run a size below the
+   logo row's marks. */
+const TABLE_LOGO: LogoSizing = { base: 22, min: 16, max: 26 };
+
+/* Only teams who gave us a number appear in the results table. Each row shows
+   the company's logo; one without a cleared file falls back to its name. */
+const measured = testimonials
+  .filter((entry) => entry.metric !== undefined)
+  .map((entry) => {
+    const brand = brandByName(entry.company);
+    const ratio = brand?.ratio ?? REF_RATIO;
+    const logoHeight = opticalHeight(ratio, TABLE_LOGO);
+    return { ...entry, logo: brand?.logo, logoHeight, logoWidth: Math.round(logoHeight * ratio) };
+  });
 
 /* Counted, never typed out — the copy on this page cannot drift from the data.
    Every brand named here needs written sign-off first: see /BRAND-CONSENT.md. */
@@ -86,10 +99,19 @@ const brandCount = customerBrands.length;
               measured.map((entry) => (
                 <tr>
                   <th scope="row">
-                    <span class="results__co">
-                      <span class="results__avatar mono" aria-hidden="true">{entry.initials}</span>
-                      {entry.company}
-                    </span>
+                    {entry.logo ? (
+                      <img
+                        class="results__logo"
+                        src={entry.logo}
+                        alt={entry.company}
+                        width={entry.logoWidth}
+                        height={entry.logoHeight}
+                        style={`--logo-h:${entry.logoHeight}px`}
+                        decoding="async"
+                      />
+                    ) : (
+                      entry.company
+                    )}
                   </th>
                   <td>{entry.industry}</td>
                   <td>{entry.metric?.label}</td>
@@ -217,22 +239,12 @@ const brandCount = customerBrands.length;
     white-space: nowrap;
   }
 
-  .results__co {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .results__avatar {
-    display: grid;
-    place-items: center;
-    width: 28px;
-    height: 28px;
-    border-radius: var(--r-pill);
-    background: var(--brand-tint);
-    border: 1px solid var(--brand-tint-2);
-    font-size: var(--t-mono-sm);
-    color: var(--brand);
+  /* Width follows the file's own proportions; the attributes only reserve
+     space before it loads. */
+  .results__logo {
+    display: block;
+    height: var(--logo-h);
+    width: auto;
   }
 
   .results__num {

@@ -11,7 +11,7 @@ export const site = {
   name: "Repli",
   /* The contracting entity. Used in the footer, the legal pages and the
      Organization node — Repli is the product, this is who signs. */
-  legalName: "PT Nexa Telekomunikasi Indonesia",
+  legalName: "PT Nusa Inti Telekomunikasi",
   url: "https://repli.site",
   tagline: "The WhatsApp CRM with an AI agent that answers",
   description:
@@ -25,26 +25,25 @@ export const contact = {
   supportEmail: "support@repli.site",
   pressEmail: "press@repli.site",
   privacyEmail: "privacy@repli.site",
-  /* Registered office, split one line per line of the printed address, with the
-     wording exactly as the company gave it to us. `officeShort` is the one-line
+  /* Registered office, split one line per line of the printed address. The
+     address the company gave us, in English: street and area names stay as
+     written, administrative terms are translated. `officeShort` is the one-line
      form for tight spots like the footer rail. */
   officeLines: [
-    "SCBD, Treasury Office Tower",
-    "District 8 14th Floor",
-    "Jl. Tulodong Atas 2 No.28, RT.5/RW.3",
-    "Senayan, Kec. Kebayoran Baru",
-    "Kota Jakarta Selatan",
-    "Daerah Khusus Ibukota Jakarta 12190",
+    "Spazio Tower, 10th Floor",
+    "Jl. Mayjend. Jonosewojo Kav. 3",
+    "Pradahkalikendal, Dukuhpakis District",
+    "Surabaya, East Java 60225",
   ],
-  officeShort: "Treasury Office Tower, SCBD Jakarta",
+  officeShort: "Spazio Tower 10th Floor, Surabaya",
   /* The same office in the shape schema.org's PostalAddress wants. Two
      representations because two consumers need different things — keep them in
      step if the office ever moves. */
   officeAddress: {
-    street: "Treasury Office Tower, District 8 14th Floor, Jl. Tulodong Atas 2 No.28, RT.5/RW.3, Senayan",
-    locality: "Kota Jakarta Selatan",
-    region: "Daerah Khusus Ibukota Jakarta",
-    postalCode: "12190",
+    street: "Spazio Tower, 10th Floor, Jl. Mayjend. Jonosewojo Kav. 3, Pradahkalikendal, Dukuhpakis",
+    locality: "Surabaya",
+    region: "East Java",
+    postalCode: "60225",
     country: "ID",
   },
   hours: "Mon–Fri, 09:00–18:00 WIB",
@@ -184,7 +183,6 @@ export const nav: NavItem[] = [
           links: [
             { label: "About Repli", href: "/about", summary: "Why we build for WhatsApp-first teams", icon: "users" },
             { label: "Contact us", href: "/contact", summary: "Talk to sales, or ask for pricing", icon: "mail" },
-            { label: "Sign in", href: "/login", summary: "Already have a workspace", icon: "key" },
           ],
         },
         {
@@ -240,7 +238,6 @@ export const footerGroups: { heading: string; links: { label: string; href: stri
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
-      { label: "Sign in", href: "/login" },
     ],
   },
 ];
