@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "repli-landing",
+  "compatibility_date": "2026-10-25",
+  /* The site is fully prebuilt, so there is no Worker script and no `main` —
+     Cloudflare serves dist/ as static assets. See README, option C. */
+  "assets": {
+    "directory": "./dist/",
+    // Serve our real 404 page instead of a Cloudflare error page.
+    "not_found_handling": "404-page",
+    // Default. Resolves /about → /about/index.html the way the build expects.
+    "html_handling": "auto-trailing-slash"
+  }
+}

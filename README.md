@@ -128,36 +128,31 @@ Workers now serves static assets directly, and this is the path Cloudflare
 develops most actively. Because the site is fully prebuilt, **no Worker script is
 needed** — there is no `main`, just an assets directory.
 
-Add `wrangler.jsonc` at the repo root:
+This is the path the repo is set up for: `wrangler.jsonc` is committed and
+`wrangler` is a devDependency, so Workers Builds uses the pinned version rather
+than whatever `latest` is on the day it builds. The Worker is named
+`repli-landing`; the name in that file has to match the one in the dashboard.
 
-```jsonc
-{
-  "name": "repli-landing",
-  "compatibility_date": "2026-09-10",
-  "assets": {
-    "directory": "./dist/",
-    // Serve our real 404 page instead of a Cloudflare error page.
-    "not_found_handling": "404-page",
-    // Default. Resolves /about → /about/index.html the way the build expects.
-    "html_handling": "auto-trailing-slash"
-  }
-}
-```
-
-Then, from your machine:
+From your machine:
 
 ```bash
-npm i -D wrangler
 npx wrangler login
 npm run build
 npx wrangler deploy
 ```
 
+`npx wrangler deploy --dry-run` checks the config and counts the files it would
+upload without touching the account.
+
 To build on push instead, use **Workers & Pages → Create → Workers → Connect to
 Git**, point it at the GitHub repo, and set:
 
 - Build command: `npm run build`
-- Deploy command: `npx wrangler deploy`
+- Deploy command: `npx wrangler deploy` — runs on the production branch, `main`
+- Preview command: `npx wrangler preview` — runs on every other branch, and only
+  when Preview Builds is enabled under Branch control
+
+Those three are the Cloudflare defaults, so there is nothing to change.
 
 Custom domain is set per-Worker under **Settings → Domains & Routes**.
 
@@ -167,7 +162,7 @@ Custom domain is set per-Worker under **Settings → Domains & Routes**.
 
 | | Vercel | Cloudflare Pages | Cloudflare Workers |
 | --- | --- | --- | --- |
-| Config files needed | none | none | `wrangler.jsonc` |
+| Config files needed | none | none | `wrangler.jsonc` (committed) |
 | Setup effort | lowest | low | moderate |
 | Astro support | first-class, documented | framework preset | generic static assets |
 | Where Cloudflare is investing | — | maintained | actively developed |
